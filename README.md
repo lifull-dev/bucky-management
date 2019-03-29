@@ -37,13 +37,7 @@ docker image prune -a
 docker-compose run --rm web rake secret
 ```
 
-## Note
-
-### routing
-
-* <http://localhost:/rails/info/routes>
-
-### remove container & image
+## Remove container & image
 
 ```bash
 docker rm `docker ps -a -q`
