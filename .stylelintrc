@@ -1,0 +1,15 @@
+{
+  "extends": "stylelint-config-standard",
+  "rules": {
+    "color-hex-length": "short",
+    "color-no-invalid-hex": true,
+    "font-family-name-quotes": null,
+    "indentation": 2,
+    "length-zero-no-unit": true,
+    "max-empty-lines": 4,
+    "media-feature-name-no-vendor-prefix": true,
+    "number-leading-zero": "never",
+    "string-quotes": "single",
+    "value-list-comma-newline-after": null,
+  }
+}

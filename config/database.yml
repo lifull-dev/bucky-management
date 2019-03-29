@@ -1,0 +1,19 @@
+default: &default
+  adapter: mysql2
+  pool: 5
+  username: <%= ENV['BUCKY_DB_USERNAME'] %>
+  password: <%= ENV['BUCKY_DB_PASSWORD'] %>
+  host: <%= ENV['BUCKY_DB_HOSTNAME'] %>
+  port: 3306
+
+development:
+  <<: *default
+  database: bucky_development
+
+test:
+  <<: *default
+  database: bucky_test
+
+production:
+  <<: *default
+  database: bucky_production

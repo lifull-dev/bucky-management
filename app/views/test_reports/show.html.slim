@@ -1,0 +1,158 @@
+- provide(:title, "TestReports | Detail")
+.is-size-2 Test Report
+- if @latest_round.nil?
+  .is-size-4 No Test Results
+- else
+  .is-size-4 = @job.start_time.strftime("%Y/%m/%d %T(%a)")
+p
+  = link_to "##{@job.id}-#{@latest_round}", "/test_reports/#{@job.id}", class: 'button'
+  - re_test_times = @latest_round - 1
+  - re_test_times.downto(1) do |num|
+    = link_to "##{@job.id}-#{num}", "/test_reports/#{@job.id}/round/#{num}", class: 'button'
+.columns.is-desktop
+  .column.is-half
+    .is-size-3 Summary
+    table.table.is-bordered.is-striped.is-narrow
+      thead.table-header
+        tr
+          th[scope="cols"]
+            | Command and Options
+      tbody
+        tr
+          td #{@job.command_and_option ? "#{@job.command_and_option}" : '-'}
+    table.table.is-bordered.is-striped.is-narrow
+      thead.table-header
+        tr
+          th[scope="cols"]
+            | Device
+          th[scope="cols"]
+            | Service
+          th[scope="cols"]
+            | Category
+          th[scope="cols"]
+            | Round Total
+          th[scope="cols"]
+            | Round Failed
+          th[scope="cols"]
+            | Time
+      tbody
+        tr
+          - pc = @data_for_test_reports[:passed_count] ||= 0
+          - fc = @data_for_test_reports[:failed_count] ||= 0
+          td
+            = @suite_data.device
+          td
+            = @suite_data.service
+          td
+            = @suite_data.category
+          td
+            = pc + fc
+          td
+            = fc
+          td
+            = Time.at(@data_for_test_reports[:total_elapsed_time]).strftime('%H:%M:%S')
+    table.table.is-bordered.is-striped.is-narrow
+      thead
+        tr
+          th[scope="cols"]
+            | Total Passed
+          th[scope="cols"]
+            | Total Failed
+          th[scope="cols"]
+            | Total
+      tbody
+        tr
+          td = @data_for_test_reports[:stack_passed_counts]
+          td = @data_for_test_reports[:failed_count]
+          td = @data_for_test_reports[:stack_passed_counts] + @data_for_test_reports[:failed_count]
+  .column.is-half
+    .is-size-4 Passed Rate
+    canvas#test-report-detail-chart
+    = Gon::Base.render_data
+- if @data_for_test_reports[:failed_test_cases].present?
+  .is-size-4 Error Details
+  table.table.is-bordered.is-striped.is-narrow.is-hoverable
+    thead
+      tr
+        th[scope="cols"]
+          | Priority
+        th[scope="cols"]
+          | Suite Name
+        th.long[scope="cols"]
+          | Suite Description
+        th[scope="cols"]
+          | Case Name
+        th.long[scope="cols"]
+          | Case Description
+        th.error-message[scope="cols"]
+          | Error Message
+        th[scope="cols"]
+          | Elappsed Time(s)
+    tbody
+      - @data_for_test_reports[:failed_test_cases].each do |ftc|
+        - base_url = ftc.github_url
+        - file_path = ftc.file_path
+        tr
+          td
+            = ftc.priority
+          td
+            = link_to ftc.test_suite_name, test_suite_path(ftc.test_suite_id)
+          td.long
+            = ftc.suite_description
+          td
+            = link_to ftc.case_name, base_url << file_path, target: '_blank'
+          td.long
+            = ftc.case_description
+          - if ftc.error_title.include?("expect:") && ftc.error_title.include?("actual:")
+            td.error-message
+              = auto_link(ftc.error_title)
+              div.assert-result
+                = "Assert Result"
+              div
+                span.expect
+                  = "Expect:"
+                p
+                  = ftc.error_title.split("actual:")[0].match(/expect:.*/).to_s.sub("expect:","")
+              div
+                span.actual
+                  = "Actual:"
+                p
+                  = ftc.error_title.split("expect:")[1].match(/actual:.*/).to_s.gsub(/actual:|is not true./,"")
+          - else
+            td.error-message
+              = auto_link(ftc.error_title)
+          td
+            = ftc.elapsed_time
+
+- if @data_for_test_reports[:slow_time_test_cases].present?
+  .is-size-4 Slow Tests List
+  table.table.is-bordered.is-striped.is-narrow.is-hoverable
+    thead
+      tr
+        th[scope="cols"]
+          | Suite Name
+        th.long[scope="cols"]
+          | Suite Description
+        th[scope="cols"]
+          | Case Name
+        th.long[scope="cols"]
+          | Case Description
+        th[scope="cols"]
+          | Elappsed Time(s)
+    tbody
+      - @data_for_test_reports[:slow_time_test_cases].each do |s|
+        - base_url = s.github_url
+        - file_path = s.file_path
+        tr
+          td
+            = link_to s.test_suite_name, test_suite_path(s.test_suite_id)
+          td.long
+            = s.suite_description
+          td
+            = link_to s.case_name, base_url << file_path, target: '_blank'
+          td.long
+            = s.case_description
+          td
+            = s.elapsed_time
+
+= javascript_include_tag 'test_reports_show'

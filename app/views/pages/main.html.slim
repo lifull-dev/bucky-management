@@ -1,0 +1,32 @@
+- provide(:title, "home")
+// two chat on one line
+- (@data_for_top.length)/2.times do |count|
+  .tile.is-ancestor
+    - @data_for_top.each_with_index do |data, index|
+      - if (index==count*2) || (index==count*2+1)
+        - if data.present?
+          .tile.is-parent
+            .tile.is-child
+              article.tile.is-child.notification
+                p.title Latest Result #{data[:title_name]}
+                - startdate = data[:start_time].strftime("%Y/%m/%d %T(%a)")
+                p.title #{data[:command_and_option]}
+                p.subtitle
+                  | Job ID: #{data[:job_id]} Round: #{data[:latest_round]} | #{startdate}
+                .content
+                  canvas[id='#{data[:title_name]}']
+                - failed_count = data[:latest_failed_count] || 0
+                - passed_count = data[:latest_passed_count] || 0
+                - total_count = failed_count + passed_count
+                .columns
+                  .column
+                    p Passed : #{passed_count}
+                    p Failed : #{failed_count}
+                    p Total : #{total_count}
+                    p = link_to "/test_reports/#{data[:job_id]}", target: "_brank" do
+                      | More Details>>
+                  .column
+                    .title
+                        = passed_count + failed_count > 0 ? "Pass rate: #{passed_count*100/(passed_count+failed_count)}\%" : 'no result'
+
+= javascript_include_tag 'pages_main'

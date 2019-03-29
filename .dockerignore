@@ -1,0 +1,13 @@
+.DS_Store
+.bundle
+.dockerignore
+.git
+.gitignore
+.rspec
+.vscode
+docker
+docker-*
+log
+node_modules
+tmp
+vendor/assets

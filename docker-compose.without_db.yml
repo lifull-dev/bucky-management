@@ -1,0 +1,33 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        rails_env: ${RAILS_ENV}
+    container_name: bm-app
+    command: bundle exec puma -C config/puma.rb config.ru
+    volumes:
+      - .:/app
+      - ./tmp/:/app/tmp
+      - ./log/:/app/log
+    # restart: always
+    environment:
+      - RAILS_ENV=${RAILS_ENV:?err}
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE:?err}
+      - BUCKY_DB_USERNAME=${BUCKY_DB_USERNAME:?err}
+      - BUCKY_DB_PASSWORD=${BUCKY_DB_PASSWORD:?err}
+      - BUCKY_DB_HOSTNAME=${BUCKY_DB_HOSTNAME:?err}
+  web:
+    build:
+      context: docker/nginx
+      dockerfile: ./Dockerfile
+    container_name: bm-web
+    ports:
+      - 80:80
+    volumes:
+      - ./public/:/app/public
+      - ./tmp/:/app/tmp
+    depends_on:
+      - app

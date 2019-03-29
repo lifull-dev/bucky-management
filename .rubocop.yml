@@ -1,0 +1,39 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  Exclude:
+    # - 'spec/fixtures/**/*'
+    - 'bin/**/*'
+    - 'db/**/*'
+    - 'node_modules/**/*'
+    - 'tmp/**/*'
+    - 'vendor/**/*'
+  TargetRubyVersion: 2.5
+
+Rails:
+  Enabled: true
+
+# allow method prefix start with "set_" and "get_"
+AccessorMethodName:
+  Enabled: false
+
+# allow comment in japanese
+AsciiComments:
+  Enabled: false
+
+#  allow missing top-level documentation comment of class
+Documentation:
+  Enabled: false
+
+FrozenStringLiteralComment:
+  EnforcedStyle: always
+
+LineLength:
+  Enabled: false
+
+MethodLength:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'test/test_helper.rb'

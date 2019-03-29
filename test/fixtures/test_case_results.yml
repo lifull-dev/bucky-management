@@ -1,0 +1,157 @@
+# == Schema Information
+#
+# Table name: test_case_results
+#
+#  id            :bigint(8)        not null, primary key
+#  test_case_id  :bigint(8)
+#  error_title   :text(65535)
+#  error_message :text(65535)
+#  elapsed_time  :float(24)        not null
+#  is_error      :boolean          not null
+#  job_id        :bigint(8)        not null
+#  round         :integer          not null
+#
+# Indexes
+#
+#  index_test_case_results_on_job_id        (job_id)
+#  index_test_case_results_on_test_case_id  (test_case_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (job_id => jobs.id)
+#  fk_rails_...  (test_case_id => test_cases.id)
+#
+
+<% r = 1..50 %>
+<% 5.times do |m| %>
+<% r.each do |n| %>
+test_case_result_<%= m*50 + n %>:
+    id: <%= "#{m*50 + n}"  %>
+    test_case_id: <%= n %>
+    error_title: <%= "Error:_#{m*50 + n}" %>
+    error_message:  <%= "Error essage_#{m*50 + n}" %>
+    elapsed_time: <%= m + n %>
+    is_error: <%= (m*50 + n) % 3 % 2 %>
+    job_id: <%= m %>
+    round: 1
+<% end %>
+<% end %>
+
+<% r = 1..25 %>
+<% r.each do |n| %>
+test_case_pc<%= n %>:
+    id: <%= n + 300 %>
+    test_case_id: 3
+    error_title: <%= "Error:_#{n}" %>
+    error_message:  <%= "Error essage_#{n}" %>
+    elapsed_time: <%= n + 0.1 %>
+    is_error: 0
+    job_id: <%= n + 20 %>
+    round: 1
+<% end %>
+
+
+1:
+    id: 251
+    test_case_id: 251
+    error_title: "NoMethodError: undefined method `quit' for nil:NilClass"
+    error_message: "/usr/local/bundle/gems/bucky-core-0.1.0/lib/bucky/test_equipment/test_case/e2e_test_case.rb:68:in `teardown'
+/usr/local/bundle/gems/bucky-core-0.1.0/lib/bucky/test_equipment/test_case/abst_test_case.rb:27:in `run'"
+    elapsed_time: 15.8339
+    is_error: 1
+    job_id: 11
+    round: 1
+
+2:
+    id: 252
+    test_case_id: 251
+    error_title: "NoMethodError: undefined method `quit' for nil:NilClass"
+    error_message: "/usr/local/bundle/gems/bucky-core-0.1.0/lib/bucky/test_equipment/test_case/e2e_test_case.rb:68:in `teardown'
+/usr/local/bundle/gems/bucky-core-0.1.0/lib/bucky/test_equipment/test_case/abst_test_case.rb:27:in `run'"
+    elapsed_time: 55.8339
+    is_error: 1
+    job_id: 11
+    round: 2
+
+3:
+    id: 253
+    test_case_id: 251
+    error_title: "NoMethodError: undefined method `quit' for nil:NilClass"
+    error_message: "/usr/local/bundle/gems/bucky-core-0.1.0/lib/bucky/test_equipment/test_case/e2e_test_case.rb:68:in `teardown'
+/usr/local/bundle/gems/bucky-core-0.1.0/lib/bucky/test_equipment/test_case/abst_test_case.rb:27:in `run'"
+    elapsed_time: 75.8339
+    is_error: 0
+    job_id: 11
+    round: 3
+
+4:
+    id: 254
+    test_case_id: 252
+    error_title: ""
+    error_message: ""
+    elapsed_time: 5.8339
+    is_error: 0
+    job_id: 12
+    round: 1
+
+5:
+    id: 255
+    test_case_id: 253
+    error_title: ""
+    error_message: ""
+    elapsed_time: 25.8339
+    is_error: 0
+    job_id: 13
+    round: 1
+
+6:
+    id: 256
+    test_case_id: 1
+    error_title: "NoMethodError: undefined method `quit' for nil:NilClass"
+    error_message: "/usr/local/bundle/gems/bucky-core-0.1.0/lib/bucky/test_equipment/test_case/e2e_test_case.rb:68:in `teardown'
+/usr/local/bundle/gems/bucky-core-0.1.0/lib/bucky/test_equipment/test_case/abst_test_case.rb:27:in `run'"
+    elapsed_time: 1.8339
+    is_error: 0
+    job_id: 14
+    round: 1
+
+7:
+    id: 257
+    test_case_id: 252
+    error_title: ""
+    error_message: ""
+    elapsed_time: 5.8339
+    is_error: 0
+    job_id: 15
+    round: 1
+
+8:
+    id: 258
+    test_case_id: 253
+    error_title: ""
+    error_message: ""
+    elapsed_time: 25.8339
+    is_error: 0
+    job_id: 15
+    round: 1
+
+9:
+    id: 259
+    test_case_id: 2
+    error_title: ""
+    error_message: ""
+    elapsed_time: 5.8339
+    is_error: 0
+    job_id: 15
+    round: 1
+
+10:
+    id: 260
+    test_case_id: 253
+    error_title: ""
+    error_message: ""
+    elapsed_time: 25.8339
+    is_error: 0
+    job_id: 15
+    round: 1
+

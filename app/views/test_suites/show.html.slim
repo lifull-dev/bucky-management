@@ -1,0 +1,67 @@
+.center
+  - provide(:title, 'TestCases')
+  .is-size-2
+    | Test Suite/Case -
+    - test_suite_name = " " + @test_suites.test_suite_name
+    - base_url = @test_suites.github_url
+    - file_path = @test_suites.file_path
+    = link_to @test_suites.test_suite_name, base_url << file_path, target: '_blank'
+- if @test_cases.blank?
+  p
+    | This Suite has no test cases.
+- else
+  table.table.is-bordered.is-striped.is-narrow
+    thead
+      tr
+        th[scope="col"]
+          | Device
+        th[scope="col"]
+          | Service
+        th[scope="col"]
+          | Category
+        th[scope="col"]
+          | Priority
+        th.long[scope="col"]
+          | Description
+    tbody
+      tr
+        td
+          = @test_suites.device
+        td
+          = @test_suites.service
+        td
+          = @test_suites.test_category
+        td
+          = @test_suites.priority
+        td.long
+          = @test_suites.suite_description
+  table.table.is-bordered.is-striped.is-narrow.is-hoverable
+    thead
+      tr
+        th[scope="col"]
+          | Case Name
+        th.long[scope="col"]
+          | Description
+        th[scope="col"]
+          | Latest Result
+        th[scope="col"]
+          | Latest Failure Date
+        th[scope="col"]
+          | Success Rate
+    tbody
+    - @test_cases.each do |t|
+      tr
+        - latest_result = @test_case_result.get_latest_result(t.id)
+        - latest_failed_case = @test_case_result.get_latest_failed_result(t.id)
+        - sc = @test_case_result.get_case_successed_counts(t.id)
+        - fc = @test_case_result.get_case_failed_counts(t.id)
+        td
+          = t.case_name
+        td.long
+          = t.case_description
+        td
+          = latest_result == nil || latest_result.is_error == true ? 'failed' : 'successed'
+        td
+          = latest_failed_case.nil? ? 'All succeeded!' : latest_failed_case.start_time
+        td
+          = sc + fc > 0 ? "#{sc*100/(sc+fc)}\%" : 'No result'

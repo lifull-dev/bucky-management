@@ -1,0 +1,15 @@
+nav.navbar
+  .container
+    .navbar-brand
+      = link_to root_path, id: "logo" do
+        = image_tag "logo.png", width:"170", height: "72"
+      .navbar-burger data-target="navMenu"
+        span
+        span
+        span
+    .navbar-menu#navMenu
+      .navbar-end
+        = link_to test_reports_path, class: 'navbar-item has-text-weight-bold' , target: "_brank" do
+          | TestReports
+        = link_to test_suites_path,  class: 'navbar-item has-text-weight-bold' , target: "_brank" do
+          | TestSuites

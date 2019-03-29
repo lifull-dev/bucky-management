@@ -1,0 +1,57 @@
+- provide(:title, "TestReports")
+.is-size-2 Test Reports
+.is-size-6 = page_entries_info @jobs
+table.table.is-bordered.is-striped.is-narrow.is-hoverable.is-fullwidth
+  thead
+      tr
+        th[scope="cols"]
+          | Job ID
+        th[scope="cols"]
+          | Command and Options
+        th[scope="cols"]
+          | Device
+        th[scope="cols"]
+          | Service
+        th[scope="cols"]
+          | Category
+        th[scope="cols"]
+          | Job Start Time
+        th[scope="cols"]
+          | Total Cases
+        th[scope="cols"]
+          | Failed Cases
+        th[scope="cols"]
+          | Total Time
+        th[scope="cols"]
+          | Pass Rate(%)
+  tbody
+    - @jobs.each do |job|
+      tr
+        - date = job.start_time.strftime("%Y/%m/%d %T(%a)")
+        - if @test_case_result.get_latest_round(job.id).present?
+          - latest_round = @test_case_result.get_latest_round(job.id)
+          - fc = @test_case_result.get_failed_counts(job.id, latest_round)
+          - pc = @test_case_result.get_total_passed_counts(job.id)
+          - tc = @test_case_result.get_total_counts(job.id, 1)
+        td
+          = link_to job.id, "/test_reports/#{job.id}"
+        td
+          = job.command_and_option
+        td
+          = job.device
+        td
+          = job.service
+        td
+          = job.category
+        td
+          = date
+        td
+          = tc
+        td
+          = fc
+        td
+          = Time.at(job.total_time).strftime('%H:%M:%S')
+        td
+          = pc + fc > 0 ? "#{pc*100/(pc+fc)}\%" : 'no result'
+= paginate @jobs
+/ = will_paginate @jobs, renderer: BulmaPagination::Rails

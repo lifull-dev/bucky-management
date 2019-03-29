@@ -1,0 +1,39 @@
+
+- provide(:title, "TestSuites")
+.is-size-2 Test Suites
+= search_form_for @q do |f|
+  .columns.is-mobile
+    .column.is-half-mobile.is-one-third-tablet.is-one-fifth-desktop
+      = f.search_field :id_eq, :placeholder=>"Input Id...", :class=>"input is-rounded"
+    .column.is-one-fifth
+      = f.submit :class=>"button is-info is-rounded"
+.is-size-6 = page_entries_info @test_suites
+table.table.is-bordered.is-striped.is-narrow.is-hoverable
+  thead
+    tr
+      th.[scope="cols"] = sort_link(@q, :id)
+      th.[scope="cols"] = sort_link(@q, :device)
+      th.[scope="cols"] = sort_link(@q, :service)
+      th.[scope="cols"] = sort_link(@q, :test_category)
+      th.[scope="cols"] = sort_link(@q, :priority)
+      th.[scope="cols"] = sort_link(@q, :test_suite_name)
+      th.[scope="cols"] = sort_link(@q, :suite_description)
+  tbody
+    - @test_suites.each do |s|
+      tr
+        td
+          = s.id
+        td
+          = s.device
+        td
+          = s.service
+        td
+          = s.test_category
+        td
+          = s.priority
+        td
+          = link_to s.test_suite_name, "/test_suites/#{s.id}"
+        td
+          = s.suite_description
+= paginate @test_suites
+/ = will_paginate @jobs, renderer: BulmaPagination::Rails

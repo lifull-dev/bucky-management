@@ -1,0 +1,53 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/bucky-management
+    docker:
+      - image: circleci/ruby:2.5.1-node
+        environment:
+          RAILS_ENV: test
+          BUCKY_DB_USERNAME: root
+          BUCKY_DB_HOSTNAME: 127.0.0.1
+      - image: circleci/mysql:5.7.19-ram
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_USER: root
+          MYSQL_ROOT_HOST: "%"
+    steps:
+      - checkout
+      - type: cache-restore
+        key: rails-demo-{{ checksum "Gemfile.lock" }}
+      - run: bundle install --path vendor/bundle
+      - type: cache-save
+        key: rails-demo-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
+      - run: bundle exec rake db:create
+      - run: bundle exec rake db:migrate
+      - run: bundle exec rake db:fixtures:load
+  test:
+    docker:
+      - image: circleci/ruby:2.5.1-node
+      - image: circleci/mysql:5.7.19-ram
+    steps:
+      - checkout
+      - type: cache-restore
+        key: rails-demo-{{ checksum "Gemfile.lock" }}
+      - run: bundle install --path vendor/bundle --with test
+      - type: cache-save
+        key: rails-demo-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
+      - run: bundle exec rails_best_practices -f html
+      - store_artifacts:
+          path: rails_best_practices_output.html
+      - run: bundle exec rubocop -f html --out report.html
+      - store_artifacts:
+          path: report.html
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test
