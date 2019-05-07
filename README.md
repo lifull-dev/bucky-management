@@ -1,7 +1,7 @@
 # Bucky-Management
 
 ## Overview
-Bucky-management is a web application that shows test result executed by [Bucky-core]((https://github.com/lifull-dev/bucky-core)).
+Bucky-management is a web application that shows test result executed by [Bucky-core](https://github.com/lifull-dev/bucky-core).
 
 ## Getting Started
 We prepare two docker-compose files to start up Bucky-managemnt.
