@@ -25,6 +25,7 @@ docker-compose up --build -d
 # Use external DB
 docker-compose -f docker-compose.without_db.yml up --build -d
 ```
+
 ### Migration database and table
 ```bash
 # Only at first time not created DB yet.
@@ -32,6 +33,7 @@ docker exec -it bm-app rails db:create
 # Do this if new migration file is added.
 docker exec -it bm-app rails db:migrate
 ```
+
 ### Publish secret key base and set to environment variables
 ```bash
 export SECRET_KEY_BASE=$(docker exec -it bm-app rake secret)
