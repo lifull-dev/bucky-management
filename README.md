@@ -1,7 +1,7 @@
-# README
+# Bucky-Management
 
 ## Overview
-Bucky-management is a web application that shows test result executed by Bucky-core.
+Bucky-management is a web application that shows test result executed by [Bucky-core]((https://github.com/lifull-dev/bucky-core)).
 
 ## Getting Started
 We prepare two docker-compose files to start up Bucky-managemnt.
@@ -32,17 +32,11 @@ docker exec -it bm-app rails db:create
 # Do this if new migration file is added.
 docker exec -it bm-app rails db:migrate
 ```
-### Publish secret key base
+### Publish secret key base and set to environment variables
 ```bash
-docker exec -it bm-app rake secret
-```
+export SECRET_KEY_BASE=$(docker exec -it bm-app rake secret)
 
-### Set secret key base to environment variables
-You should restart Bucky-management after you export secret key base.
-```bash
-export SECRET_KEY_BASE=${SECRET_KEY_BASE}
-
-# Restart Bucky-management
+# Restart Bucky-management to reflect environment variables
 docker-compose up --build -d
 ```
 
