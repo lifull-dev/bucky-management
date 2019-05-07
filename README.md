@@ -9,10 +9,13 @@ We prepare two docker-compose files to start up Bucky-managemnt.
 - **docker-compose.without_db.yml**: Using external DB
 
 ### Set environment variables
-- You should set RAILS_ENV, because it doesn't set in default
-- Use default value if starting by docker-compose.yml
+Take care of following points when setting environment variables:
+- You must set RAILS_ENV, because it doesn't have default value
+- Use default value when starting by docker-compose.yml
 ```bash
 export RAILS_ENV=${RAILS_ENV} # e.g. production, development, test
+
+# You don't need to export if you're going to use default value.
 export BUCKY_DB_USERNAME=${BUCKY_DB_USERNAME} # default: root
 export BUCKY_DB_PASSWORD=${BUCKY_DB_PASSWORD} # default: password
 export BUCKY_DB_HOSTNAME=${BUCKY_DB_HOSTNAME} # default: db
