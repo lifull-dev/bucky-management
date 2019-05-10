@@ -8,11 +8,11 @@ jobs:
           RAILS_ENV: test
           BUCKY_DB_USERNAME: root
           BUCKY_DB_HOSTNAME: 127.0.0.1
-      - image: circleci/mysql:5.7.19-ram
-        environment:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_USER: root
-          MYSQL_ROOT_HOST: "%"
+      # - image: circleci/mysql:5.7.19-ram
+      #   environment:
+      #     MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      #     MYSQL_USER: root
+      #     MYSQL_ROOT_HOST: "%"
     steps:
       - checkout
       - type: cache-restore
@@ -22,13 +22,13 @@ jobs:
         key: rails-demo-{{ checksum "Gemfile.lock" }}
         paths:
           - vendor/bundle
-      - run: bundle exec rake db:create
-      - run: bundle exec rake db:migrate
-      - run: bundle exec rake db:fixtures:load
+      # - run: bundle exec rake db:create
+      # - run: bundle exec rake db:migrate
+      # - run: bundle exec rake db:fixtures:load
   test:
     docker:
       - image: circleci/ruby:2.5.1-node
-      - image: circleci/mysql:5.7.19-ram
+      # - image: circleci/mysql:5.7.19-ram
     steps:
       - checkout
       - type: cache-restore
