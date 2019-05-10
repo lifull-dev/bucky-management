@@ -20,8 +20,8 @@ jobs:
       - run: bundle install --path vendor/bundle
       - save_cache: 
           key: rails-demo-{{ checksum "Gemfile.lock" }}
-        paths:
-          - vendor/bundle
+          paths:
+            - vendor/bundle
       # - run: bundle exec rake db:create
       # - run: bundle exec rake db:migrate
       # - run: bundle exec rake db:fixtures:load
