@@ -41,13 +41,16 @@ jobs:
       #   paths:
       #     - vendor/bundle
       # - run: bundle exec rails_best_practices -f html
+      - run: rubocop -f html --out report.html
+      - store_artifacts:
+          path: report.html
       - run: rails_best_practices -f html
       - store_artifacts:
           path: rails_best_practices_output.html
       # - run: bundle exec rubocop -f html --out report.html
-      - run: rubocop -f html --out report.html
-      - store_artifacts:
-          path: report.html
+      # - run: rubocop -f html --out report.html
+      # - store_artifacts:
+      #     path: report.html
 
 workflows:
   version: 2
