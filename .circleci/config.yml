@@ -15,11 +15,13 @@ jobs:
       #     MYSQL_ROOT_HOST: "%"
     steps:
       - checkout
-      - type: cache-restore
-        key: rails-demo-{{ checksum "Gemfile.lock" }}
+      - restore_cache:
+          keys: 
+            - rails-demo-{{ checksum "Gemfile.lock" }}
       - run: bundle install --path vendor/bundle
-      - type: cache-save
-        key: rails-demo-{{ checksum "Gemfile.lock" }}
+      - cache-save:
+          keys:
+            - rails-demo-{{ checksum "Gemfile.lock" }}
         paths:
           - vendor/bundle
       # - run: bundle exec rake db:create
