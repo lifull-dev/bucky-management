@@ -16,12 +16,10 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: 
-            - rails-demo-{{ checksum "Gemfile.lock" }}
+          key: rails-demo-{{ checksum "Gemfile.lock" }}
       - run: bundle install --path vendor/bundle
       - cache-save:
-          keys:
-            - rails-demo-{{ checksum "Gemfile.lock" }}
+          key: rails-demo-{{ checksum "Gemfile.lock" }}
         paths:
           - vendor/bundle
       # - run: bundle exec rake db:create
