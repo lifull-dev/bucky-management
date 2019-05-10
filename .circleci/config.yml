@@ -25,36 +25,29 @@ jobs:
       - run: bundle exec rake db:create
       - run: bundle exec rake db:migrate
       - run: bundle exec rake db:fixtures:load
-  static_analysis:
+  rails_best_practices:
     docker:
       - image: circleci/ruby:2.5.1-node
-      # - image: circleci/mysql:5.7.19-ram
     steps:
       - checkout
-      # - type: cache-restore
-      #   key: rails-demo-{{ checksum "Gemfile.lock" }}
-      # - run: bundle install --path vendor/bundle --with test
       - run: gem install rails_best_practices
-      - run: gem install rubocop -v '0.58.2'
-      # - type: cache-save
-      #   key: rails-demo-{{ checksum "Gemfile.lock" }}
-      #   paths:
-      #     - vendor/bundle
-      # - run: bundle exec rails_best_practices -f html
-      - run: rubocop -f html --out report.html
-      - store_artifacts:
-          path: report.html
       - run: rails_best_practices -f html
       - store_artifacts:
           path: rails_best_practices_output.html
-      # - run: bundle exec rubocop -f html --out report.html
-      # - run: rubocop -f html --out report.html
-      # - store_artifacts:
-      #     path: report.html
+  rubocop:
+    docker:
+      - image: circleci/ruby:2.5.1-node
+    steps:
+      - checkout
+      - run: gem install rubocop -v '0.58.2'
+      - run: rubocop -f html --out report.html
+      - store_artifacts:
+          path: report.html
 
 workflows:
   version: 2
   test_and_static_analysis:
     jobs:
       # - test
-      - static_analysis
+      - rails_best_practices
+      - rubocop
