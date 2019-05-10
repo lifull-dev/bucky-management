@@ -31,6 +31,7 @@ jobs:
     steps:
       - checkout
       - run: gem install rails_best_practices
+      - run: rails_best_practices --version
       - run: rails_best_practices -f html
       - store_artifacts:
           path: rails_best_practices_output.html
