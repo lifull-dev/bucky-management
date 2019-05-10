@@ -50,5 +50,5 @@ workflows:
   version: 2
   test_and_static_analysis:
     jobs:
-      # - test
+      - test
       - static_analysis
