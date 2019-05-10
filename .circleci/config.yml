@@ -30,9 +30,14 @@ jobs:
       - image: circleci/ruby:2.5.1-node
     steps:
       - checkout
-      - run: gem install rails_best_practices
-      - run: rails_best_practices --version
-      - run: rails_best_practices -f html
+      - restore_cache: 
+          key: rails-demo-{{ checksum "Gemfile.lock" }}
+      - run: bundle install --path vendor/bundle
+      - save_cache: 
+          key: rails-demo-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+      - run: bundle exec rails_best_practices -f html
       - store_artifacts:
           path: rails_best_practices_output.html
   rubocop:
