@@ -8,41 +8,44 @@ jobs:
           RAILS_ENV: test
           BUCKY_DB_USERNAME: root
           BUCKY_DB_HOSTNAME: 127.0.0.1
-      # - image: circleci/mysql:5.7.19-ram
-      #   environment:
-      #     MYSQL_ALLOW_EMPTY_PASSWORD: yes
-      #     MYSQL_USER: root
-      #     MYSQL_ROOT_HOST: "%"
+      - image: circleci/mysql:5.7.19-ram
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_USER: root
+          MYSQL_ROOT_HOST: "%"
     steps:
       - checkout
       - restore_cache: 
           key: rails-demo-{{ checksum "Gemfile.lock" }}
-      - run: bundle install rails_best_practices --path vendor/bundle
-      # - run: bundle install --path vendor/bundle
+      - run: bundle install --path vendor/bundle
       - save_cache: 
           key: rails-demo-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
-      # - run: bundle exec rake db:create
-      # - run: bundle exec rake db:migrate
-      # - run: bundle exec rake db:fixtures:load
+      - run: bundle exec rake db:create
+      - run: bundle exec rake db:migrate
+      - run: bundle exec rake db:fixtures:load
   static_analysis:
     docker:
       - image: circleci/ruby:2.5.1-node
       # - image: circleci/mysql:5.7.19-ram
     steps:
       - checkout
-      - type: cache-restore
-        key: rails-demo-{{ checksum "Gemfile.lock" }}
-      - run: bundle install --path vendor/bundle --with test
-      - type: cache-save
-        key: rails-demo-{{ checksum "Gemfile.lock" }}
-        paths:
-          - vendor/bundle
-      - run: bundle exec rails_best_practices -f html
+      # - type: cache-restore
+      #   key: rails-demo-{{ checksum "Gemfile.lock" }}
+      # - run: bundle install --path vendor/bundle --with test
+      - run: gem install rails_best_practices
+      - run: gem install rubocop -v '0.58.2'
+      # - type: cache-save
+      #   key: rails-demo-{{ checksum "Gemfile.lock" }}
+      #   paths:
+      #     - vendor/bundle
+      # - run: bundle exec rails_best_practices -f html
+      - run: rails_best_practices -f html
       - store_artifacts:
           path: rails_best_practices_output.html
-      - run: bundle exec rubocop -f html --out report.html
+      # - run: bundle exec rubocop -f html --out report.html
+      - run: rubocop -f html --out report.html
       - store_artifacts:
           path: report.html
 
@@ -50,5 +53,5 @@ workflows:
   version: 2
   test_and_static_analysis:
     jobs:
-      - test
+      # - test
       - static_analysis
