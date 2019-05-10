@@ -18,7 +18,7 @@ jobs:
       - restore_cache:
           key: rails-demo-{{ checksum "Gemfile.lock" }}
       - run: bundle install --path vendor/bundle
-      - cache-save:
+      - save_cache:
           key: rails-demo-{{ checksum "Gemfile.lock" }}
         paths:
           - vendor/bundle
