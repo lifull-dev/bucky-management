@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  test: # [TODO] add test step
     working_directory: ~/bucky-management
     docker:
       - image: circleci/ruby:2.5.1-node
@@ -17,7 +17,8 @@ jobs:
       - checkout
       - restore_cache: 
           key: rails-demo-{{ checksum "Gemfile.lock" }}
-      - run: bundle install --path vendor/bundle
+      - run: bundle install rails_best_practices --path vendor/bundle
+      # - run: bundle install --path vendor/bundle
       - save_cache: 
           key: rails-demo-{{ checksum "Gemfile.lock" }}
           paths:
@@ -25,7 +26,7 @@ jobs:
       # - run: bundle exec rake db:create
       # - run: bundle exec rake db:migrate
       # - run: bundle exec rake db:fixtures:load
-  test:
+  static_analysis:
     docker:
       - image: circleci/ruby:2.5.1-node
       # - image: circleci/mysql:5.7.19-ram
@@ -47,7 +48,7 @@ jobs:
 
 workflows:
   version: 2
-  build_and_test:
+  test_and_static_analysis:
     jobs:
-      - build
-      - test
+      # - test
+      - static_analysis
