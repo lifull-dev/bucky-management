@@ -193,8 +193,6 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
-    rails_autolink (1.1.6)
-      rails (> 3.1)
     rails_best_practices (1.19.4)
       activesupport
       code_analyzer (>= 0.4.8)
@@ -351,7 +349,6 @@ DEPENDENCIES
   rack-env_ribbon
   rack-mini-profiler
   rails (~> 5.2.2.1)
-  rails_autolink
   rails_best_practices
   ransack
   rspec-rails (~> 3)
