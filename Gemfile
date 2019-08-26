@@ -29,7 +29,6 @@ group :development, :test, optional: true do
   gem 'awesome_print'
   gem 'bullet'
   gem 'byebug', platform: :mri
-  gem 'capybara'
   gem 'pry-byebug'
   gem 'pry-doc', '~> 0.13'
   gem 'pry-rails'
