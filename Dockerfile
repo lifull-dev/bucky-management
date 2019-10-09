@@ -27,6 +27,3 @@ ADD . /app
 CMD bundle exec rake assets:precompile RAILS_ENV=${RAILS_ENV}
 
 EXPOSE 3000
-
-RUN useradd -r bucky
-USER bucky
