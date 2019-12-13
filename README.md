@@ -20,6 +20,9 @@ export RAILS_ENV=${RAILS_ENV} # e.g. production, development, test
 export BUCKY_DB_USERNAME=${BUCKY_DB_USERNAME} # default: root
 export BUCKY_DB_PASSWORD=${BUCKY_DB_PASSWORD} # default: password
 export BUCKY_DB_HOSTNAME=${BUCKY_DB_HOSTNAME} # default: db
+# You need to export database name and secret key base in production environment.
+export BUCKY_DB_NAME=${BUCKY_DB_NAME}
+export SECRET_KEY_BASE=${SECRET_KEY_BASE}
 ```
 
 ### Build and start Bucky-management
