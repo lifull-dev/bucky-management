@@ -151,7 +151,8 @@ GEM
     pry-stack_explorer (0.4.9.3)
       binding_of_caller (>= 0.7)
       pry (>= 0.9.11)
-    puma (3.12.1)
+    puma (4.3.1)
+      nio4r (~> 2.0)
     rack (2.0.7)
     rack-contrib (2.1.0)
       rack (~> 2.0)
@@ -329,7 +330,7 @@ DEPENDENCIES
   pry-doc (~> 0.13)
   pry-rails
   pry-stack_explorer
-  puma (~> 3.11)
+  puma (>= 3.12.2)
   rack-env_ribbon
   rack-mini-profiler
   rails (~> 5.2.2.1)

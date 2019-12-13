@@ -19,6 +19,7 @@ services:
       - BUCKY_DB_USERNAME=${BUCKY_DB_USERNAME:?err}
       - BUCKY_DB_PASSWORD=${BUCKY_DB_PASSWORD:?err}
       - BUCKY_DB_HOSTNAME=${BUCKY_DB_HOSTNAME:?err}
+      - BUCKY_DB_NAME=${BUCKY_DB_NAME:?err}
   web:
     build:
       context: docker/nginx
