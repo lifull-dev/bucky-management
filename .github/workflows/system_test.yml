@@ -11,7 +11,9 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build the run Docker image
-      run: docker-compose up --build -d
+      run: |
+        export RAILS_ENV=development
+        docker-compose up --build -d
     - name: docker ps
       run: docker ps
 
