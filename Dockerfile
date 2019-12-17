@@ -27,3 +27,5 @@ ADD . /app
 CMD bundle exec rake assets:precompile RAILS_ENV=${RAILS_ENV}
 
 EXPOSE 3000
+RUN chown -R nobody:nogroup /app
+USER nobody
