@@ -19,7 +19,9 @@ jobs:
     - name: BC clone
       run: mkdir /opt/bucky-core && git clone https://github.com/hikimochi/bucky-testing.git /opt/bucky-core
     - name: cd
-      run : cd /opt/bucky-core && docker-compose up --build -d
+      run: cd /opt/bucky-core && docker-compose up --build -d && docker ps
+    - name: exec
+      run: docker exec -it bucky-core bucky run -D pc -d -l top
     
     
 
