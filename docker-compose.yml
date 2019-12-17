@@ -3,8 +3,6 @@ services:
   db:
     image: mysql:5.7.19
     container_name: bm-mysql
-    ports:
-      - 3306:3306
     volumes:
       - ./docker/mysql/volumes:/var/lib/mysql
     environment:
