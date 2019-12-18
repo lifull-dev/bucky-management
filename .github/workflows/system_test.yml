@@ -31,6 +31,12 @@ jobs:
         fi
 
   run:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+
     - name: Build the run Docker image
       id: cache-primes
       uses: actions/cache@v1
