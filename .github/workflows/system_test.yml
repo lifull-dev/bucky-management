@@ -11,7 +11,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Cache node modules
+    - name: Cache docker images
       uses: actions/cache@v1
       with:
         path: ~/caches/images.tar
@@ -25,16 +25,25 @@ jobs:
       run: |
         if [ ! -f ~/caches/images.tar ]; then
           export RAILS_ENV=development
-          docker-compose build && \
+          docker build -t bucky-management . && \
           mkdir -p ~/caches && \
-          docker save $(docker images | awk 'NR>=2 && ! /^<none>/{print $1}') -o ~/caches/images.tar
+          docker save bucky-management -o ~/caches/images.tar
         fi
 
-  
-    # - name: Build the run Docker image
-    #   run: |
-    #     export RAILS_ENV=development
-    #     docker-compose up --build -d
+  run:
+    - name: Build the run Docker image
+      id: cache-primes
+      uses: actions/cache@v1
+      with:
+        path: ~/caches/images.tar
+        key: ${{ runner.os }}-build-${{ hashFiles('Dockerfile') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ hashFiles('Dockerfile') }}
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+    - name: Open
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: docker-compose -f docker-compose.bucky.yml up -d
     # - name: docker ps
     #   run: docker ps
     # - name: BC clone
