@@ -10,18 +10,39 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Build the run Docker image
+
+    - name: Cache node modules
+      uses: actions/cache@v1
+      with:
+        path: ~/caches/images.tar
+        key: ${{ runner.os }}-build-${{ hashFiles('Dockerfile') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ hashFiles('Dockerfile') }}
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - name: Build docker image
       run: |
-        export RAILS_ENV=development
-        docker-compose up --build -d
-    - name: docker ps
-      run: docker ps
-    - name: BC clone
-      run: mkdir /opt/bucky-core && git clone https://github.com/hikimochi/bucky-testing.git /opt/bucky-core
-    - name: cd
-      run: cd /opt/bucky-core && docker-compose up --build -d && docker ps
-    - name: exec
-      run: docker exec bucky-core bucky run -D pc -d -l top
+        if [ ! -f ~/caches/images.tar ]; then
+          export RAILS_ENV=development
+          docker-compose build && \
+          mkdir -p ~/caches && \
+          docker save $(docker images | awk 'NR>=2 && ! /^<none>/{print $1}') -o ~/caches/images.tar
+        fi
+
+  
+    # - name: Build the run Docker image
+    #   run: |
+    #     export RAILS_ENV=development
+    #     docker-compose up --build -d
+    # - name: docker ps
+    #   run: docker ps
+    # - name: BC clone
+    #   run: mkdir /opt/bucky-core && git clone https://github.com/hikimochi/bucky-testing.git /opt/bucky-core
+    # - name: cd
+    #   run: cd /opt/bucky-core && docker-compose up --build -d && docker ps
+    # - name: exec
+    #   run: docker exec bucky-core bucky run -D pc -d -l top
     
     
 
