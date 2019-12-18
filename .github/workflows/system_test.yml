@@ -24,8 +24,7 @@ jobs:
     - name: Build docker image
       run: |
         if [ ! -f ~/caches/images.tar ]; then
-          export RAILS_ENV=development
-          docker build -t bucky-management . && \
+          docker build -t bucky-management . --build-arg rails_env=development && \
           mkdir -p ~/caches && \
           docker save bucky-management -o ~/caches/images.tar
         fi
@@ -47,9 +46,9 @@ jobs:
           ${{ runner.os }}-build-${{ hashFiles('Dockerfile') }}
           ${{ runner.os }}-build-
           ${{ runner.os }}-
-    - name: Open
+    - name: Load
       if: steps.cache.outputs.cache-hit != 'true'
-      run: docker-compose -f docker-compose.bucky.yml up -d
+      run: docker load -q -i ~/caches/images.tar
     # - name: docker ps
     #   run: docker ps
     # - name: BC clone
