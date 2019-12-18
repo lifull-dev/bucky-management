@@ -14,7 +14,7 @@ jobs:
     - name: Cache docker images
       uses: actions/cache@v1
       with:
-        path: ~/caches/images.tar
+        path: ~/caches
         key: ${{ runner.os }}-build-${{ hashFiles('Dockerfile') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ hashFiles('Dockerfile') }}
@@ -40,7 +40,7 @@ jobs:
       id: cache-primes
       uses: actions/cache@v1
       with:
-        path: ~/caches/images.tar
+        path: ~/caches
         key: ${{ runner.os }}-build-${{ hashFiles('Dockerfile') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ hashFiles('Dockerfile') }}
