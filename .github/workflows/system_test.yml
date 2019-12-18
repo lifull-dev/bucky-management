@@ -21,7 +21,7 @@ jobs:
     - name: cd
       run: cd /opt/bucky-core && docker-compose up --build -d && docker ps
     - name: exec
-      run: docker exec -it bucky-core bucky run -D pc -d -l top
+      run: docker exec -i bucky-core bucky run -D pc -d -l top
     
     
 
