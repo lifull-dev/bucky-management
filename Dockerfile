@@ -3,7 +3,6 @@ FROM ruby:2.5.1-alpine
 
 RUN apk update && \
     apk add --no-cache \
-      alpine-sdk \
       libstdc++ \
       libxml2-dev \
       libxslt-dev \

@@ -6,6 +6,7 @@
 .rspec
 .vscode
 docker
+docker/mysql/volume
 docker-*
 log
 node_modules
