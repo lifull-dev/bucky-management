@@ -18,8 +18,6 @@ jobs:
         key: ${{ runner.os }}-build-${{ hashFiles('Dockerfile') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ hashFiles('Dockerfile') }}
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
 
     - name: Build docker image
       run: |
