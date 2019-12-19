@@ -41,11 +41,9 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ~/caches
-        key: ${{ runner.os }}-build-${{ hashFiles('Dockerfile') }}
+        key: ${{ runner.os }}-build-v2-${{ hashFiles('Dockerfile') }}
         restore-keys: |
-          ${{ runner.os }}-build-${{ hashFiles('Dockerfile') }}
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
+          ${{ runner.os }}-build-v2-${{ hashFiles('Dockerfile') }}
     - name: Load and run and setup BM
       if: steps.cache.outputs.cache-hit != 'true'
       run: | 
