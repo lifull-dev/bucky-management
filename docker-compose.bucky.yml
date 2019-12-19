@@ -7,8 +7,6 @@ services:
       - ./docker/mysql/volumes:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=password
-    ports:
-      - 3306:3306
   app:
     image: bucky-management
     container_name: bm-app

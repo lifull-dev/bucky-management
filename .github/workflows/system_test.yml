@@ -54,6 +54,7 @@ jobs:
         docker load -q -i ~/caches/images.tar
         docker-compose -f docker-compose.bucky.yml up --build -d
         docker ps
+        sleep 10
         docker exec -i bm-app rails db:create
         docker exec -i bm-app rails db:migrate
         docker exec -i bm-app rails db:fixtures:load
