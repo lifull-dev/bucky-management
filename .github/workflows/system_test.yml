@@ -53,10 +53,10 @@ jobs:
       run: | 
         docker load -q -i ~/caches/images.tar
         docker-compose -f docker-compose.bucky.yml up --build -d
+        docker ps
         docker exec bm-app rails db:create
         docker exec bm-app rails db:migrate
         docker exec bm-app rails db:fixtures:load
-        docker ps
         curl 'http://localhost'
     - name: Clone test codes
       run: mkdir /opt/bucky-core && git clone https://github.com/hikimochi/bucky-testing.git /opt/bucky-core
