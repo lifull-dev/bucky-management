@@ -62,6 +62,8 @@ jobs:
       run: cd /opt/bucky-core && docker-compose up --build -d && docker ps && sleep 10
     - name: exec
       run: docker exec -i bucky-core bucky run -D pc -d -l top
+    - name: DB drop
+      run: docker exec -i bm-app rails db:drop
     
     
 
