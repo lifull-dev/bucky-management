@@ -7,6 +7,8 @@ services:
       - ./docker/mysql/volumes:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=password
+    networks:
+      bucky:
   app:
     image: bucky-management
     container_name: bm-app
@@ -23,6 +25,8 @@ services:
       - BUCKY_DB_HOSTNAME=${BUCKY_DB_HOSTNAME:-db}
     depends_on:
       - db
+    networks:
+      bucky:
   web:
     build:
       context: docker/nginx
@@ -35,3 +39,8 @@ services:
       - 80:80
     depends_on:
       - app
+    networks:
+      bucky:
+networks:
+  bucky:
+    external: true
