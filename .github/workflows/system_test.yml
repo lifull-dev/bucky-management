@@ -55,7 +55,6 @@ jobs:
         docker exec -i bm-app rails db:create
         docker exec -i bm-app rails db:migrate
         docker exec -i bm-app rails db:fixtures:load
-        curl 'http://localhost'
     - name: Clone test codes
       run: mkdir /opt/bucky-core && git clone https://github.com/hikimochi/bucky-testing.git /opt/bucky-core
     - name: cd
