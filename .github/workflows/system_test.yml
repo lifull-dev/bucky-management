@@ -26,7 +26,9 @@ jobs:
         if [ ! -f ~/caches/images.tar ]; then
           docker build -t bucky-management . --build-arg rails_env=development && \
           mkdir -p ~/caches && \
+          echo 'tar start'
           docker save bucky-management -o ~/caches/images.tar
+          echo 'tar finish'
         fi
 
   run:

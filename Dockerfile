@@ -1,7 +1,24 @@
-FROM ruby:2.5.1
+FROM ruby:2.5.1-alpine
 
-RUN apt-get update
-RUN apt-get install -y build-essential libpq-dev mysql-client && rm -rf /var/lib/apt/lists/*
+
+RUN apk update && \
+    apk add --no-cache \
+      alpine-sdk \
+      libstdc++ \
+      libxml2-dev \
+      libxslt-dev \
+      linux-headers \
+      mysql-client \
+      mysql-dev \
+      nodejs \
+      ruby-dev \
+      ruby-json \
+      yaml \
+      yaml-dev \
+      bash \
+      build-base \
+      tzdata \
+      zlib-dev
 
 RUN gem install bundler
 
