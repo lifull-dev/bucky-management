@@ -48,11 +48,14 @@ jobs:
           ${{ runner.os }}-build-${{ hashFiles('Dockerfile') }}
           ${{ runner.os }}-build-
           ${{ runner.os }}-
-    - name: Load and run BM
+    - name: Load and run and setup BM
       if: steps.cache.outputs.cache-hit != 'true'
       run: | 
         docker load -q -i ~/caches/images.tar
         docker-compose -f docker-compose.bucky.yml up --build -d
+        docker exec bm-app rails db:create
+        docker exec bm-app rails db:migrate
+        docker exec bm-app rails db:fixtures:load
         docker ps
         curl 'http://localhost'
     - name: Clone test codes
