@@ -2,6 +2,8 @@ FROM ruby:2.5.1-alpine
 RUN apk update && \
     apk add --no-cache \
       alpine-sdk \
+      bash \
+      build-base \
       libstdc++ \
       libxml2-dev \
       libxslt-dev \
@@ -11,11 +13,9 @@ RUN apk update && \
       nodejs \
       ruby-dev \
       ruby-json \
+      tzdata \
       yaml \
       yaml-dev \
-      bash \
-      build-base \
-      tzdata \
       zlib-dev
 
 RUN gem install bundler
