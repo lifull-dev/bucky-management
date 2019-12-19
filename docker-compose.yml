@@ -3,8 +3,6 @@ services:
   db:
     image: mysql:5.7.19
     container_name: bm-mysql
-    volumes:
-      - ./docker/mysql/volumes:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=password
   app:
