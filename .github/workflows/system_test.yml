@@ -38,7 +38,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Build the run Docker image
+    - name: Cache restore
       id: cache-primes
       uses: actions/cache@v1
       with:
@@ -48,13 +48,14 @@ jobs:
           ${{ runner.os }}-build-${{ hashFiles('Dockerfile') }}
           ${{ runner.os }}-build-
           ${{ runner.os }}-
-    - name: Load
+    - name: Load and run BM
       if: steps.cache.outputs.cache-hit != 'true'
       run: | 
         docker load -q -i ~/caches/images.tar
         docker-compose -f docker-compose.bucky.yml up --build -d
         docker ps
-    - name: BC clone
+        curl 'http://localhost'
+    - name: Clone test codes
       run: mkdir /opt/bucky-core && git clone https://github.com/hikimochi/bucky-testing.git /opt/bucky-core
     - name: cd
       run: cd /opt/bucky-core && docker-compose up --build -d && docker ps
