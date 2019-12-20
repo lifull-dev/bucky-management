@@ -11,6 +11,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - name: Github event path
+      run: cat $GITHUB_EVENT_PATH
     - name: Cache docker images
       uses: actions/cache@v1
       with:
