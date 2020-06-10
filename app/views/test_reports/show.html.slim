@@ -75,6 +75,8 @@ p
     thead
       tr
         th[scope="cols"]
+          | Check Status
+        th[scope="cols"]
           | Priority
         th[scope="cols"]
           | Suite Name
@@ -93,6 +95,10 @@ p
         - base_url = ftc.github_url
         - file_path = ftc.file_path
         tr
+          td
+            = form_with scpoe: :update, url: "result/#{ftc.result_id}" do |f|
+              = f.select :check_status, @select, {selected: ftc.check_status}, class: 'check_status', onchange: 'submit(this.form)'
+              = text_area_tag 'check_comment', ftc.check_comment, size: "30x5", required: true, onblur: 'submit(this.form)', placeholder: 'Leave your comment here'
           td
             = ftc.priority
           td
