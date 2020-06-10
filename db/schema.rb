@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_15_022534) do
+ActiveRecord::Schema.define(version: 2020_06_10_030437) do
 
   create_table "jobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.datetime "start_time", null: false
@@ -36,6 +36,8 @@ ActiveRecord::Schema.define(version: 2019_03_15_022534) do
     t.boolean "is_error", null: false
     t.bigint "job_id", null: false
     t.integer "round", null: false
+    t.integer "check_status"
+    t.text "check_comment"
     t.index ["job_id"], name: "index_test_case_results_on_job_id"
     t.index ["test_case_id"], name: "index_test_case_results_on_test_case_id"
   end
