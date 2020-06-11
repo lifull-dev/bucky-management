@@ -1,10 +1,7 @@
-const labels = ['Passed', 'Failed'];
-
-const detailChart = 'test-report-detail-chart';
-new Chart(detailChart, {
+new Chart('test-report-detail-chart', {
   type: 'pie',
   data: {
-    labels,
+    labels: ['Passed', 'Failed'],
     datasets: [{
       data: [
         gon.passed_count,
@@ -21,4 +18,18 @@ new Chart(detailChart, {
       borderWidth: 1,
     }],
   },
+});
+
+var element = document.getElementsByName("check_status");
+Object.keys(element).forEach((select) => {
+  var a = element[select].value;
+  if ( a == "1" ) {
+    element[select].className="select_1";
+  } else if ( a == "2" ) {
+    element[select].className="select_2";
+  } else if ( a == "3" ) {
+    element[select].className="select_3";
+  } else if ( a == "4" ) {
+    element[select].className="select_4";
+  }
 });

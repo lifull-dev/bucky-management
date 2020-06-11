@@ -97,7 +97,7 @@ p
         tr
           td
             = form_with scpoe: :update, url: "result/#{ftc.result_id}" do |f|
-              = f.select :check_status, @select, {selected: ftc.check_status}, class: "select_#{ftc.check_status}", onchange: 'submit(this.form)'
+              = f.select :check_status, @select, {selected: ftc.check_status}, class: "check_status", onchange: 'submit(this.form)'
               = text_area_tag 'check_comment', ftc.check_comment, size: "30x5", required: true, onblur: 'submit(this.form)', placeholder: 'Leave your comment here'
           td
             = ftc.priority
@@ -160,5 +160,3 @@ p
             = s.case_description
           td
             = s.elapsed_time
-
-= javascript_include_tag 'test_reports_show'
