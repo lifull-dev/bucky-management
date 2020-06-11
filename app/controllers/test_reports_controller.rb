@@ -38,5 +38,7 @@ class TestReportsController < ApplicationController
     else
       @get_update_target_result.update(check_status: params[:check_status], check_comment: params[:check_comment])
     end
+    @data_for_test_reports = TestCaseResult.get_data_for_test_reports_page(params[:id], @round)
+    @select =  {'Unchecked': '', 'OK': 1, 'Degradation': 2, 'Fix test script': 3, 'Checking': 4}
   end
 end

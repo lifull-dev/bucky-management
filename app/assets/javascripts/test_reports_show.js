@@ -19,17 +19,3 @@ new Chart('test-report-detail-chart', {
     }],
   },
 });
-
-var element = document.getElementsByName("check_status");
-Object.keys(element).forEach((select) => {
-  var a = element[select].value;
-  if ( a == "1" ) {
-    element[select].className="select_1";
-  } else if ( a == "2" ) {
-    element[select].className="select_2";
-  } else if ( a == "3" ) {
-    element[select].className="select_3";
-  } else if ( a == "4" ) {
-    element[select].className="select_4";
-  }
-});
