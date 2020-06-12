@@ -71,7 +71,7 @@ p
     = Gon::Base.render_data
 
 .detail_table
-  = render partial: "detail_table", locals: {data_for_test_reports: @data_for_test_reports, select: @select}
+  = render partial: "detail_table", locals: {data_for_test_reports: @data_for_test_reports, select_option: @select_option, job: @job, round: @round}
 
 - if @data_for_test_reports[:slow_time_test_cases].present?
   .is-size-4 Slow Tests List

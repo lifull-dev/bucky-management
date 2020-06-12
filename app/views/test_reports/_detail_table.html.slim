@@ -1,4 +1,4 @@
-- if @data_for_test_reports[:failed_test_cases].present?
+- if data_for_test_reports[:failed_test_cases].present?
   .is-size-4 Error Details
   table.table.is-bordered.is-striped.is-narrow.is-hoverable
     thead
@@ -20,13 +20,15 @@
         th[scope="cols"]
           | Elappsed Time(s)
     tbody
-      - @data_for_test_reports[:failed_test_cases].each do |ftc|
+      - data_for_test_reports[:failed_test_cases].each do |ftc|
         - base_url = ftc.github_url
         - file_path = ftc.file_path
         tr
           td
             = form_with scpoe: :update, url: "result/#{ftc.result_id}", local: false do |f|
-              = f.select :check_status, @select, {selected: ftc.check_status}, class: "select_#{ftc.check_status}", onchange: 'Rails.fire(this.form, "submit")'
+              = f.hidden_field :job_id, value: job.id
+              = f.hidden_field :round, value: round
+              = f.select :check_status, select_option, {selected: ftc.check_status}, class: "select_#{ftc.check_status}", onchange: 'Rails.fire(this.form, "submit")'
               = text_area_tag 'check_comment', ftc.check_comment, size: "30x5", required: true, onblur: 'Rails.fire(this.form, "submit")', placeholder: 'Leave your comment here'
           td
             = ftc.priority

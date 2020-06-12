@@ -11,7 +11,7 @@ class TestReportsController < ApplicationController
   end
 
   def show
-    @select =  {'Unchecked': '', 'OK': 1, 'Degradation': 2, 'Fix test script': 3, 'Checking': 4}
+    @select_option =  {'Unchecked': '', 'OK': 1, 'Degradation': 2, 'Fix test script': 3, 'Checking': 4}
     @latest_round = TestCaseResult.get_latest_round(params[:id])
     # if round exists, use the round number
     @round = if params[:round].nil?
@@ -38,7 +38,15 @@ class TestReportsController < ApplicationController
     else
       @get_update_target_result.update(check_status: params[:check_status], check_comment: params[:check_comment])
     end
-    @data_for_test_reports = TestCaseResult.get_data_for_test_reports_page(params[:id], @round)
-    @select =  {'Unchecked': '', 'OK': 1, 'Degradation': 2, 'Fix test script': 3, 'Checking': 4}
+    @latest_round = TestCaseResult.get_latest_round(params[:job_id])
+    @round = if params[:round].nil?
+      @latest_round
+    else
+      raise ActiveRecord::RecordNotFound unless params[:round].match?(/\A[1-9][0-9]*\z/)
+      params[:round]
+    end
+    @job = Job.find(params[:job_id])
+    @data_for_test_reports = TestCaseResult.get_data_for_test_reports_page(params[:job_id], @round)
+    @select_option =  {'Unchecked': '', 'OK': 1, 'Degradation': 2, 'Fix test script': 3, 'Checking': 4}
   end
 end

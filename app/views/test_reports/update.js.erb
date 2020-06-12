@@ -1,4 +1,4 @@
-$('detail_table').html('<%= escape_javascript(render partial:'detail_table', locals: {data_for_test_reports: @data_for_test_reports, select: @select} )%>');
+$('.detail_table').html("<%= j(render partial: "detail_table", locals: {data_for_test_reports: @data_for_test_reports, select_option: @select_option, job: @job , round: @round}) %>");
 
 var element = document.getElementsByName("check_status");
 Object.keys(element).forEach((select) => {
