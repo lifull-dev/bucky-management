@@ -32,7 +32,7 @@ class TestReportsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.js { render action: 'show.js.erb' }
+      format.js { render 'show.js.erb' }
     end
   end
 
