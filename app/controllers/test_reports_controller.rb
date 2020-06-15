@@ -48,5 +48,10 @@ class TestReportsController < ApplicationController
     @job = Job.find(params[:job_id])
     @data_for_test_reports = TestCaseResult.get_data_for_test_reports_page(params[:job_id], @round)
     @select_option =  {'Unchecked': '', 'OK': 1, 'Degradation': 2, 'Fix test script': 3, 'Checking': 4}
+
+    respond_to do |format|
+      format.html
+      format.js { render action: 'show.js.erb' }
+    end
   end
 end
