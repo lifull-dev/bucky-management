@@ -39,6 +39,7 @@ class TestCaseResult < ApplicationRecord
   scope :get_slow_time_cases, ->(job_id, round) { joins(test_case: :test_suite).select('test_cases.*, test_case_results.*, test_suites.*').where(job_id: job_id).where(round: round).order('elapsed_time desc').where('elapsed_time >= 60') }
   scope :get_case_successed_counts, ->(test_case_id) { where(test_case_id: test_case_id).where(is_error: 0).order('id desc').limit(20).count }
   scope :get_case_failed_counts, ->(test_case_id) { where(test_case_id: test_case_id).where(is_error: 1).order('id desc').limit(20).count }
+  scope :check_update_in_ten_sec, -> { where("updated_at >= ?", 10.seconds.ago) }
 
   class << self
     def get_latest_result(test_case_id)

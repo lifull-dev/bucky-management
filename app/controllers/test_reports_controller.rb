@@ -10,6 +10,8 @@ class TestReportsController < ApplicationController
                .page(params[:page]).per(30)
                .order('jobs.id DESC')
     @test_case_result = TestCaseResult
+    gon.controller_name = controller_name
+    gon.action_name = action_name
   end
 
   def show
@@ -20,6 +22,20 @@ class TestReportsController < ApplicationController
 
     gon.passed_count = @data_for_test_reports[:stack_passed_counts]
     gon.failed_count = @data_for_test_reports[:failed_count]
+    gon.controller_name = controller_name
+    gon.action_name = action_name
+
+    respond_to do |format|
+      format.html
+      format.js {
+        check_update = TestCaseResult.get_failed_cases(params[:id], @round).check_update_in_ten_sec.ids
+        unless check_update.empty?
+          render 'show.js.erb'
+        else
+          render body: nil
+        end
+      }
+    end
   end
 
   def update
@@ -31,7 +47,6 @@ class TestReportsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html
       format.js { render 'show.js.erb' }
     end
   end
