@@ -22,18 +22,15 @@ if (gon.controller_name == "test_reports" && gon.action_name == "show") {
   });
 
   var path = window.location.pathname;
-  var regex = RegExp('^/test_reports\/[0-9]');
-  if (regex.test(path)){
-    $(function() {
-      $(document).ready(function() {
-          setInterval(function() {
-              jQuery.ajax({
-              url: path,
-              type: "GET",
-              dataType: "script"
-              });
-          }, 10000); // In every 10 seconds
-      });
+  $(function() {
+    $(document).ready(function() {
+        setInterval(function() {
+            jQuery.ajax({
+            url: path,
+            type: "GET",
+            dataType: "script"
+            });
+        }, 10000); // In every 10 seconds
     });
-  }
+  });
 }
