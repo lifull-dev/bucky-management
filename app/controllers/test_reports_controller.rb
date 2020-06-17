@@ -27,14 +27,14 @@ class TestReportsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.js {
+      format.js do
         check_update = TestCaseResult.get_failed_cases(params[:id], @round).check_update_in_ten_sec.ids
-        unless check_update.empty?
-          render 'show.js.erb'
-        else
+        if check_update.empty?
           render body: nil
+        else
+          render 'show.js.erb'
         end
-      }
+      end
     end
   end
 
