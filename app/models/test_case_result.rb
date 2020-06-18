@@ -12,6 +12,9 @@
 #  is_error      :boolean          not null
 #  job_id        :bigint(8)        not null
 #  round         :integer          not null
+#  check_status  :integer
+#  check_comment :text(65535)
+#  updated_at    :datetime
 #
 # Indexes
 #
