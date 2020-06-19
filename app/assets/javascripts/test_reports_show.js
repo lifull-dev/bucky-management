@@ -1,5 +1,5 @@
-if (gon.controller_name == "test_reports" && gon.action_name == "show") {
-    new Chart('test-report-detail-chart', {
+if (gon.controller_name === 'test_reports' && gon.action_name === 'show') {
+  new Chart('test-report-detail-chart', {
     type: 'pie',
     data: {
       labels: ['Passed', 'Failed'],
@@ -21,16 +21,15 @@ if (gon.controller_name == "test_reports" && gon.action_name == "show") {
     },
   });
 
-  var path = window.location.pathname;
-  $(function() {
-    $(document).ready(function() {
-        setInterval(function() {
-            jQuery.ajax({
-            url: path,
-            type: "GET",
-            dataType: "script"
-            });
-        }, 10000); // In every 10 seconds
+  $(() => {
+    $(document).ready(() => {
+      setInterval(() => {
+        jQuery.ajax({
+          url: window.location.pathname,
+          type: 'GET',
+          dataType: 'script',
+        });
+      }, 10000); // In every 10 seconds
     });
   });
 }

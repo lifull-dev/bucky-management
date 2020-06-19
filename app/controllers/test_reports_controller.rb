@@ -49,11 +49,7 @@ class TestReportsController < ApplicationController
   private
 
   def check_round
-    if params[:action] == 'show'
-      @job_id = params[:id]
-    elsif params[:action] == 'update'
-      @job_id = params[:job_id]
-    end
+    set_job_id
     @latest_round = TestCaseResult.get_latest_round(@job_id)
     # if round exists, use the round number
     @round = if params[:round].nil?
@@ -62,6 +58,14 @@ class TestReportsController < ApplicationController
                raise ActiveRecord::RecordNotFound unless params[:round].match?(/\A[1-9][0-9]*\z/)
                params[:round]
              end
+  end
+
+  def set_job_id
+    if params[:action] == 'show'
+      @job_id = params[:id]
+    elsif params[:action] == 'update'
+      @job_id = params[:job_id]
+    end
   end
 
   def set_var_for_render
