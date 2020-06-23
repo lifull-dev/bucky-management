@@ -26,10 +26,13 @@
         tr
           td
             = form_with scpoe: :update, url: "result/#{ftc.result_id}", local: false do |f|
-              = f.hidden_field :job_id, value: job.id
-              = f.hidden_field :round, value: round
-              = f.select :check_status, select_option, {selected: ftc.check_status}, class: "select_#{ftc.check_status}", onchange: 'Rails.fire(this.form, "submit")'
-              = text_area_tag 'check_comment', ftc.check_comment, size: "30x5", required: true, onblur: 'Rails.fire(this.form, "submit")', placeholder: 'Leave your comment here'
+              ul
+                = f.hidden_field :job_id, value: job.id
+                = f.hidden_field :round, value: round
+                li
+                  = f.select :check_status, select_option, {selected: ftc.check_status}, class: "select_#{ftc.check_status}", onchange: 'Rails.fire(this.form, "submit")'
+                li
+                  = text_area_tag 'check_comment', ftc.check_comment, size: "30x5", required: true, onblur: 'Rails.fire(this.form, "submit")', placeholder: 'Leave your comment here'
           td
             = ftc.priority
           td
