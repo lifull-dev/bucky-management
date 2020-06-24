@@ -10,5 +10,7 @@ class PagesController < ApplicationController
       end
     end
     gon.data_for_top = @data_for_top
+    gon.controller_name = controller_name
+    gon.action_name = action_name
   end
 end
