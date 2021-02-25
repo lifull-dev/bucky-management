@@ -154,7 +154,7 @@ GEM
       pry (>= 0.9.11)
     puma (3.12.1)
     racc (1.5.2)
-    rack (2.0.7)
+    rack (2.2.3)
     rack-contrib (2.1.0)
       rack (~> 2.0)
     rack-env_ribbon (0.2.1)
