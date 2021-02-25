@@ -3,13 +3,12 @@
 $family-sanserif: 'Futura', -apple-system, BlinkMacSystemFont, "Helvetica Neue", YuGothic, "ヒラギノ角ゴ ProN W3", Hiragino Kaku Gothic ProN, Arial, "メイリオ", Meiryo, sans-serif;
 $family-primary: $family-sanserif;
 
-// header
-
-#logo {
-  font-size: 1.7em;
-  line-height: 50px;
+nav.navbar {
+  background: #2f2725;
 }
-
+a.navbar-item {
+  color: rgb(235, 235, 235);
+}
 // color for assert result
 
 span.expect {
@@ -30,7 +29,7 @@ td.error-message {
 // test_suites#index
 
 a.sort_link {
-  color: #2f2725;
+  color: #4b3d39;
   // text-decoration: none;
   &:hover {
     color: #767676;
