@@ -3,9 +3,10 @@
 $family-sanserif: 'Futura', -apple-system, BlinkMacSystemFont, "Helvetica Neue", YuGothic, "ヒラギノ角ゴ ProN W3", Hiragino Kaku Gothic ProN, Arial, "メイリオ", Meiryo, sans-serif;
 $family-primary: $family-sanserif;
 
-nav.navbar {
-  background: #2f2725;
+div#navMenu.navbar-menu.is-active {
+  background: #363636;
 }
+
 a.navbar-item {
   color: rgb(235, 235, 235);
 }
