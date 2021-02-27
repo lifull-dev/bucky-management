@@ -2,13 +2,12 @@ footer.footer
   .content.has-text-centered
     p
       strong Bucky
-      |  is a testing framework that supports test processes.
+      |  is system testing framework for web application.
 
     .tile.is-ancestor
       .tile
         article.tile.is-child.notification
-          p.title Link
-          p.subtitle = link_to 'Top', root_path
-          p.subtitle = link_to 'TestReports', test_reports_path
-          p.subtitle = link_to 'TestSuites', test_suites_path
-          p.subtitle = link_to 'Contribute', 'https://github.com/lifull-dev/bucky-management', target: "_brank"
+          p = link_to 'Top', root_path
+          p = link_to 'TestReports', test_reports_path
+          p = link_to 'TestSuites', test_suites_path
+          p = link_to 'Contribute', 'https://github.com/lifull-dev/bucky-management', target: "_brank"
