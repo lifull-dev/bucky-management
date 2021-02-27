@@ -1,4 +1,5 @@
 # Bucky-Management
+![logo](docs/assets/Bucky-Management.png)
 [![Maintainability](https://api.codeclimate.com/v1/badges/aaeb28e229926007442b/maintainability)](https://codeclimate.com/github/lifull-dev/bucky-management/maintainability)
 
 ## Overview

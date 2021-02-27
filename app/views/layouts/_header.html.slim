@@ -1,15 +1,15 @@
-nav.navbar
+nav.navbar.is-dark role="navigation" aria-label="main navigation"
   .container
     .navbar-brand
-      = link_to root_path, id: "logo" do
-        = image_tag "logo.png", width:"220", height: "120"
+      = link_to root_path, class: "navbar-item", id: "logo" do
+        = image_tag "Bucky_White.png", alt: "Logo"
       .navbar-burger data-target="navMenu"
         span
         span
         span
     .navbar-menu#navMenu
-      .navbar-end
-        = link_to test_reports_path, class: 'navbar-item has-text-weight-bold' , target: "_brank" do
+      .navbar-start
+        = link_to test_reports_path, class: 'navbar-item' , target: "_brank" do
           | TestReports
-        = link_to test_suites_path,  class: 'navbar-item has-text-weight-bold' , target: "_brank" do
+        = link_to test_suites_path,  class: 'navbar-item' , target: "_brank" do
           | TestSuites
