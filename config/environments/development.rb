@@ -19,7 +19,7 @@ Rails.application.configure do
   config.colorize_logging = false
 
   # Enable/disable caching. By default caching is disabled.
-  if Rails.root.join('tmp', 'caching-dev.txt').exist?
+  if Rails.root.join('tmp/caching-dev.txt').exist?
     config.action_controller.perform_caching = true
 
     config.cache_store = :memory_store
@@ -58,13 +58,13 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
   if ENV['RAILS_LOG_TO_STDOUT'].present?
-    logger           = ActiveSupport::Logger.new(STDOUT)
+    logger           = ActiveSupport::Logger.new($stdout)
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
 
   # for development.log
-    config.web_console.whitelisted_ips = '0.0.0.0/0'
+  config.web_console.whitelisted_ips = '0.0.0.0/0'
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
