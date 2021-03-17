@@ -25,7 +25,6 @@ services:
       - BUCKY_DB_USERNAME=${BUCKY_DB_USERNAME:-root}
       - BUCKY_DB_PASSWORD=${BUCKY_DB_PASSWORD:-password}
       - BUCKY_DB_HOSTNAME=${BUCKY_DB_HOSTNAME:-db}
-      - BUCKY_DB_NAME=${BUCKY_DB_NAME:-db_name}
     depends_on:
       - db
   web:
