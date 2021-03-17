@@ -1,0 +1,15 @@
+$('.detail_table').html("<%= j(render "detail_table", data_for_test_reports: @data_for_test_reports, select_option: @select_option, job: @job , round: @round) %>");
+
+var element = document.getElementsByName("check_status");
+Object.keys(element).forEach((select) => {
+    var checked = element[select].value;
+    if ( checked == "1" ) {
+    element[select].className="select_1";
+    } else if ( checked == "2" ) {
+    element[select].className="select_2";
+    } else if ( checked == "3" ) {
+    element[select].className="select_3";
+    } else if ( checked == "4" ) {
+    element[select].className="select_4";
+    }
+});

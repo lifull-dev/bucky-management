@@ -12,6 +12,9 @@
 #  is_error      :boolean          not null
 #  job_id        :bigint(8)        not null
 #  round         :integer          not null
+#  check_status  :integer
+#  check_comment :text(65535)
+#  updated_at    :datetime
 #
 # Indexes
 #
@@ -35,10 +38,11 @@ class TestCaseResult < ApplicationRecord
   scope :get_total_passed_counts, ->(job_id) { where(job_id: job_id).where(is_error: 0).count }
   scope :get_stack_passed_counts, ->(job_id, round) { where(job_id: job_id).where(round: 1..round.to_i).where(is_error: 0).count }
   scope :get_latest_round, ->(job_id) { joins(:job).where(job_id: job_id).last.round }
-  scope :get_failed_cases, ->(job_id, round) { joins(test_case: :test_suite).select('test_cases.*, test_case_results.*, test_suites.*').where(job_id: job_id).where(round: round).where(is_error: true) }
+  scope :get_failed_cases, ->(job_id, round) { joins(test_case: :test_suite).select('test_cases.*, test_case_results.*, test_suites.*, test_case_results.id as result_id').where(job_id: job_id).where(round: round).where(is_error: true) }
   scope :get_slow_time_cases, ->(job_id, round) { joins(test_case: :test_suite).select('test_cases.*, test_case_results.*, test_suites.*').where(job_id: job_id).where(round: round).order('elapsed_time desc').where('elapsed_time >= 60') }
   scope :get_case_successed_counts, ->(test_case_id) { where(test_case_id: test_case_id).where(is_error: 0).order('id desc').limit(20).count }
   scope :get_case_failed_counts, ->(test_case_id) { where(test_case_id: test_case_id).where(is_error: 1).order('id desc').limit(20).count }
+  scope :check_update_in_ten_sec, -> { where('updated_at >= ?', 10.seconds.ago) }
 
   class << self
     def get_latest_result(test_case_id)

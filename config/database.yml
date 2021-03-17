@@ -8,12 +8,12 @@ default: &default
 
 development:
   <<: *default
-  database: bucky_development
+  database: <%= ENV['BUCKY_DB_NAME'] || 'bucky_development' %>
 
 test:
   <<: *default
-  database: bucky_test
+  database: <%= ENV['BUCKY_DB_NAME'] || 'bucky_test' %>
 
 production:
   <<: *default
-  database: bucky_production
+  database: <%= ENV['BUCKY_DB_NAME'] %>

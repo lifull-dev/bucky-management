@@ -1,7 +1,22 @@
-FROM ruby:2.7.2
-
-RUN apt-get update
-RUN apt-get install -y build-essential libpq-dev default-mysql-client && rm -rf /var/lib/apt/lists/*
+FROM ruby:2.7.2-alpine
+RUN apk update && \
+    apk add --no-cache \
+      alpine-sdk \
+      bash \
+      build-base \
+      libstdc++ \
+      libxml2-dev \
+      libxslt-dev \
+      linux-headers \
+      mysql-client \
+      mysql-dev \
+      nodejs \
+      ruby-dev \
+      ruby-json \
+      tzdata \
+      yaml \
+      yaml-dev \
+      zlib-dev
 
 RUN gem update --system
 RUN gem install bundler
