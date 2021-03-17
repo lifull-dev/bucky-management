@@ -20,7 +20,7 @@ jobs:
       - image: circleci/ruby:2.7.2-node
     steps:
       - checkout
-      - run: gem install rubocop
+      - run: gem install rubocop rubocop-rails
       - run: rubocop -f html --out report.html
       - store_artifacts:
           path: report.html
