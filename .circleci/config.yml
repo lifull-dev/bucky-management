@@ -2,7 +2,7 @@ version: 2
 jobs:
   rails_best_practices:
     docker:
-      - image: circleci/ruby:2.7.2-node
+      - image: circleci/ruby:3.0.0-node
     steps:
       - checkout
       - restore_cache:
@@ -17,7 +17,7 @@ jobs:
           path: rails_best_practices_output.html
   rubocop:
     docker:
-      - image: circleci/ruby:2.7.2-node
+      - image: circleci/ruby:3.0.0-node
     steps:
       - checkout
       - run: gem install rubocop rubocop-rails
