@@ -22,7 +22,7 @@ gem 'slim-rails'
 gem 'therubyracer', platforms: :ruby
 gem 'webpacker'
 
-group :development, :test, :optional => true do
+group :development, :test, optional: true do
   gem 'awesome_print'
   gem 'bullet'
   gem 'byebug', platform: :mri
@@ -36,7 +36,7 @@ group :development, :test, :optional => true do
   gem 'simplecov'
 end
 
-group :development, :optional => true do
+group :development, optional: true do
   gem 'annotate'
   gem 'better_errors'
   gem 'brakeman', require: false
