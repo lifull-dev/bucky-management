@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
       if exception
         logger.info "Rendering 404 with exception: #{exception.message}"
       end
-      render template: 'errors/error_404', status: :not_found, layout: 'application'
+      render template: 'errors/error_404', status: :not_found, layout: 'application', formats: :html
     end
   end
 end
