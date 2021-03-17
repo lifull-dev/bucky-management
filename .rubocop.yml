@@ -10,8 +10,7 @@ AllCops:
     - 'vendor/**/*'
   TargetRubyVersion: 2.5
 
-Rails:
-  Enabled: true
+require: rubocop-rails
 
 # allow method prefix start with "set_" and "get_"
 AccessorMethodName:
