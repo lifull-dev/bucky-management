@@ -1,32 +1,20 @@
-FROM ruby:2.5.1-alpine
-RUN apk update && \
-    apk add --no-cache \
-      alpine-sdk \
-      bash \
-      build-base \
-      libstdc++ \
-      libxml2-dev \
-      libxslt-dev \
-      linux-headers \
-      mysql-client \
-      mysql-dev \
-      nodejs \
-      ruby-dev \
-      ruby-json \
-      tzdata \
-      yaml \
-      yaml-dev \
-      zlib-dev
+FROM ruby:3.0.0
 
-RUN gem install bundler
+RUN apt-get update && \
+    apt-get install -y \
+      build-essential \
+      libpq-dev \
+      default-mysql-client \
+      && rm -rf /var/lib/apt/lists/*
+RUN gem update --system && \
+    gem install bundler
 
 RUN mkdir /app
 WORKDIR /app
 ADD Gemfile /app/Gemfile
-ADD Gemfile.lock /app/Gemfile.lock
 
-ARG rails_env
-RUN echo rails_env: ${rails_env}
+ARG RAILS_ENV
+RUN echo RAILS_ENV: ${RAILS_ENV}
 
 RUN \
   echo 'gem: --no-document' >> ~/.gemrc && \
@@ -34,7 +22,8 @@ RUN \
   chmod uog+r /etc/gemrc && \
   bundle config --global build.nokogiri --use-system-libraries && \
   bundle config --global jobs 4 && \
-  bundle install --with ${rails_env} && \
+  bundle config set --local with "${RAILS_ENV}" && \
+  bundle install && \
   rm -rf ~/.gem
 
 ADD . /app

@@ -1,49 +1,50 @@
-/log/*
 !/log/.keep
-/tmp/*
 !/tmp/.keep
 !/tmp/sockets/
-/tmp/sockets/*
 !/tmp/sockets/.keep
+/log/*
+/tmp/*
+/tmp/sockets/*
 
 ### https://raw.githubusercontent.com/github/gitignore/master/Rails.gitignore
 
-output.html
+**.orig
 *.rbc
-capybara-*.html
 .rspec
+/coverage/
 /db/*.sqlite3
 /db/*.sqlite3-journal
-/public/system
 /public/assets/
-/coverage/
+/public/system
 /spec/tmp
-**.orig
-rerun.txt
-report.html
+capybara-*.html
+output.html
 pickle-email-*.html
 rails_best_practices_output.html
+report.html
+rerun.txt
 
 config/initializers/secret_token.rb
 config/secrets.yml
 
-/.bundle
-/vendor/bundle
-.rvmrc
-/vendor/assets/bower_components
 *.bowerrc
-bower.json
-.powenv
 .byebug_history
 .env
+.powenv
+.rvmrc
+/.bundle
+/vendor/assets/bower_components
+/vendor/bundle
+Gemfile.lock
+bower.json
 
 # Docker
-docker/mysql/volumes/*
+*.log
+.yarn-integrity
+/node_modules
 /public/packs
 /public/packs-test
-/node_modules
+docker/mysql/volumes/*
 yarn-debug.log*
-.yarn-integrity
-*.log
 
 /.vscode
