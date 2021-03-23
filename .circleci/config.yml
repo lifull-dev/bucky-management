@@ -1,40 +1,15 @@
 version: 2
 jobs:
-  test: # [TODO] add test step
-    working_directory: ~/bucky-management
-    docker:
-      - image: circleci/ruby:2.5.1-node
-        environment:
-          RAILS_ENV: test
-          BUCKY_DB_USERNAME: root
-          BUCKY_DB_HOSTNAME: 127.0.0.1
-      - image: circleci/mysql:5.7.19-ram
-        environment:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_USER: root
-          MYSQL_ROOT_HOST: "%"
-    steps:
-      - checkout
-      - restore_cache: 
-          key: rails-demo-{{ checksum "Gemfile.lock" }}
-      - run: bundle install --path vendor/bundle
-      - save_cache: 
-          key: rails-demo-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
-      - run: bundle exec rake db:create
-      - run: bundle exec rake db:migrate
-      - run: bundle exec rake db:fixtures:load
   rails_best_practices:
     docker:
-      - image: circleci/ruby:2.5.1-node
+      - image: circleci/ruby:3.0.0-node
     steps:
       - checkout
-      - restore_cache: 
-          key: rails-demo-{{ checksum "Gemfile.lock" }}
+      - restore_cache:
+          key: rails-demo-{{ checksum "Gemfile" }}
       - run: bundle install --path vendor/bundle --with test
-      - save_cache: 
-          key: rails-demo-{{ checksum "Gemfile.lock" }}
+      - save_cache:
+          key: rails-demo-{{ checksum "Gemfile" }}
           paths:
             - vendor/bundle
       - run: bundle exec rails_best_practices -f html
@@ -42,10 +17,10 @@ jobs:
           path: rails_best_practices_output.html
   rubocop:
     docker:
-      - image: circleci/ruby:2.5.1-node
+      - image: circleci/ruby:3.0.0-node
     steps:
       - checkout
-      - run: gem install rubocop -v '0.58.2'
+      - run: gem install rubocop rubocop-rails
       - run: rubocop -f html --out report.html
       - store_artifacts:
           path: report.html
@@ -54,6 +29,5 @@ workflows:
   version: 2
   test_and_static_analysis:
     jobs:
-      # - test
       - rails_best_practices
       - rubocop
