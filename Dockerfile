@@ -26,6 +26,7 @@ RUN \
   bundle install && \
   rm -rf ~/.gem
 
+RUN cp Gemfile.lock /tmp
 ADD . /app
 
 CMD bundle exec rake assets:precompile RAILS_ENV=${RAILS_ENV}

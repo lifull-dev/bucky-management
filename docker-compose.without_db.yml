@@ -5,9 +5,11 @@ services:
       context: .
       dockerfile: ./Dockerfile
       args:
-        rails_env: ${RAILS_ENV}
+        RAILS_ENV: ${RAILS_ENV}
     container_name: bm-app
-    command: bundle exec puma -C config/puma.rb config.ru
+    command: >
+      bash -c "cp /tmp/Gemfile.lock /app;
+      bundle exec puma -C config/puma.rb config.ru"
     volumes:
       - .:/app
       - ./tmp/:/app/tmp
