@@ -58,7 +58,7 @@ class TestCaseResult < ApplicationRecord
       data_for_top[:job_id] = job[:id]
       data_for_top[:command_and_option] = job[:command_and_option]
       data_for_top[:start_time] = job[:start_time]
-      data_for_top[:title_name] = "#{test_category}-#{device}"
+      data_for_top[:title_name] = test_category + '-' + device
       data_for_top[:latest_round] = get_latest_round(job[:id])
       data_for_top[:latest_passed_count] = get_total_passed_counts(job[:id])
       data_for_top[:latest_failed_count] = get_failed_counts(job[:id], data_for_top[:latest_round])

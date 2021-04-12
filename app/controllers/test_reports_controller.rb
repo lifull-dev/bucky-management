@@ -56,22 +56,20 @@ class TestReportsController < ApplicationController
                @latest_round
              else
                raise ActiveRecord::RecordNotFound unless params[:round].match?(/\A[1-9][0-9]*\z/)
-
                params[:round]
              end
   end
 
   def set_job_id
-    case params[:action]
-    when 'show'
+    if params[:action] == 'show'
       @job_id = params[:id]
-    when 'update'
+    elsif params[:action] == 'update'
       @job_id = params[:job_id]
     end
   end
 
   def set_var_for_render
-    @select_option = { Unchecked: '', OK: 1, Degradation: 2, 'Fix test script': 3, Checking: 4 }
+    @select_option = { 'Unchecked': '', 'OK': 1, 'Degradation': 2, 'Fix test script': 3, 'Checking': 4 }
     @job = Job.find(@job_id)
     @data_for_test_reports = TestCaseResult.get_data_for_test_reports_page(@job_id, @round)
   end

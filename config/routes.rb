@@ -9,5 +9,5 @@ Rails.application.routes.draw do
     end
   end
   resources :test_suites, only: %i[index show]
-  get '*path', to: 'application#render404'
+  get '*path', to: 'application#render_404'
 end
