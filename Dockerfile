@@ -16,7 +16,8 @@ RUN apk update && \
       tzdata \
       yaml \
       yaml-dev \
-      zlib-dev
+      zlib-dev \
+      shared-mime-info
 
 RUN gem install bundler
 
