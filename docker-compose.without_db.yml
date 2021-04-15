@@ -7,11 +7,8 @@ services:
       args:
         RAILS_ENV: ${RAILS_ENV}
     container_name: bm-app
-    command: >
-      bash -c "cp /tmp/Gemfile.lock /app;
-      bundle exec puma -C config/puma.rb config.ru"
+    command: bundle exec puma -C config/puma.rb config.ru
     volumes:
-      - .:/app
       - ./tmp/:/app/tmp
       - ./log/:/app/log
     # restart: always
