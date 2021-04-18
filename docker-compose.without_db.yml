@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
       args:
-        RAILS_ENV: ${RAILS_ENV}
+        RAILS_ENV: ${RAILS_ENV:?err}
     container_name: bm-app
     command: bundle exec puma -C config/puma.rb config.ru
     volumes:
@@ -14,7 +14,7 @@ services:
     # restart: always
     environment:
       - RAILS_ENV=${RAILS_ENV:?err}
-      - SECRET_KEY_BASE=${SECRET_KEY_BASE:?err}
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
       - BUCKY_DB_USERNAME=${BUCKY_DB_USERNAME:?err}
       - BUCKY_DB_PASSWORD=${BUCKY_DB_PASSWORD:?err}
       - BUCKY_DB_HOSTNAME=${BUCKY_DB_HOSTNAME:?err}
