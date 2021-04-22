@@ -8,7 +8,7 @@ Bucky-management is a web application that shows test result executed by [Bucky-
 ## Getting Started
 We prepare three docker-compose files to start up Bucky-managemnt.
 - **docker-compose.yml**: Base compose file for production
-- **docker-compose.with_nmysql.yml**: Compose file for adding a DB container
+- **docker-compose.with_mysql.yml**: Compose file for adding a DB container
 - **docker-compose.dev.yml**: Compose file for development
 
 ## Starting in production environment
