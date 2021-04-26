@@ -1,32 +1,23 @@
 version: '3'
 services:
-  db:
-    image: mysql:5.7.19
-    container_name: bm-mysql
-    volumes:
-      - ./docker/mysql/volumes:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=password
   app:
     build:
       context: .
       dockerfile: ./Dockerfile
       args:
-        RAILS_ENV: ${RAILS_ENV:-development}
+        RAILS_ENV: ${RAILS_ENV:-production}
     container_name: bm-app
     command: bundle exec puma -C config/puma.rb config.ru
     volumes:
-      - .:/app
       - ./tmp/:/app/tmp
       - ./log/:/app/log
     environment:
-      - RAILS_ENV=${RAILS_ENV:-development}
+      - RAILS_ENV=${RAILS_ENV:-production}
       - SECRET_KEY_BASE=${SECRET_KEY_BASE}
-      - BUCKY_DB_USERNAME=${BUCKY_DB_USERNAME:-root}
-      - BUCKY_DB_PASSWORD=${BUCKY_DB_PASSWORD:-password}
-      - BUCKY_DB_HOSTNAME=${BUCKY_DB_HOSTNAME:-db}
-    depends_on:
-      - db
+      - BUCKY_DB_USERNAME=${BUCKY_DB_USERNAME}
+      - BUCKY_DB_PASSWORD=${BUCKY_DB_PASSWORD}
+      - BUCKY_DB_HOSTNAME=${BUCKY_DB_HOSTNAME}
+      - BUCKY_DB_NAME=${BUCKY_DB_NAME}
   web:
     build:
       context: docker/nginx
