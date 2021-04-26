@@ -6,49 +6,65 @@
 Bucky-management is a web application that shows test result executed by [Bucky-core](https://github.com/lifull-dev/bucky-core).
 
 ## Getting Started
-We prepare two docker-compose files to start up Bucky-managemnt.
-- **docker-compose.yml**: Using DB container in docker-compose.yml
-- **docker-compose.without_db.yml**: Using external DB
+We prepare three docker-compose files to start up Bucky-managemnt.
+- **docker-compose.yml**: Base compose file for production
+- **docker-compose.with_mysql.yml**: Compose file for adding a DB container
+- **docker-compose.dev.yml**: Compose file for development
 
+## Starting in production environment
 ### Set environment variables
-Take care of following points when setting environment variables:
-- You must set RAILS_ENV, because it doesn't have default value
-- Use default value when starting by docker-compose.yml
+Set DB name if you start Bucky-management first time:
 ```bash
-export RAILS_ENV=${RAILS_ENV} # e.g. production, development, test
-
-# You don't need to export if you're going to use default value.
-export BUCKY_DB_USERNAME=${BUCKY_DB_USERNAME} # default: root
-export BUCKY_DB_PASSWORD=${BUCKY_DB_PASSWORD} # default: password
-export BUCKY_DB_HOSTNAME=${BUCKY_DB_HOSTNAME} # default: db
-# You need to export database name and secret key base in production environment.
 export BUCKY_DB_NAME=${BUCKY_DB_NAME}
-export SECRET_KEY_BASE=${SECRET_KEY_BASE}
+
+# Set connecting info for external DB.
+# Igore these if you are going to use mysql container.
+export BUCKY_DB_USERNAME=${BUCKY_DB_USERNAME}
+export BUCKY_DB_PASSWORD=${BUCKY_DB_PASSWORD}
+export BUCKY_DB_HOSTNAME=${BUCKY_DB_HOSTNAME}
 ```
 
 ### Build and start Bucky-management
 ```bash
-# Use DB container
+# Start only Bucky-management. (Make sure you have prepared an external DB)
 docker-compose up --build -d
-# Use external DB
-docker-compose -f docker-compose.without_db.yml up --build -d
+
+# Start with mysql DB container
+docker-compose -f docker-compose.yml -f docker-compose.with_mysql.yml up --build -d
 ```
 
 ### Migration database and table
 ```bash
-# Only at first time not created DB yet.
+# Create DB if you start Bucky-management first time.
 docker exec -it bm-app rails db:create
 # Do this if new migration file is added.
 docker exec -it bm-app rails db:migrate
 ```
-
 ### Publish secret key base and set to environment variables
 ```bash
 export SECRET_KEY_BASE=$(docker exec -it bm-app rake secret)
 
 # Restart Bucky-management to reflect environment variables
 docker-compose up --build -d
+# Restart with mysql DB container
+docker-compose -f docker-compose.yml -f docker-compose.with_mysql.yml up --build -d
 ```
 
-### Check your Bucky-management dashboard
+## Starting in development environment
+
+### Build and start Bucky-management
+```bash
+# Start Bucky-management in development with mysql DB container
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.with_mysql.yml up --build -d
+```
+
+### Migration database and table
+```bash
+# Create DB if you start Bucky-management first time.
+docker exec -it bm-app rails db:create
+# Do this if new migration file is added.
+docker exec -it bm-app rails db:migrate
+```
+
+## Check your Bucky-management dashboard
 http://localhost

@@ -11,7 +11,7 @@ RUN gem update --system && \
 
 RUN mkdir /app
 WORKDIR /app
-ADD Gemfile /app/Gemfile
+ADD . /app
 
 ARG RAILS_ENV
 RUN echo RAILS_ENV: ${RAILS_ENV}
@@ -25,8 +25,6 @@ RUN \
   bundle config set --local with "${RAILS_ENV}" && \
   bundle install && \
   rm -rf ~/.gem
-
-ADD . /app
 
 CMD bundle exec rake assets:precompile RAILS_ENV=${RAILS_ENV}
 
