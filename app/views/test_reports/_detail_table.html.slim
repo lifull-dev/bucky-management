@@ -43,23 +43,7 @@
             = link_to ftc.case_name, base_url << file_path, target: '_blank'
           td.long
             = ftc.case_description
-          - if ftc.error_title.include?("expect:") && ftc.error_title.include?("actual:")
-            td.error-message
-              = ftc.error_title
-              div.assert-result
-                = "Assert Result"
-              div
-                span.expect
-                  = "Expect:"
-                p
-                  = ftc.error_title.split("actual:")[0].match(/expect:.*/).to_s.sub("expect:","")
-              div
-                span.actual
-                  = "Actual:"
-                p
-                  = ftc.error_title.split("expect:")[1].match(/actual:.*/).to_s.gsub(/actual:|is not true./,"")
-          - else
-            td.error-message
-              = ftc.error_title
+          td.error-message
+            = ftc.error_title
           td
             = ftc.elapsed_time
