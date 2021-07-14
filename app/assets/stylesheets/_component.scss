@@ -1,6 +1,8 @@
 // bulma customize variables
 
-$family-sanserif: 'Futura', -apple-system, BlinkMacSystemFont, "Helvetica Neue", YuGothic, "ヒラギノ角ゴ ProN W3", Hiragino Kaku Gothic ProN, Arial, "メイリオ", Meiryo, sans-serif;
+$family-sanserif: "Futura", -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+  YuGothic, "ヒラギノ角ゴ ProN W3", Hiragino Kaku Gothic ProN, Arial, "メイリオ",
+  Meiryo, sans-serif;
 $family-primary: $family-sanserif;
 
 div#navMenu.navbar-menu.is-active {
@@ -10,22 +12,12 @@ div#navMenu.navbar-menu.is-active {
 a.navbar-item {
   color: rgb(235, 235, 235);
 }
-// color for assert result
-
-span.expect {
-  color: limegreen;
-}
-
-span.actual {
-  color: red;
-}
 
 // word-break for error message
 
 td.error-message {
   word-break: break-all;
 }
-
 
 // test_suites#index
 
@@ -37,11 +29,10 @@ a.sort_link {
   }
 }
 
-
 .select_1 {
   background: hsl(141, 53%, 53%);
 }
-.select_2  {
+.select_2 {
   background: hsl(348, 100%, 61%);
 }
 .select_3 {
