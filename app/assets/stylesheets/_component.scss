@@ -13,10 +13,14 @@ a.navbar-item {
   color: rgb(235, 235, 235);
 }
 
-// word-break for error message
+div.case-description {
+  width: 150px;
+  overflow: auto;
+}
 
-td.error-message {
-  word-break: break-all;
+div.error-message {
+  width: 250px;
+  overflow: auto;
 }
 
 // test_suites#index
