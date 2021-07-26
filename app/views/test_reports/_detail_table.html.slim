@@ -25,7 +25,7 @@
         - file_path = ftc.file_path
         tr
           td
-            = form_with scope: :update, url: "result/#{ftc.result_id}", local: false do |f|
+            = form_with url: "result/#{ftc.result_id}", local: false do |f|
               ul
                 = f.hidden_field :job_id, value: job.id
                 = f.hidden_field :round, value: round
