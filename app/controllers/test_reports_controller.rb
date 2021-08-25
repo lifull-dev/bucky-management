@@ -4,11 +4,16 @@ class TestReportsController < ApplicationController
   before_action :check_round, only: %i[show update]
 
   def index
-    @jobs = Job.join_with_suites
-               .select_group_concat_suites
-               .group('jobs.id')
-               .page(params[:page]).per(30)
-               .order('jobs.id DESC')
+    per_page = 30
+    @jobs = Job.all
+                .page(params[:page])
+                .per(per_page)
+                .order('jobs.id DESC')
+    @joined_jobs = Job.join_with_suites
+                      .select_group_concat_suites
+                      .group('jobs.id')
+                      .page(params[:page]).per(per_page)
+                      .order('jobs.id DESC')
     @test_case_result = TestCaseResult
     gon.controller_name = controller_name
     gon.action_name = action_name
