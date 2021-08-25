@@ -25,7 +25,7 @@ table.table.is-bordered.is-striped.is-narrow.is-hoverable.is-fullwidth
         th[scope="cols"]
           | Pass Rate(%)
   tbody
-    - @jobs.each do |job|
+    - @joined_jobs.each do |job|
       tr
         - date = job.start_time.strftime("%Y/%m/%d %T(%a)")
         - if @test_case_result.get_latest_round(job.id).present?
