@@ -9,10 +9,11 @@ class TestReportsController < ApplicationController
                 .page(params[:page])
                 .per(per_page)
                 .order('jobs.id DESC')
+    job_ids = Job.select("id").page(params[:page]).per(per_page).order('jobs.id DESC').to_a
     @joined_jobs = Job.join_with_suites
                       .select_group_concat_suites
                       .group('jobs.id')
-                      .page(params[:page]).per(per_page)
+                      .where(id: job_ids)
                       .order('jobs.id DESC')
     @test_case_result = TestCaseResult
     gon.controller_name = controller_name
