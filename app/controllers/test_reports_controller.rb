@@ -6,10 +6,10 @@ class TestReportsController < ApplicationController
   def index
     per_page = 30
     @jobs = Job.all
-                .page(params[:page])
-                .per(per_page)
-                .order('jobs.id DESC')
-    job_ids = Job.select("id").page(params[:page]).per(per_page).order('jobs.id DESC').to_a
+               .page(params[:page])
+               .per(per_page)
+               .order('jobs.id DESC')
+    job_ids = Job.select('id').page(params[:page]).per(per_page).order('jobs.id DESC').to_a
     @joined_jobs = Job.join_with_suites
                       .select_group_concat_suites
                       .group('jobs.id')
