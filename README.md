@@ -18,7 +18,7 @@ Set DB name if you start Bucky-management first time:
 export BUCKY_DB_NAME=${BUCKY_DB_NAME}
 
 # Set connecting info for external DB.
-# Igore these if you are going to use mysql container.
+# Ignore these if you are going to use mysql container.
 export BUCKY_DB_USERNAME=${BUCKY_DB_USERNAME}
 export BUCKY_DB_PASSWORD=${BUCKY_DB_PASSWORD}
 export BUCKY_DB_HOSTNAME=${BUCKY_DB_HOSTNAME}
