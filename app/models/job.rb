@@ -15,8 +15,8 @@ class Job < ApplicationRecord
   has_many :test_suites, through: :test_cases
 
   scope :join_with_suites, -> { joins(test_case_results: { test_case: :test_suite }) }
-  scope :get_job, ->(test_category, device) {
-    query = <<-SQL
+  scope :get_job, lambda { |test_category, device|
+    query = <<-SQL.squish
       SELECT jobs.* FROM jobs
       STRAIGHT_JOIN `test_case_results` ON `test_case_results`.`job_id` = `jobs`.`id`
       INNER JOIN `test_cases` ON `test_cases`.`id` = `test_case_results`.`test_case_id`
