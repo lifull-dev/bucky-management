@@ -31,7 +31,7 @@ class TestReportsController < ApplicationController
           render body: nil
         else
           set_var_for_show
-          render 'show.js.erb'
+          render 'check_status'
         end
       end
     end
@@ -48,7 +48,7 @@ class TestReportsController < ApplicationController
     set_var_for_render
 
     respond_to do |format|
-      format.js { render 'show.js.erb' }
+      format.js { render 'check_status' }
     end
   end
 
