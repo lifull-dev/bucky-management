@@ -1,7 +1,8 @@
 version: '3'
 services:
   db:
-    image: mysql:5.7.19
+    platform: linux/x86_64
+    image: mysql:8.0
     container_name: bm-mysql
     volumes:
       - ./docker/mysql/volumes:/var/lib/mysql
