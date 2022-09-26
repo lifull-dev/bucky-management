@@ -10,11 +10,11 @@
 # test_case_result:
 #     name: TestCaseResult
 
-<% require 'active_support/all'
-t = Time.utc(2018, 1, 1)
-50.times do |n| %>
+<% require 'active_support/all' %>
+<% t = Time.utc(2018, 1, 1) %>
+<% 50.times do |n| %>
 job_<%= n %>:
     id: <%= "#{n}" %>
     start_time: <%= t + n.days + n.hour %>
-    command_and_option: "run -t e2e -c test_case_#{n}"
+    command_and_option: <%= "bucky run -t e2e -c test_case_#{n}" %>
 <% end %>

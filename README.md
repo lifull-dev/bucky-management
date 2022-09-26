@@ -31,6 +31,9 @@ docker-compose up --build -d
 
 # Start with mysql DB container
 docker-compose -f docker-compose.yml -f docker-compose.with_mysql.yml up --build -d
+
+# for m1 chip
+docker-compose -f docker-compose.yml -f docker-compose.dev.arm.yml -f docker-compose.with_mysql.yml up --build -d
 ```
 
 ### Migration database and table
@@ -56,6 +59,9 @@ docker-compose -f docker-compose.yml -f docker-compose.with_mysql.yml up --build
 ```bash
 # Start Bucky-management in development with mysql DB container
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.with_mysql.yml up --build -d
+
+# for m1 chip
+docker-compose -f docker-compose.yml -f docker-compose.dev.arm.yml -f docker-compose.with_mysql.yml up --build -d
 ```
 
 ### Migration database and table

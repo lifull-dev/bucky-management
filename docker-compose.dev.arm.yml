@@ -1,6 +1,7 @@
 version: '3'
 services:
   app:
+    platform: linux/arm64
     build:
       args:
         RAILS_ENV: development

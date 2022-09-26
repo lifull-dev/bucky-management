@@ -15,6 +15,9 @@ class TestReportsController < ApplicationController
                       .group('jobs.id')
                       .where(id: job_ids)
                       .order('jobs.id DESC')
+
+    @job_trees = create_job_trees(@joined_jobs)
+
     @test_case_result = TestCaseResult
     gon.controller_name = controller_name
     gon.action_name = action_name
@@ -53,6 +56,26 @@ class TestReportsController < ApplicationController
   end
 
   private
+
+  def create_job_trees(jobs)
+    child_parent_pair = {}
+
+    jobs.each { |job| child_parent_pair[job.id] = TestReport.create_child_parent_pair(job) }
+    parent_jobs = child_parent_pair.select { |_k, v| v.nil? }.keys
+
+    job_trees = {}
+    parent_jobs.each do |parent_id|
+      job_trees[parent_id] = {}
+      job_trees[parent_id][:parent] = jobs.select { |job| job.id == parent_id }.first
+
+      job_trees[parent_id][:children] = []
+      child_parent_pair.each do |child, parent|
+        job_trees[parent_id][:children] << jobs.select { |job| job.id == child }.first if parent_id == parent
+      end
+    end
+
+    job_trees
+  end
 
   def check_round
     set_job_id

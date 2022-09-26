@@ -33,11 +33,14 @@ LineLength:
 MethodLength:
   Enabled: false
 
+Metrics/CyclomaticComplexity:
+  Max: 8
+
 Style/ClassAndModuleChildren:
   Exclude:
     - 'test/test_helper.rb'
 
-Gemspec/DateAssignment: # (new in 1.10)
+Gemspec/DeprecatedAttributeAssignment: # (new in 1.10)
   Enabled: true
 Layout/SpaceBeforeBrackets: # (new in 1.7)
   Enabled: true

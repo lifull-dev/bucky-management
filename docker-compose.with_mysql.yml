@@ -1,13 +1,16 @@
 version: '3'
 services:
   db:
-    image: mysql:5.7.19
+    platform: linux/x86_64
+    image: mysql:5.7.39
     container_name: bm-mysql
     volumes:
       - ./docker/mysql/volumes:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=password
+    command: mysqld --innodb_use_native_aio=0
   app:
+    platform: linux/amd64
     environment:
       - BUCKY_DB_USERNAME=${BUCKY_DB_USERNAME:-root}
       - BUCKY_DB_PASSWORD=${BUCKY_DB_PASSWORD:-password}

@@ -25,41 +25,121 @@ table.table.is-bordered.is-striped.is-narrow.is-hoverable.is-fullwidth
         th[scope="cols"]
           | Pass Rate(%)
   tbody
-    - @joined_jobs.each do |job|
+    - @job_trees.each do |_, jobs|
       tr
-        - date = job.start_time.strftime("%Y/%m/%d %T(%a)")
-        - if @test_case_result.get_latest_round(job.id).present?
-          - latest_round = @test_case_result.get_latest_round(job.id)
-          - fc = @test_case_result.get_failed_counts(job.id, latest_round)
-          - pc = @test_case_result.get_total_passed_counts(job.id)
-          - tc = @test_case_result.get_total_counts(job.id, 1)
+        - date = jobs[:parent].start_time.strftime("%Y/%m/%d %T(%a)")
+                / ↓TODO helperに移せる??
+        - if @test_case_result.get_latest_round(jobs[:parent].id).present?
+          - latest_round = @test_case_result.get_latest_round(jobs[:parent].id)
+          - faild_count = @test_case_result.get_failed_counts(jobs[:parent].id, latest_round)
+          - pass_count = @test_case_result.get_total_passed_counts(jobs[:parent].id)
+          - total_count = @test_case_result.get_total_counts(jobs[:parent].id, 1)
         - else
           - latest_round = 0
-          - fc = 0
-          - tc = 0
-          - pc = 0
+          - faild_count = 0
+          - total_count = 0
+          - pass_count = 0
         td
-          = link_to job.id, "/test_reports/#{job.id}"
+            = link_to jobs[:parent].id, "/test_reports/#{jobs[:parent].id}"
         td
-          = job.command_and_option
+          = jobs[:parent].command_and_option
         td
-          = job.device
+          = jobs[:parent].device
         td
-          = job.service
+          = jobs[:parent].service
         td
-          = job.category
+          = jobs[:parent].category
         td
           = date
         td
-          = tc
+          = total_count
         td
-          = fc
+          = faild_count
         td
-          - if job.total_time
-            = Time.at(job.total_time).strftime('%H:%M:%S')
+          - if jobs[:parent].total_time
+            = Time.at(jobs[:parent].total_time).strftime('%H:%M:%S')
           - else
             = 0
         td
-          = pc + fc > 0 ? "#{pc*100/(pc+fc)}\%" : 'no result'
+          = pass_count + faild_count > 0 ? "#{pass_count*100/(pass_count+faild_count)}\%" : 'no result'
+
+
+      - jobs[:children].reverse.each do |child_job|
+        tr
+          - date = child_job.start_time.strftime("%Y/%m/%d %T(%a)")
+                  / ↓TODO helperに移せる??
+          - if @test_case_result.get_latest_round(child_job.id).present?
+            - latest_round = @test_case_result.get_latest_round(child_job.id)
+            - faild_count = @test_case_result.get_failed_counts(child_job.id, latest_round)
+            - pass_count = @test_case_result.get_total_passed_counts(child_job.id)
+            - total_count = @test_case_result.get_total_counts(child_job.id, 1)
+          - else
+            - latest_round = 0
+            - faild_count = 0
+            - total_count = 0
+            - pass_count = 0
+          td
+            | &nbsp;&lfloor;&nbsp;
+            = link_to child_job.id, "/test_reports/#{child_job.id}"
+          td
+            = child_job.command_and_option
+          td
+            = child_job.device
+          td
+            = child_job.service
+          td
+            = child_job.category
+          td
+            = date
+          td
+            = total_count
+          td
+            = faild_count
+          td
+            - if child_job.total_time
+              = Time.at(child_job.total_time).strftime('%H:%M:%S')
+            - else
+              = 0
+          td
+            = pass_count + faild_count > 0 ? "#{pass_count*100/(pass_count+faild_count)}\%" : 'no result'
+
+
+    / - @joined_jobs.each do |job|
+    /   tr
+    /     - date = job.start_time.strftime("%Y/%m/%d %T(%a)")
+    /     - if @test_case_result.get_latest_round(job.id).present?
+    /       - latest_round = @test_case_result.get_latest_round(job.id)
+    /       - fc = @test_case_result.get_failed_counts(job.id, latest_round)
+    /       - pc = @test_case_result.get_total_passed_counts(job.id)
+    /       - tc = @test_case_result.get_total_counts(job.id, 1)
+    /     - else
+    /       - latest_round = 0
+    /       - fc = 0
+    /       - tc = 0
+    /       - pc = 0
+    /     td
+    /       = link_to job.id, "/test_reports/#{job.id}"
+    /     td
+    /       = job.command_and_option
+    /     td
+    /       = job.device
+    /     td
+    /       = job.service
+    /     td
+    /       = job.category
+    /     td
+    /       = date
+    /     td
+    /       = tc
+    /     td
+    /       = fc
+    /     td
+    /       - if job.total_time
+    /         = Time.at(job.total_time).strftime('%H:%M:%S')
+    /       - else
+    /         = 0
+    /     td
+    /       = pc + fc > 0 ? "#{pc*100/(pc+fc)}\%" : 'no result'
+
 = paginate @jobs
 / = will_paginate @jobs, renderer: BulmaPagination::Rails

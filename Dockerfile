@@ -16,15 +16,14 @@ ADD . /app
 ARG RAILS_ENV
 RUN echo RAILS_ENV: ${RAILS_ENV}
 
-RUN \
-  echo 'gem: --no-document' >> ~/.gemrc && \
-  cp ~/.gemrc /etc/gemrc && \
-  chmod uog+r /etc/gemrc && \
-  bundle config --global build.nokogiri --use-system-libraries && \
-  bundle config --global jobs 4 && \
-  bundle config set --local with "${RAILS_ENV}" && \
-  bundle install && \
-  rm -rf ~/.gem
+  RUN echo 'gem: --no-document' >> ~/.gemrc
+  RUN cp ~/.gemrc /etc/gemrc
+  RUN chmod uog+r /etc/gemrc
+  RUN bundle config --global build.nokogiri --use-system-libraries
+  RUN bundle config --global jobs 4
+  RUN bundle config set --local with "${RAILS_ENV}"
+  RUN bundle install --verbose
+  RUN rm -rf ~/.gem
 
 CMD bundle exec rake assets:precompile RAILS_ENV=${RAILS_ENV}
 

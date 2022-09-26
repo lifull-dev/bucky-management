@@ -31,6 +31,7 @@ group :development, :test, optional: true do
   gem 'pry-rails'
   gem 'pry-stack_explorer'
   gem 'rails_best_practices'
+  gem 'rails-controller-testing'
   gem 'rubocop', require: false
   gem 'rubocop-rails'
   gem 'simplecov'

@@ -10,10 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_14_031435) do
-
+ActiveRecord::Schema[7.0].define(version: 2022_09_26_032406) do
   create_table "jobs", charset: "utf8mb4", force: :cascade do |t|
-    t.datetime "start_time", null: false
+    t.datetime "start_time", precision: nil, null: false
     t.string "command_and_option"
   end
 
@@ -38,7 +37,7 @@ ActiveRecord::Schema.define(version: 2021_07_14_031435) do
     t.integer "round", null: false
     t.integer "check_status"
     t.text "check_comment"
-    t.datetime "updated_at"
+    t.datetime "updated_at", precision: nil
     t.index ["job_id", "round", "test_case_id"], name: "index_test_case_results_on_job_id_and_round_and_test_case_id"
     t.index ["job_id"], name: "index_test_case_results_on_job_id"
     t.index ["test_case_id"], name: "index_test_case_results_on_test_case_id"
@@ -49,6 +48,11 @@ ActiveRecord::Schema.define(version: 2021_07_14_031435) do
     t.text "case_description", null: false
     t.string "case_name", null: false
     t.index ["test_suite_id"], name: "index_test_cases_on_test_suite_id"
+  end
+
+  create_table "test_reports", charset: "utf8mb4", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "test_suites", charset: "utf8mb4", force: :cascade do |t|
