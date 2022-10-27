@@ -1,6 +1,7 @@
 - provide(:title, "TestReports")
 .is-size-2 Test Reports
-.is-size-6 = page_entries_info @jobs
+.is-size-6 = page_entries_info @page
+
 table.table.is-bordered.is-striped.is-narrow.is-hoverable.is-fullwidth
   thead
       tr
@@ -24,42 +25,43 @@ table.table.is-bordered.is-striped.is-narrow.is-hoverable.is-fullwidth
           | Total Time
         th[scope="cols"]
           | Pass Rate(%)
+
   tbody
-    - @joined_jobs.each do |job|
+    - @jobs.each do |job|
       tr
-        - date = job.start_time.strftime("%Y/%m/%d %T(%a)")
-        - if @test_case_result.get_latest_round(job.id).present?
-          - latest_round = @test_case_result.get_latest_round(job.id)
-          - fc = @test_case_result.get_failed_counts(job.id, latest_round)
-          - pc = @test_case_result.get_total_passed_counts(job.id)
-          - tc = @test_case_result.get_total_counts(job.id, 1)
+        - indent = job[:indent_num] == 0 ? "" : "&nbsp;&nbsp;" * job[:indent_num] + "└&nbsp;"
+        - if @test_case_result.get_latest_round(job[:id]).present?
+          - latest_round = @test_case_result.get_latest_round(job[:id])
+          - fc = @test_case_result.get_failed_counts(job[:id], latest_round)
+          - pc = @test_case_result.get_total_passed_counts(job[:id])
+          - tc = @test_case_result.get_total_counts(job[:id], 1)
         - else
           - latest_round = 0
           - fc = 0
           - tc = 0
           - pc = 0
         td
-          = link_to job.id, "/test_reports/#{job.id}"
+          = link_to "#{indent}#{job[:id]}".html_safe, "/test_reports/#{job[:id]}".html_safe
         td
-          = job.command_and_option
+          = job[:command_and_option]
         td
-          = job.device
+          = job[:device]
         td
-          = job.service
+          = job[:service]
         td
-          = job.category
+          = job[:category]
         td
-          = date
+          = job[:job_start_time].strftime("%Y/%m/%d %T(%a)")
         td
           = tc
         td
           = fc
         td
-          - if job.total_time
-            = Time.at(job.total_time).strftime('%H:%M:%S')
+          - if job[:total_time]
+            = Time.at(job[:total_time]).strftime('%H:%M:%S')
           - else
             = 0
         td
           = pc + fc > 0 ? "#{pc*100/(pc+fc)}\%" : 'no result'
-= paginate @jobs
-/ = will_paginate @jobs, renderer: BulmaPagination::Rails
+
+= paginate @page
