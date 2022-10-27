@@ -2,19 +2,21 @@
 
 class TestReportsController < ApplicationController
   before_action :check_round, only: %i[show update]
-
   def index
     per_page = 30
-    @jobs = Job.all
-               .page(params[:page])
-               .per(per_page)
-               .order('jobs.id DESC')
-    job_ids = Job.select('id').page(params[:page]).per(per_page).order('jobs.id DESC').to_a
-    @joined_jobs = Job.join_with_suites
-                      .select_group_concat_suites
-                      .group('jobs.id')
-                      .where(id: job_ids)
-                      .order('jobs.id DESC')
+    @page = Kaminari.paginate_array(Job.all_root_jobs.to_a, total_count: Job.all_root_jobs.length).page(params[:page]).per(per_page)
+    start_num = params[:page].nil? || params[:page] == 1 ? 0 : per_page * (params[:page].to_i - 1)
+    root_jobs = Job.root_jobs(start_num, per_page)
+    @jobs = []
+    return if root_jobs.empty?
+
+    # Guessed the number of chiled_jobs per page is obtained by per_page*4
+    children_jobs = Job.children_jobs(root_jobs.each(&:id).min.id, per_page * 4)
+    root_job_tree = Job.create_job_tree(root_jobs, children_jobs)
+    children_job_tree = Job.create_job_tree(children_jobs, children_jobs)
+
+    root_jobs.each { |job| child_loop(root_job_tree.merge(children_job_tree), job[:id], 0) }
+
     @test_case_result = TestCaseResult
     gon.controller_name = controller_name
     gon.action_name = action_name
@@ -22,9 +24,7 @@ class TestReportsController < ApplicationController
 
   def show
     respond_to do |format|
-      format.html do
-        set_var_for_show
-      end
+      format.html { set_var_for_show }
       format.js do
         check_update = TestCaseResult.get_failed_cases(params[:id], @round).check_update_in_ten_sec.ids
         if check_update.empty?
@@ -53,6 +53,13 @@ class TestReportsController < ApplicationController
   end
 
   private
+
+  def child_loop(job_tree, job_id, indent_num)
+    @jobs << job_tree[job_id]
+    @jobs.last[:indent_num] = indent_num
+    indent_num += 1
+    job_tree[job_id][:children].reverse_each { |child_job_id| child_loop(job_tree, child_job_id, indent_num) }
+  end
 
   def check_round
     set_job_id
@@ -83,10 +90,7 @@ class TestReportsController < ApplicationController
   end
 
   def set_var_for_show
-    @suite_data = Job.join_with_suites
-                     .select_group_concat_suites
-                     .group('jobs.id')
-                     .find(@job_id)
+    @suite_data = Job.join_with_suites([@job_id]).first
     set_var_for_render
     gon.passed_count = @data_for_test_reports[:stack_passed_counts]
     gon.failed_count = @data_for_test_reports[:failed_count]
