@@ -12,7 +12,7 @@ jobs:
           key: rails-demo-{{ checksum "Gemfile" }}
           paths:
             - vendor/bundle
-      - run: bundle exec rails_best_practices -f html
+      - run: bundle exec rails_best_practices -f html -c .rails_best_practices.yml 
       - store_artifacts:
           path: rails_best_practices_output.html
   rubocop:
