@@ -1,0 +1,20 @@
+name: dast
+on:
+  pull_request:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    services:
+      web-server:
+        image: nginx:latest
+        ports:
+          - 80:80
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Run Dastardly Action Step
+        uses: PortSwigger/dastardly-github-action@main
+        with:
+          target-url: 'http://localhost'
