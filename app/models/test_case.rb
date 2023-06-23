@@ -22,4 +22,12 @@ class TestCase < ApplicationRecord
   belongs_to :test_suite
   has_many :test_case_results, dependent: :nullify
   has_many :test_case_labels, dependent: :destroy
+
+  def self.ransackable_associations(_auth_object = nil)
+    ['test_case_labels']
+  end
+
+  def self.ransackable_attributes(_auth_object = nil)
+    ['case_name']
+  end
 end

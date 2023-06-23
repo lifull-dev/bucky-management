@@ -10,6 +10,13 @@
 #
 
 class Job < ApplicationRecord
+  def self.ransackable_associations(_auth_object = nil)
+    %w[test_case_results test_cases test_suites]
+  end
+
+  def self.ransackable_attributes(_auth_object = nil)
+    ['command_and_option']
+  end
   has_many :test_case_results, dependent: :destroy
   has_many :test_cases, through: :test_case_results
   has_many :test_suites, through: :test_cases
