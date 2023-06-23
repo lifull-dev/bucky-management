@@ -32,7 +32,7 @@ class TestCaseResult < ApplicationRecord
   belongs_to :job
 
   def self.ransackable_associations(_auth_object = nil)
-    ['test_cases']
+    %w[test_cases]
   end
   scope :get_total_elapsed_time, ->(job_id, round) { joins(:job).where(job_id: job_id).where(round: round).sum(:elapsed_time) }
   scope :get_total_counts, ->(job_id, round) { where(job_id: job_id).where(round: round).count }
