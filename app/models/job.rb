@@ -11,7 +11,7 @@
 
 class Job < ApplicationRecord
   def self.ransackable_associations(_auth_object = nil)
-    %w[test_case_results test_cases test_suites]
+    %w[test_cases]
   end
 
   def self.ransackable_attributes(_auth_object = nil)
