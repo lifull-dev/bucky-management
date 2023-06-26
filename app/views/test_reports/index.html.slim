@@ -2,6 +2,11 @@
 .is-size-2 Test Reports
 .is-size-6 = page_entries_info @page
 
+.search_form
+  = form_with url: test_reports_path, local: true, method: :get do |f|
+    = f.text_field :search_word
+    = f.submit "検索", class: "btn btn-primary"
+
 table.table.is-bordered.is-striped.is-narrow.is-hoverable.is-fullwidth
   thead
       tr

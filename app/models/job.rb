@@ -32,6 +32,12 @@ class Job < ApplicationRecord
   }
   scope :select_group_concat_suites, -> { select("jobs.*, GROUP_CONCAT(DISTINCT test_suites.device separator '/') AS device, GROUP_CONCAT(DISTINCT test_suites.service separator '/') AS service, GROUP_CONCAT(DISTINCT test_suites.test_category separator '/') AS category, SUM(test_case_results.elapsed_time) AS total_time") }
 
+  def self.root_jobs_by_search_word(start_num, per_page, search_word)
+    Job.join_with_suites(Job.all_root_jobs
+      .where('command_and_option LIKE ?', "%#{search_word}%")
+      .select(&:id)[start_num...start_num + per_page])
+  end
+
   def self.all_root_jobs
     Job.all.where("command_and_option not like '%rerun%'").order('jobs.id DESC')
   end

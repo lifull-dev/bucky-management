@@ -7,6 +7,14 @@ class TestReportsController < ApplicationController
     @page = Kaminari.paginate_array(Job.all_root_jobs.to_a, total_count: Job.all_root_jobs.length).page(params[:page]).per(per_page)
     start_num = params[:page].nil? || params[:page] == 1 ? 0 : per_page * (params[:page].to_i - 1)
     root_jobs = Job.root_jobs(start_num, per_page)
+
+    search_word = params[:search_word]
+    root_jobs = if search_word.present?
+                  Job.root_jobs_by_search_word(start_num, per_page, search_word)
+                else
+                  Job.root_jobs(start_num, per_page)
+                end
+
     @jobs = []
     return if root_jobs.empty?
 
@@ -59,6 +67,8 @@ class TestReportsController < ApplicationController
     @jobs.last[:indent_num] = indent_num
     indent_num += 1
     job_tree[job_id][:children].reverse_each { |child_job_id| child_loop(job_tree, child_job_id, indent_num) }
+    # logger.debug("================================================================")
+    # logger.debug(@jobs.[:command_and_option])
   end
 
   def check_round
