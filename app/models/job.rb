@@ -35,8 +35,6 @@ class Job < ApplicationRecord
   }
   scope :select_group_concat_suites, -> { select("jobs.*, GROUP_CONCAT(DISTINCT test_suites.device separator '/') AS device, GROUP_CONCAT(DISTINCT test_suites.service separator '/') AS service, GROUP_CONCAT(DISTINCT test_suites.test_category separator '/') AS category, SUM(test_case_results.elapsed_time) AS total_time") }
 
-  def searched_root_jobs_ransack; end
-
   def self.all_root_jobs
     Job.all.where("command_and_option not like '%rerun%'").order('jobs.id DESC')
   end
