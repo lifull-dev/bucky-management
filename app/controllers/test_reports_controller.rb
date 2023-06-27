@@ -6,8 +6,10 @@ class TestReportsController < ApplicationController
     per_page = 30
     @page = Kaminari.paginate_array(Job.all_root_jobs.to_a, total_count: Job.all_root_jobs.length).page(params[:page]).per(per_page)
     start_num = params[:page].nil? || params[:page] == 1 ? 0 : per_page * (params[:page].to_i - 1)
+
     @q = Job.root_jobs(start_num, per_page).ransack(params[:q])
     root_jobs = @q.result
+
     @jobs = []
     return if root_jobs.empty?
 
