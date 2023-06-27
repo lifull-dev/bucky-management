@@ -10,8 +10,4 @@
 
 class Label < ApplicationRecord
   has_many :test_case_label, dependent: :destroy
-
-  def self.ransackable_attributes(_auth_object = nil)
-    ['label_name']
-  end
 end

@@ -22,11 +22,4 @@
 class TestCaseLabel < ApplicationRecord
   belongs_to :test_case
   belongs_to :label
-  def self.ransackable_associations(_auth_object = nil)
-    %w[label]
-  end
-
-  def self.ransackable_attributes(_auth_object = nil)
-    %w[id label_id test_case_id]
-  end
 end
