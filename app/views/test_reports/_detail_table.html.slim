@@ -26,7 +26,7 @@
                 li
                   = text_area_tag 'check_comment', ftc.check_comment, size: "30x5", required: true, onblur: 'Rails.fire(this.form, "submit")', placeholder: 'Leave your comment here'
           td
-            = link_to ftc.case_name, base_url << file_path, target: '_blank'
+            = link_to ftc.case_name, base_url << file_path << "#:~:text="<< ftc.case_name, target: '_blank'
           td
             div.case-description
               = ftc.case_description
