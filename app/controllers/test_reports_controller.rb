@@ -2,19 +2,20 @@
 
 class TestReportsController < ApplicationController
   before_action :check_round, only: %i[show update]
+  PER_PAGE = 30
+  
   def index
-    per_page = 30
-    start_num = params[:page].nil? || params[:page] == 1 ? 0 : per_page * (params[:page].to_i - 1)
+    start_num = params[:page].nil? || params[:page] == 1 ? 0 : PER_PAGE * (params[:page].to_i - 1)
     root_jobs, @page = if params[:search_word]
-                  Job.root_jobs_by_search_word(start_num, per_page, params[:search_word], params[:page])
+                  Job.get_searched_root_jobs(start_num, PER_PAGE, params[:search_word], params[:page])
                 else
-                  Job.root_jobs(start_num, per_page, params[:page])
+                  Job.root_jobs(start_num, PER_PAGE, params[:page])
                 end
     @jobs = []
     return if root_jobs.empty?
 
-    # Guessed the number of chiled_jobs per page is obtained by per_page*4
-    children_jobs = Job.children_jobs(root_jobs.each(&:id).min.id, per_page * 4)
+    # Guessed the number of chiled_jobs per page is obtained by PER_PAGE*4
+    children_jobs = Job.children_jobs(root_jobs.each(&:id).min.id, PER_PAGE * 4)
     root_job_tree = Job.create_job_tree(root_jobs, children_jobs)
     children_job_tree = Job.create_job_tree(children_jobs, children_jobs)
 
