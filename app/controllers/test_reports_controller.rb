@@ -5,17 +5,11 @@ class TestReportsController < ApplicationController
   def index
     per_page = 30
     start_num = params[:page].nil? || params[:page] == 1 ? 0 : per_page * (params[:page].to_i - 1)
-    logger.debug("〜〜〜〜〜#{params[:page]}")
-
     root_jobs, @page = if params[:search_word]
-      logger.debug("tureです")
                   Job.root_jobs_by_search_word(start_num, per_page, params[:search_word], params[:page])
                 else
-                  logger.debug("faleです")
                   Job.root_jobs(start_num, per_page, params[:page])
                 end
-    logger.debug("@page#{@page.count}") #@page
-
     @jobs = []
     return if root_jobs.empty?
 
