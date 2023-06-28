@@ -14,7 +14,6 @@ class TestReportsController < ApplicationController
                   logger.debug("faleです")
                   Job.root_jobs(start_num, per_page, params[:page])
                 end
-
     logger.debug("@page#{@page.count}") #@page
 
     @jobs = []
