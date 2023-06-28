@@ -8,13 +8,14 @@ class TestReportsController < ApplicationController
     logger.debug("〜〜〜〜〜#{params[:page]}")
 
     root_jobs, @page = if params[:search_word]
+      logger.debug("tureです")
                   Job.root_jobs_by_search_word(start_num, per_page, params[:search_word], params[:page])
                 else
+                  logger.debug("faleです")
                   Job.root_jobs(start_num, per_page, params[:page])
                 end
 
-    logger.debug("=====#{root_jobs.inspect}")
-    logger.debug("=====#{@page}")
+    logger.debug("@page#{@page.count}") #@page
 
     @jobs = []
     return if root_jobs.empty?
