@@ -7,11 +7,6 @@
     = f.text_field :search_word
     = f.submit "検索", class: "btn btn-primary"
 
-/ = search_form_for @q, url: test_reports_path do |f|
-/   = f.label :command_and_option_cont, "Command and Option"
-/   = f.search_field :command_and_option_cont
-/   = f.submit "Search"
-
 .is-size-6 = page_entries_info @page
 
 table.table.is-bordered.is-striped.is-narrow.is-hoverable.is-fullwidth
