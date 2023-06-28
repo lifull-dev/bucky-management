@@ -1,10 +1,16 @@
 - provide(:title, "TestReports")
 .is-size-2 Test Reports
 
-= search_form_for @q, url: test_reports_path do |f|
-  = f.label :command_and_option_cont, "Command and Option"
-  = f.search_field :command_and_option_cont
-  = f.submit "Search"
+
+.search_form
+  = form_with url: test_reports_path, local: true, method: :get do |f|
+    = f.text_field :search_word
+    = f.submit "検索", class: "btn btn-primary"
+
+/ = search_form_for @q, url: test_reports_path do |f|
+/   = f.label :command_and_option_cont, "Command and Option"
+/   = f.search_field :command_and_option_cont
+/   = f.submit "Search"
 
 .is-size-6 = page_entries_info @page
 
