@@ -39,14 +39,27 @@ class Job < ApplicationRecord
     Job.all.where("command_and_option not like '%rerun%'").order('jobs.id DESC')
   end
 
+  def self.root_jobs_by_search_word(start_num, per_page, search_word, page)
+    return Job.join_with_suites(Job.all_root_jobs
+        .where('command_and_option LIKE ?', "%#{search_word}%")
+        .select(&:id)[start_num...start_num + per_page]),
+      Kaminari.paginate_array(
+        Job.all_root_jobs.to_a, total_count: Job.all_root_jobs.length)
+        .page(page).per(per_page)
+  end
+
+  def self.root_jobs(start_num, per_page, page)
+    return Job.join_with_suites(Job.all_root_jobs.to_a
+        .map(&:id)[start_num...start_num + per_page]),
+      Kaminari.paginate_array(
+        Job.all_root_jobs.to_a, total_count: Job.all_root_jobs.length)
+        .page(page).per(per_page)
+  end
+
   def self.all_children_jobs(start, limit)
     Job.all.where("command_and_option like '%rerun%'").where(id: start..).order('jobs.id ASC').limit(limit)
   end
 
-  def self.root_jobs(start_num, per_page)
-    Job.join_with_suites(Job.all_root_jobs.to_a
-      .map(&:id)[start_num...start_num + per_page])
-  end
 
   def self.children_jobs(start, limit)
     Job.join_with_suites(

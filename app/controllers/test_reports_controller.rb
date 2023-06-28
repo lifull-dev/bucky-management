@@ -4,11 +4,17 @@ class TestReportsController < ApplicationController
   before_action :check_round, only: %i[show update]
   def index
     per_page = 30
-    @page = Kaminari.paginate_array(Job.all_root_jobs.to_a, total_count: Job.all_root_jobs.length).page(params[:page]).per(per_page)
     start_num = params[:page].nil? || params[:page] == 1 ? 0 : per_page * (params[:page].to_i - 1)
+    logger.debug("〜〜〜〜〜#{params[:page]}")
 
-    @q = Job.root_jobs(start_num, per_page).ransack(params[:q])
-    root_jobs = @q.result
+    root_jobs, @page = if params[:search_word]
+                  Job.root_jobs_by_search_word(start_num, per_page, params[:search_word], params[:page])
+                else
+                  Job.root_jobs(start_num, per_page, params[:page])
+                end
+
+    logger.debug("=====#{root_jobs.inspect}")
+    logger.debug("=====#{@page}")
 
     @jobs = []
     return if root_jobs.empty?
