@@ -40,7 +40,6 @@ class Job < ApplicationRecord
   end
 
   def self.root_jobs_by_search_word(start_num, per_page, search_word, page)
-    logger.debug("あああああああ")
     return Job.join_with_suites(Job.all_root_jobs
         .where('command_and_option LIKE ?', "%#{search_word}%")
         .select(&:id)[start_num...start_num + per_page]),
