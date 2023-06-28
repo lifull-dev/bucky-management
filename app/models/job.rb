@@ -40,12 +40,13 @@ class Job < ApplicationRecord
   end
 
   def self.root_jobs_by_search_word(start_num, per_page, search_word, page)
+    logger.debug("あああああああ")
     return Job.join_with_suites(Job.all_root_jobs
         .where('command_and_option LIKE ?', "%#{search_word}%")
         .select(&:id)[start_num...start_num + per_page]),
-      Kaminari.paginate_array(
-        Job.all_root_jobs.to_a, total_count: Job.all_root_jobs.length)
-        .page(page).per(per_page)
+          Kaminari.paginate_array(Job.all_root_jobs.where(
+            'command_and_option LIKE ?', "%#{search_word}%").to_a,
+            total_count: Job.all_root_jobs.where('command_and_option LIKE ?', "%#{search_word}%").length).page(page).per(per_page)
   end
 
   def self.root_jobs(start_num, per_page, page)
@@ -59,7 +60,6 @@ class Job < ApplicationRecord
   def self.all_children_jobs(start, limit)
     Job.all.where("command_and_option like '%rerun%'").where(id: start..).order('jobs.id ASC').limit(limit)
   end
-
 
   def self.children_jobs(start, limit)
     Job.join_with_suites(
