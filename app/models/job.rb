@@ -10,9 +10,11 @@
 #
 
 class Job < ApplicationRecord
+
   def self.ransackable_attributes(_auth_object = nil)
     ['command_and_option']
   end
+
   has_many :test_case_results, dependent: :destroy
   has_many :test_cases, through: :test_case_results
   has_many :test_suites, through: :test_cases
@@ -34,26 +36,29 @@ class Job < ApplicationRecord
     find_by_sql([query, test_category, device])
   }
   scope :select_group_concat_suites, -> { select("jobs.*, GROUP_CONCAT(DISTINCT test_suites.device separator '/') AS device, GROUP_CONCAT(DISTINCT test_suites.service separator '/') AS service, GROUP_CONCAT(DISTINCT test_suites.test_category separator '/') AS category, SUM(test_case_results.elapsed_time) AS total_time") }
-
   def self.all_root_jobs
     Job.all.where("command_and_option not like '%rerun%'").order('jobs.id DESC')
   end
 
-  def self.root_jobs_by_search_word(start_num, per_page, search_word, page)
+  def self.searched_root_jobs(search_word)
+    all_root_jobs.where('command_and_option LIKE ?', "%#{search_word}%")
+  end
+
+  def self.get_searched_root_jobs(start_num, per_page, search_word, page)
+    searched_jobs = searched_root_jobs(search_word)
     return Job.join_with_suites(Job.all_root_jobs
-        .where('command_and_option LIKE ?', "%#{search_word}%")
-        .select(&:id)[start_num...start_num + per_page]),
-          Kaminari.paginate_array(Job.all_root_jobs.where(
-            'command_and_option LIKE ?', "%#{search_word}%").to_a,
-            total_count: Job.all_root_jobs.where('command_and_option LIKE ?', "%#{search_word}%").length).page(page).per(per_page)
+            .searched_root_jobs(search_word)
+            .select(&:id)[start_num...start_num + per_page]),
+          Kaminari.paginate_array(Job.all_root_jobs
+            .searched_root_jobs(search_word).to_a,
+            total_count: Job.all_root_jobs.searched_root_jobs(search_word).length)
+            .page(page).per(per_page)
   end
 
   def self.root_jobs(start_num, per_page, page)
     return Job.join_with_suites(Job.all_root_jobs.to_a
         .map(&:id)[start_num...start_num + per_page]),
-      Kaminari.paginate_array(
-        Job.all_root_jobs.to_a, total_count: Job.all_root_jobs.length)
-        .page(page).per(per_page)
+      Kaminari.paginate_array(Job.all_root_jobs.to_a, total_count: Job.all_root_jobs.length).page(page).per(per_page)
   end
 
   def self.all_children_jobs(start, limit)
