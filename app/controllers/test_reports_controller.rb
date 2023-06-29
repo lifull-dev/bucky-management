@@ -27,16 +27,14 @@ class TestReportsController < ApplicationController
 
   def show
     respond_to do |format|
-      format.html do
-        set_var_for_show
-      end
+      format.html { set_var_for_show }
       format.js do
         check_update = TestCaseResult.get_failed_cases(params[:id], @round).check_update_in_ten_sec.ids
         if check_update.empty?
           render body: nil
         else
           set_var_for_show
-          render 'show.js.erb'
+          render 'check_status'
         end
       end
     end
@@ -53,11 +51,18 @@ class TestReportsController < ApplicationController
     set_var_for_render
 
     respond_to do |format|
-      format.js { render 'show.js.erb' }
+      format.js { render 'check_status' }
     end
   end
 
   private
+
+  def child_loop(job_tree, job_id, indent_num)
+    @jobs << job_tree[job_id]
+    @jobs.last[:indent_num] = indent_num
+    indent_num += 1
+    job_tree[job_id][:children].reverse_each { |child_job_id| child_loop(job_tree, child_job_id, indent_num) }
+  end
 
   def check_round
     set_job_id
@@ -88,10 +93,7 @@ class TestReportsController < ApplicationController
   end
 
   def set_var_for_show
-    @suite_data = Job.join_with_suites
-                     .select_group_concat_suites
-                     .group('jobs.id')
-                     .find(@job_id)
+    @suite_data = Job.join_with_suites([@job_id]).first
     set_var_for_render
     gon.passed_count = @data_for_test_reports[:stack_passed_counts]
     gon.failed_count = @data_for_test_reports[:failed_count]

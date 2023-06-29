@@ -14,7 +14,10 @@ class Job < ApplicationRecord
   has_many :test_cases, through: :test_case_results
   has_many :test_suites, through: :test_cases
 
-  scope :join_with_suites, -> { joins(test_case_results: { test_case: :test_suite }) }
+  scope :join_with_suites, lambda { |job_ids|
+                             joins(test_case_results: { test_case: :test_suite }).select_group_concat_suites.group('jobs.id').where(id: job_ids).order('jobs.id DESC')
+                           }
+
   scope :get_job, lambda { |test_category, device|
     query = <<-SQL.squish
       SELECT jobs.* FROM jobs
