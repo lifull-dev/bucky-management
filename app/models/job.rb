@@ -11,10 +11,6 @@
 
 class Job < ApplicationRecord
 
-  def self.ransackable_attributes(_auth_object = nil)
-    ['command_and_option']
-  end
-
   has_many :test_case_results, dependent: :destroy
   has_many :test_cases, through: :test_case_results
   has_many :test_suites, through: :test_cases
@@ -45,19 +41,19 @@ class Job < ApplicationRecord
   end
 
   def self.get_searched_root_jobs(start_num, per_page, search_word, page)
-    return Job.join_with_suites(Job.all_root_jobs
+    [Job.join_with_suites(Job.all_root_jobs
             .searched_root_jobs(search_word)
             .select(&:id)[start_num...start_num + per_page]),
-          Kaminari.paginate_array(Job.all_root_jobs
-            .searched_root_jobs(search_word).to_a,
-            total_count: Job.all_root_jobs.searched_root_jobs(search_word).length)
-            .page(page).per(per_page)
+     Kaminari.paginate_array(Job.all_root_jobs
+       .searched_root_jobs(search_word).to_a,
+                             total_count: Job.all_root_jobs.searched_root_jobs(search_word).length)
+             .page(page).per(per_page)]
   end
 
   def self.root_jobs(start_num, per_page, page)
-    return Job.join_with_suites(Job.all_root_jobs.to_a
+    [Job.join_with_suites(Job.all_root_jobs.to_a
         .map(&:id)[start_num...start_num + per_page]),
-      Kaminari.paginate_array(Job.all_root_jobs.to_a, total_count: Job.all_root_jobs.length).page(page).per(per_page)
+     Kaminari.paginate_array(Job.all_root_jobs.to_a, total_count: Job.all_root_jobs.length).page(page).per(per_page)]
   end
 
   def self.all_children_jobs(start, limit)

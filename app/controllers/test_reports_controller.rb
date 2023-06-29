@@ -3,14 +3,14 @@
 class TestReportsController < ApplicationController
   before_action :check_round, only: %i[show update]
   PER_PAGE = 30
-  
+
   def index
     start_num = params[:page].nil? || params[:page] == 1 ? 0 : PER_PAGE * (params[:page].to_i - 1)
     root_jobs, @page = if params[:search_word]
-                  Job.get_searched_root_jobs(start_num, PER_PAGE, params[:search_word], params[:page])
-                else
-                  Job.root_jobs(start_num, PER_PAGE, params[:page])
-                end
+                         Job.get_searched_root_jobs(start_num, PER_PAGE, params[:search_word], params[:page])
+                       else
+                         Job.root_jobs(start_num, PER_PAGE, params[:page])
+                       end
     @jobs = []
     return if root_jobs.empty?
 
