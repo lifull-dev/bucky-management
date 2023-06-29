@@ -6,19 +6,11 @@
         th[scope="cols"]
           | Check Status
         th[scope="cols"]
-          | Priority
-        th[scope="cols"]
-          | Suite Name
-        th[scope="cols"]
-          | Suite Description
-        th[scope="cols"]
           | Case Name
         th[scope="cols"]
           | Case Description
         th.error-message[scope="cols"]
           | Error Message
-        th[scope="cols"]
-          | Elappsed Time(s)
     tbody
       - data_for_test_reports[:failed_test_cases].each do |ftc|
         - base_url = ftc.github_url
@@ -41,5 +33,3 @@
           td
             div.error-message
               = ftc.error_title
-          td
-            = ftc.elapsed_time
