@@ -45,7 +45,6 @@ class Job < ApplicationRecord
   end
 
   def self.get_searched_root_jobs(start_num, per_page, search_word, page)
-    searched_jobs = searched_root_jobs(search_word)
     return Job.join_with_suites(Job.all_root_jobs
             .searched_root_jobs(search_word)
             .select(&:id)[start_num...start_num + per_page]),
