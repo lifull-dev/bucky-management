@@ -6,9 +6,11 @@ class TestReportsController < ApplicationController
   def index
     start_num = params[:page].nil? || params[:page] == 1 ? 0 : PER_PAGE * (params[:page].to_i - 1)
     root_jobs, @page = if params[:search_word]
-                         Job.get_searched_root_jobs(start_num, PER_PAGE, params[:search_word], params[:page])
+                         [Job.get_searched_root_jobs(start_num, PER_PAGE, params[:search_word]),
+                          ganerate_pagenation(params[:search_word])]
                        else
-                         Job.root_jobs(start_num, PER_PAGE, params[:page])
+                         [Job.root_jobs(start_num, PER_PAGE),
+                          ganerate_pagenation]
                        end
     @jobs = []
     return if root_jobs.empty?
@@ -62,6 +64,17 @@ class TestReportsController < ApplicationController
     @jobs.last[:indent_num] = indent_num
     indent_num += 1
     job_tree[job_id][:children].reverse_each { |child_job_id| child_loop(job_tree, child_job_id, indent_num) }
+  end
+
+  def ganerate_pagenation(search_word = nil)
+    if search_word.nil?
+      Kaminari.paginate_array(Job.all_root_jobs.to_a, total_count: Job.all_root_jobs.length).page(params[:page]).per(PER_PAGE)
+    else
+      Kaminari.paginate_array(
+        Job.all_root_jobs.searched_root_jobs(params[:search_word]).to_a,
+        total_count: Job.all_root_jobs.searched_root_jobs(params[:search_word]).length
+      ).page(params[:page]).per(PER_PAGE)
+    end
   end
 
   def check_round
