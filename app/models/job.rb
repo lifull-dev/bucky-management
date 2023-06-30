@@ -39,20 +39,15 @@ class Job < ApplicationRecord
     all_root_jobs.where('command_and_option LIKE ?', "%#{search_word}%")
   end
 
-  def self.get_searched_root_jobs(start_num, per_page, search_word, page)
-    [Job.join_with_suites(Job.all_root_jobs
+  def self.get_searched_root_jobs(start_num, per_page, search_word)
+    Job.join_with_suites(Job.all_root_jobs
             .searched_root_jobs(search_word)
-            .select(&:id)[start_num...start_num + per_page]),
-     Kaminari.paginate_array(Job.all_root_jobs
-       .searched_root_jobs(search_word).to_a,
-                             total_count: Job.all_root_jobs.searched_root_jobs(search_word).length)
-             .page(page).per(per_page)]
+            .select(&:id)[start_num...start_num + per_page])
   end
 
-  def self.root_jobs(start_num, per_page, page)
-    [Job.join_with_suites(Job.all_root_jobs.to_a
-        .map(&:id)[start_num...start_num + per_page]),
-     Kaminari.paginate_array(Job.all_root_jobs.to_a, total_count: Job.all_root_jobs.length).page(page).per(per_page)]
+  def self.root_jobs(start_num, per_page)
+    Job.join_with_suites(Job.all_root_jobs.to_a
+        .map(&:id)[start_num...start_num + per_page])
   end
 
   def self.all_children_jobs(start, limit)
