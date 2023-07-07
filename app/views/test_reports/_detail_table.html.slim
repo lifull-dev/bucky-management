@@ -7,14 +7,19 @@
           | Check Status
         th[scope="cols"]
           | Case Name
-        th[scope="cols"]
+        th.long[scope="cols"]
           | Case Description
         th.error-message[scope="cols"]
           | Error Message
+        th.long[scope="cols"]
+          | Create Issue
     tbody
       - data_for_test_reports[:failed_test_cases].each do |ftc|
         - base_url = ftc.github_url
         - file_path = ftc.file_path
+        - bucky_url = request.original_url
+        - body = CGI::escape("## Device\n#{suite_data.device}\n\n## URL\n#{bucky_url}")
+        - issue_path = "/issues/new?title=#{ftc.case_name}&body=#{body}"
         tr
           td
             = form_with url: "result/#{ftc.result_id}", local: false do |f|
@@ -26,10 +31,12 @@
                 li
                   = text_area_tag 'check_comment', ftc.check_comment, size: "30x5", required: true, onblur: 'Rails.fire(this.form, "submit")', placeholder: 'Leave your comment here'
           td
-            = link_to ftc.case_name, base_url << file_path, target: '_blank'
+            = link_to ftc.case_name, base_url + file_path + "#:~:text=" + ftc.case_name, target: '_blank'
           td
             div.case-description
               = ftc.case_description
           td
             div.error-message
               = ftc.error_title
+          td
+            = link_to 'create_issue', owner_and_ripository(base_url) + issue_path, target: '_blank'
