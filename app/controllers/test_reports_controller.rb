@@ -67,14 +67,12 @@ class TestReportsController < ApplicationController
   end
 
   def ganerate_pagenation(search_word = nil)
-    if search_word.nil?
-      Kaminari.paginate_array(Job.all_root_jobs.to_a, total_count: Job.all_root_jobs.length).page(params[:page]).per(PER_PAGE)
-    else
-      Kaminari.paginate_array(
-        Job.all_root_jobs.searched_root_jobs(params[:search_word]).to_a,
-        total_count: Job.all_root_jobs.searched_root_jobs(params[:search_word]).length
-      ).page(params[:page]).per(PER_PAGE)
-    end
+    elements = if search_word.nil?
+                  Job.all_root_jobs.to_a
+                else
+                  Job.all_root_jobs.searched_root_jobs(params[:search_word]).to_a
+                end
+    Kaminari.paginate_array(elements, total_count: elements.length).page(params[:page]).per(PER_PAGE)
   end
 
   def check_round
