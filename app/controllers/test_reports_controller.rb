@@ -5,13 +5,12 @@ class TestReportsController < ApplicationController
   PER_PAGE = 30
   def index
     start_num = params[:page].nil? || params[:page] == 1 ? 0 : PER_PAGE * (params[:page].to_i - 1)
-    root_jobs, @page = if params[:search_word]
-                         [Job.get_searched_root_jobs(start_num, PER_PAGE, params[:search_word]),
-                          ganerate_pagenation(params[:search_word])]
-                       else
-                         [Job.root_jobs(start_num, PER_PAGE),
-                          ganerate_pagenation]
-                       end
+    root_jobs = if params[:search_word]
+                  Job.searched_root_jobs_per_page(start_num, PER_PAGE, params[:search_word])
+                else
+                  Job.root_jobs(start_num, PER_PAGE)
+                end
+    @page = ganerate_pagenation(params[:search_word])
     @jobs = []
     return if root_jobs.empty?
 
