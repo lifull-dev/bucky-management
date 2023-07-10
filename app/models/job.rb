@@ -31,18 +31,27 @@ class Job < ApplicationRecord
     find_by_sql([query, test_category, device])
   }
   scope :select_group_concat_suites, -> { select("jobs.*, GROUP_CONCAT(DISTINCT test_suites.device separator '/') AS device, GROUP_CONCAT(DISTINCT test_suites.service separator '/') AS service, GROUP_CONCAT(DISTINCT test_suites.test_category separator '/') AS category, SUM(test_case_results.elapsed_time) AS total_time") }
-
   def self.all_root_jobs
     Job.all.where("command_and_option not like '%rerun%'").order('jobs.id DESC')
   end
 
-  def self.all_children_jobs(start, limit)
-    Job.all.where("command_and_option like '%rerun%'").where(id: start..).order('jobs.id ASC').limit(limit)
+  def self.searched_root_jobs(search_word)
+    all_root_jobs.where('command_and_option LIKE ?', "%#{search_word}%")
+  end
+
+  def self.searched_root_jobs_per_page(start_num, per_page, search_word)
+    Job.join_with_suites(Job.all_root_jobs
+            .searched_root_jobs(search_word)
+            .select(&:id)[start_num...start_num + per_page])
   end
 
   def self.root_jobs(start_num, per_page)
     Job.join_with_suites(Job.all_root_jobs.to_a
-      .map(&:id)[start_num...start_num + per_page])
+        .map(&:id)[start_num...start_num + per_page])
+  end
+
+  def self.all_children_jobs(start, limit)
+    Job.all.where("command_and_option like '%rerun%'").where(id: start..).order('jobs.id ASC').limit(limit)
   end
 
   def self.children_jobs(start, limit)
