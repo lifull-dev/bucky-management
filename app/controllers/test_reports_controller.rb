@@ -65,7 +65,7 @@ class TestReportsController < ApplicationController
     job_tree[job_id][:children].reverse_each { |child_job_id| child_loop(job_tree, child_job_id, indent_num) }
   end
 
-  def ganerate_pagenation(search_word = nil)
+  def ganerate_pagenation(search_word)
     elements = if search_word.nil?
                  Job.all_root_jobs.to_a
                else
