@@ -71,7 +71,7 @@ p
     = Gon::Base.render_data
 
 .detail_table
-  = render "detail_table", data_for_test_reports: @data_for_test_reports, select_option: @select_option, job: @job, round: @round
+  = render "detail_table", data_for_test_reports: @data_for_test_reports, select_option: @select_option, job: @job, round: @round, suite_data: @suite_data
 
 - if @data_for_test_reports[:slow_time_test_cases].present?
   .is-size-4 Slow Tests List
@@ -91,3 +91,5 @@ p
             = link_to s.case_name, base_url << file_path, target: '_blank'
           td.long
             = s.case_description
+          td
+            = link_to 'create_issue', issue_link, target: '_blank'
