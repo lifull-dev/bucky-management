@@ -2,16 +2,20 @@
 
 class TestReportsController < ApplicationController
   before_action :check_round, only: %i[show update]
+  PER_PAGE = 30
   def index
-    per_page = 30
-    @page = Kaminari.paginate_array(Job.all_root_jobs.to_a, total_count: Job.all_root_jobs.length).page(params[:page]).per(per_page)
-    start_num = params[:page].nil? || params[:page] == 1 ? 0 : per_page * (params[:page].to_i - 1)
-    root_jobs = Job.root_jobs(start_num, per_page)
+    start_num = params[:page].nil? || params[:page] == 1 ? 0 : PER_PAGE * (params[:page].to_i - 1)
+    root_jobs = if params[:search_word]
+                  Job.searched_root_jobs_per_page(start_num, PER_PAGE, params[:search_word])
+                else
+                  Job.root_jobs(start_num, PER_PAGE)
+                end
+    @page = ganerate_pagenation(params[:search_word])
     @jobs = []
     return if root_jobs.empty?
 
-    # Guessed the number of chiled_jobs per page is obtained by per_page*4
-    children_jobs = Job.children_jobs(root_jobs.each(&:id).min.id, per_page * 4)
+    # Guessed the number of chiled_jobs per page is obtained by PER_PAGE*4
+    children_jobs = Job.children_jobs(root_jobs.each(&:id).min.id, PER_PAGE * 4)
     root_job_tree = Job.create_job_tree(root_jobs, children_jobs)
     children_job_tree = Job.create_job_tree(children_jobs, children_jobs)
 
@@ -59,6 +63,15 @@ class TestReportsController < ApplicationController
     @jobs.last[:indent_num] = indent_num
     indent_num += 1
     job_tree[job_id][:children].reverse_each { |child_job_id| child_loop(job_tree, child_job_id, indent_num) }
+  end
+
+  def ganerate_pagenation(search_word)
+    elements = if search_word.nil?
+                 Job.all_root_jobs.to_a
+               else
+                 Job.all_root_jobs.searched_root_jobs(params[:search_word]).to_a
+               end
+    Kaminari.paginate_array(elements, total_count: elements.length).page(params[:page]).per(PER_PAGE)
   end
 
   def check_round
