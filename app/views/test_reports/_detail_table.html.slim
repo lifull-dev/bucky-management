@@ -39,4 +39,4 @@
             div.error-message
               = ftc.error_title
           td
-            = link_to 'create_issue', owner_and_ripository(base_url) + issue_path, target: '_blank'
+            = link_to 'create_issue', github_repo_base_url(base_url) + issue_path, target: '_blank'
