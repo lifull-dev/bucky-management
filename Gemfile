@@ -26,11 +26,13 @@ group :development, :test, optional: true do
   gem 'awesome_print'
   gem 'bullet'
   gem 'byebug', platform: :mri
+  gem 'factory_bot_rails'
   gem 'pry-byebug'
   gem 'pry-doc'
   gem 'pry-rails'
   gem 'pry-stack_explorer'
   gem 'rails_best_practices'
+  gem 'rspec-rails'
   gem 'rubocop', require: false
   gem 'rubocop-rails'
   gem 'simplecov'
