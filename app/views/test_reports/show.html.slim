@@ -16,9 +16,16 @@ p
       thead.table-header
         tr
           th[scope="cols"]
+            | Base FQDN
+          th[scope="cols"]
             | Command and Options
       tbody
         tr
+          td
+            - if @job.base_fqdn
+              = link_to @job.base_fqdn, @job.base_fqdn, target: '_blank'
+            - else
+              = "N/A"
           td #{@job.command_and_option ? "#{@job.command_and_option}" : '-'}
     table.table.is-bordered.is-striped.is-narrow
       thead.table-header
