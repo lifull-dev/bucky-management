@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_14_031435) do
-
+ActiveRecord::Schema[7.0].define(version: 2023_07_25_014426) do
   create_table "jobs", charset: "utf8mb4", force: :cascade do |t|
-    t.datetime "start_time", null: false
+    t.datetime "start_time", precision: nil, null: false
     t.string "command_and_option"
+    t.string "base_fqdn"
   end
 
   create_table "labels", charset: "utf8mb4", force: :cascade do |t|
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 2021_07_14_031435) do
     t.integer "round", null: false
     t.integer "check_status"
     t.text "check_comment"
-    t.datetime "updated_at"
+    t.datetime "updated_at", precision: nil
     t.index ["job_id", "round", "test_case_id"], name: "index_test_case_results_on_job_id_and_round_and_test_case_id"
     t.index ["job_id"], name: "index_test_case_results_on_job_id"
     t.index ["test_case_id"], name: "index_test_case_results_on_test_case_id"
