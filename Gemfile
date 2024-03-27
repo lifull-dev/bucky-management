@@ -19,7 +19,7 @@ gem 'rails'
 gem 'ransack'
 gem 'sass-rails'
 gem 'slim-rails'
-gem 'therubyracer', '~> 0.12.3', platforms: :ruby
+gem 'mini_racer', '~> 0.1.14'
 gem 'webpacker'
 
 group :development, :test, optional: true do
