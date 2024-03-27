@@ -19,10 +19,11 @@ gem 'rails'
 gem 'ransack'
 gem 'sass-rails'
 gem 'slim-rails'
-gem 'therubyracer', platforms: :ruby
+gem 'mini_racer', '~> 0.1.14'
 gem 'webpacker'
 
 group :development, :test, optional: true do
+  gem 'mini_racer', '~> 0.1.14'
   gem 'awesome_print'
   gem 'bullet'
   gem 'byebug', platform: :mri

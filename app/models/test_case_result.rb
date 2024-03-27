@@ -40,7 +40,7 @@ class TestCaseResult < ApplicationRecord
   scope :get_latest_round, lambda { |job_id|
                              return '' if joins(:job).where(job_id: job_id).blank?
 
-                             return joins(:job).where(job_id: job_id).last.round
+                             joins(:job).where(job_id: job_id).last.round
                            }
   scope :get_failed_cases, ->(job_id, round) { joins(test_case: :test_suite).select('test_cases.*, test_case_results.*, test_suites.*, test_case_results.id as result_id').where(job_id: job_id).where(round: round).where(is_error: true) }
   scope :get_slow_time_cases, ->(job_id, round) { joins(test_case: :test_suite).select('test_cases.*, test_case_results.*, test_suites.*').where(job_id: job_id).where(round: round).order('elapsed_time desc').where('elapsed_time >= 60') }
