@@ -2,9 +2,6 @@
 ![logo](docs/assets/Bucky-Management.png)
 [![Maintainability](https://api.codeclimate.com/v1/badges/aaeb28e229926007442b/maintainability)](https://codeclimate.com/github/lifull-dev/bucky-management/maintainability)
 
-## Overview
-Bucky-management is a web application that shows test result executed by [Bucky-core](https://github.com/lifull-dev/bucky-core).
-
 ## Getting Started
 We prepare three docker-compose files to start up Bucky-managemnt.
 - **docker-compose.yml**: Base compose file for production

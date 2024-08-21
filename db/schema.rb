@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_25_014426) do
+ActiveRecord::Schema[7.1].define(version: 2023_07_25_014426) do
   create_table "jobs", charset: "utf8mb4", force: :cascade do |t|
     t.datetime "start_time", precision: nil, null: false
     t.string "command_and_option"
