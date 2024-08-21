@@ -13,15 +13,15 @@ gem 'bulma-rails'
 gem 'gon'
 gem 'jquery-rails'
 gem 'kaminari'
+gem 'mini_racer', platforms: :ruby
 gem 'mysql2'
+gem 'psych', '~> 4.0'
 gem 'puma'
 gem 'rails'
 gem 'ransack'
 gem 'sass-rails'
 gem 'slim-rails'
 gem 'webpacker'
-gem 'mini_racer', platforms: :ruby
-gem 'psych', '~> 4.0'
 
 group :development, :test, optional: true do
   gem 'awesome_print'
