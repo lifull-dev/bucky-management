@@ -19,8 +19,9 @@ gem 'rails'
 gem 'ransack'
 gem 'sass-rails'
 gem 'slim-rails'
-gem 'therubyracer', platforms: :ruby
 gem 'webpacker'
+gem 'mini_racer', platforms: :ruby
+gem 'psych', '~> 4.0'
 
 group :development, :test, optional: true do
   gem 'awesome_print'
