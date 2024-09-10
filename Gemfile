@@ -36,6 +36,9 @@ group :development, :test, optional: true do
   gem 'rubocop', require: false
   gem 'rubocop-rails'
   gem 'simplecov'
+  gem 'factory_bot'
+  gem 'rspec-expectations'
+  gem 'simplecov-html'
 end
 
 group :development, optional: true do
