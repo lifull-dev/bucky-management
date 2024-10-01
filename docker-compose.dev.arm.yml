@@ -11,3 +11,8 @@ services:
     environment:
       - RAILS_ENV=development
       - BUCKY_DB_NAME=bucky_development
+    networks:
+      - bucky-management_default
+networks:
+  bucky-management_default:
+    external: true
