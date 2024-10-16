@@ -18,8 +18,9 @@
         - base_url = ftc.github_url
         - file_path = ftc.file_path
         - bucky_url = request.original_url
-        - body = CGI::escape("## Device\n#{suite_data.device}\n\n## URL\n#{bucky_url}\n\n## お願い\n1. 要素のlocator変更は[こちら](https://github.com/lifull/ldat-homes/discussions/1885)に準拠して対応お願いします。\n2. メンテPRをissueのdevelopmentで紐付けお願いします。")
-        - issue_path = "/issues/new?title=#{ftc.case_name}&body=#{body}&labels=maint"
+        - notice
+        - body = CGI::escape("## URL\n#{bucky_url}\n\n## Caution\n1. \n2.\n3.\n4.\n5.")
+        - issue_path = "/issues/new?title=【#{suite_data.device}】#{ftc.case_name}&body=#{body}&labels=maint"
         tr
           td
             = form_with url: "result/#{ftc.result_id}", local: false do |f|
