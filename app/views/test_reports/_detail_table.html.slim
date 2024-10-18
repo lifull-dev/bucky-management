@@ -19,10 +19,9 @@
         - file_path = ftc.file_path
         - bucky_url = request.original_url
         - body = CGI::escape("## URL\n#{bucky_url}\n\n## メンテナンス手順\n- `data-test-id`適応やcookieの固定などのメンテナンス手順：[maintenance.md](https://github.com/lifull/ldat-homes/blob/master/docs/maintenance.md)\n- ローカルでのテストの実行手順：[run.md](https://github.com/lifull/ldat-homes/blob/master/docs/run.md)\n\n## 注意事項\n- 担当者を割り当て、issueの進捗に応じてProjectsエリアの `Todo`、`In Progress` などステータス変更を行ってください\n- 作成したPRをissueのDevelopmentにリンクづけしてください\n")
-        - translation = CGI::escape("<details>\n<summary>English Translation</summary>\n<ul>\n  <li>Maintenance Procedures\n    <ul>\n      <li>How to maintenance (using <code>data-test-id</code>, setting cookie, etc.): <a href=\"https://github.com/lifull/ldat-homes/blob/master/docs/maintenance.md\">maintenance.md</a></li>\n      <li>How to execute tests locally: <a href=\"https://github.com/lifull/ldat-homes/blob/master/docs/run.md\">run.md</a></li>\n    </ul>\n  </li>\n  <li>Caution\n    <ul>\n      <li>Select assignees and Update the status in the Projects area (<code>Todo</code>, <code>In Progress</code>......) based on the progress of this issue.</li>\n      <li>Link the created PR to the Development section of this issue.</li>\n    </ul>\n  </li>\n</ul>\n</details>")
+        - translation = render "app/views/test_reports/_issue_translation.html.erb"
         - issue_path = "/issues/new?title=【#{suite_data.device}】#{ftc.case_name}&body=#{body}#{translation}&labels=maint"
-        
-        
+
         tr
           td
             = form_with url: "result/#{ftc.result_id}", local: false do |f|
