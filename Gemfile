@@ -16,8 +16,8 @@ gem 'kaminari'
 gem 'mini_racer', platforms: :ruby
 gem 'mysql2'
 gem 'psych', '~> 4.0'
-gem 'puma'
-gem 'rails', '7.0.0'
+gem 'puma', '6.4.2'
+gem 'rails', '7.0'
 gem 'ransack'
 gem 'sass-rails'
 gem 'slim-rails'
@@ -37,6 +37,9 @@ group :development, :test, optional: true do
   gem 'rubocop', require: false
   gem 'rubocop-rails'
   gem 'simplecov'
+  gem 'factory_bot'
+  gem 'rspec-expectations'
+  gem 'simplecov-html'
 end
 
 group :development, optional: true do
@@ -46,7 +49,6 @@ group :development, optional: true do
   gem 'debase'
   gem 'listen'
   gem 'rack-mini-profiler', require: false
-  gem 'ruby-debug-ide'
   gem 'spring'
   gem 'spring-watcher-listen'
   gem 'web-console'
