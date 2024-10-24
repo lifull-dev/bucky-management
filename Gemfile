@@ -46,6 +46,7 @@ group :development, optional: true do
   gem 'annotate'
   gem 'better_errors'
   gem 'brakeman', require: false
+  gem 'debase'
   gem 'listen'
   gem 'rack-mini-profiler', require: false
   gem 'spring'
