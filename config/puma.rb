@@ -50,5 +50,4 @@ worker_timeout 500
 plugin :tmp_restart
 
 app_root = File.expand_path('..', __dir__)
-# bind "unix://#{app_root}/tmp/sockets/puma.sock"
-port ENV.fetch("PORT") { 3001 }
+bind "unix://#{app_root}/tmp/sockets/puma.sock"

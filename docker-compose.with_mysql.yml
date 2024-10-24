@@ -9,8 +9,6 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=password
     command: mysqld --innodb_use_native_aio=0
-    networks:
-      - bucky-management_default
   app:
     platform: linux/amd64
     environment:
@@ -19,8 +17,3 @@ services:
       - BUCKY_DB_HOSTNAME=${BUCKY_DB_HOSTNAME:-db}
     depends_on:
       - db
-    networks:
-      - bucky-management_default
-networks:
-  bucky-management_default:
-    external: true

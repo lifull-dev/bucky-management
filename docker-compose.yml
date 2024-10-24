@@ -18,8 +18,6 @@ services:
       - BUCKY_DB_PASSWORD=${BUCKY_DB_PASSWORD}
       - BUCKY_DB_HOSTNAME=${BUCKY_DB_HOSTNAME}
       - BUCKY_DB_NAME=${BUCKY_DB_NAME}
-    networks:
-      - bucky-management_default
   web:
     build:
       context: docker/nginx
@@ -32,8 +30,3 @@ services:
       - 80:80
     depends_on:
       - app
-    networks:
-      - bucky-management_default
-networks:
-  bucky-management_default:
-    external: true
