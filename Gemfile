@@ -20,6 +20,7 @@ gem 'puma'
 gem 'rails', '7.0.0'
 gem 'ransack'
 gem 'sass-rails'
+gem 'sass-embedded'
 gem 'slim-rails'
 gem 'webpacker'
 
