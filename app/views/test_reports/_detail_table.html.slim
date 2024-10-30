@@ -18,8 +18,10 @@
         - base_url = ftc.github_url
         - file_path = ftc.file_path
         - bucky_url = request.original_url
-        - body = CGI::escape("## Device\n#{suite_data.device}\n\n## URL\n#{bucky_url}")
-        - issue_path = "/issues/new?title=#{ftc.case_name}&body=#{body}"
+        - body = CGI::escape("## URL\n#{bucky_url}\n\n## メンテナンス手順\n- `data-test-id`適応やcookieの固定などのメンテナンス手順：[maintenance.md](https://github.com/lifull/ldat-homes/blob/master/docs/maintenance.md)\n- ローカルでのテストの実行手順：[run.md](https://github.com/lifull/ldat-homes/blob/master/docs/run.md)\n\n## 注意事項\n- 担当者を割り当て、issueの進捗に応じてProjectsエリアの `Todo`、`In Progress` などステータス変更を行ってください\n- 作成したPRをissueのDevelopmentにリンクづけしてください\n")
+        - translation = render "test_reports/issue_translation"
+        - issue_path = "/issues/new?title=【#{suite_data.device}】#{ftc.case_name}&body=#{body}#{translation}&labels=maint"
+
         tr
           td
             = form_with url: "result/#{ftc.result_id}", local: false do |f|
