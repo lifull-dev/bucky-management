@@ -48,5 +48,3 @@ docker/mysql/volumes/*
 yarn-debug.log*
 
 /.vscode
-app/views/test_reports/_issue_translation.html.erb
-app/views/test_reports/_detail_table.html.slim
