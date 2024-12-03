@@ -7,5 +7,6 @@ services:
     volumes:
       - .:/app
     environment:
+      - TZ=${TZ}
       - RAILS_ENV=development
       - BUCKY_DB_NAME=bucky_development

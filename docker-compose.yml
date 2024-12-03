@@ -12,6 +12,7 @@ services:
       - ./tmp/:/app/tmp
       - ./log/:/app/log
     environment:
+      - TZ=${TZ}
       - RAILS_ENV=${RAILS_ENV:-production}
       - SECRET_KEY_BASE=${SECRET_KEY_BASE}
       - BUCKY_DB_USERNAME=${BUCKY_DB_USERNAME}
@@ -26,6 +27,8 @@ services:
     volumes:
       - ./public/:/app/public
       - ./tmp/:/app/tmp
+    environment:
+      - TZ=${TZ}
     ports:
       - 80:80
     depends_on:
