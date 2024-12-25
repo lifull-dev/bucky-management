@@ -5,7 +5,7 @@
 .gitignore
 .rspec
 .vscode
-Gemfile.lock
+# Gemfile.lock
 docker
 docker-*
 log
