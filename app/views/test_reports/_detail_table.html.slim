@@ -19,7 +19,7 @@
         - file_path = ftc.file_path
         - bucky_url = request.original_url
         - body = CGI::escape("## Device\n#{suite_data.device}\n\n## URL\n#{bucky_url}")
-        - issue_path = "/issues/new?title=#{ftc.case_name}&body=#{body}"
+        - issue_path = "/issues/new?title=#{ftc.case_name}&body=#{body}&labels=maint"
         tr
           td
             = form_with url: "result/#{ftc.result_id}", local: false do |f|
