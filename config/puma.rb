@@ -49,5 +49,8 @@ worker_timeout 500
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
 
-app_root = File.expand_path('..', __dir__)
-bind "unix://#{app_root}/tmp/sockets/puma.sock"
+# 開発環境以外でのみUnixソケットを使用（環境変数でチェック）
+unless ENV.fetch('RAILS_ENV', 'development') == 'development'
+  app_root = File.expand_path('..', __dir__)
+  bind "unix://#{app_root}/tmp/sockets/puma.sock"
+end
