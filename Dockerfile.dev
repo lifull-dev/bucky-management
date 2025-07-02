@@ -1,4 +1,4 @@
-FROM ruby:3.2.0
+FROM ruby:3.1.6
 
 RUN apt-get update && \
     apt-get install -y build-essential libpq-dev default-mysql-client nodejs npm && \
@@ -8,16 +8,18 @@ RUN apt-get update && \
 RUN gem install bundler
 WORKDIR /app
 
-# Gemfile準備とbundle install
+# Gemfile準備とbundle install（並列処理を無効化して安定性向上）
 COPY Gemfile.dev Gemfile
 COPY Gemfile.lock* ./
-RUN bundle install
+RUN bundle config set --local jobs 1 && \
+    bundle config set --local retry 3 && \
+    bundle install
 
 # アプリケーションファイルをコピー
 COPY . .
 
-# 実行時にGemfile.devを使用するためのエントリーポイント
-RUN echo '#!/bin/bash\nset -e\ncp Gemfile.dev Gemfile\nexec "$@"' > /usr/local/bin/docker-entrypoint.sh && chmod +x /usr/local/bin/docker-entrypoint.sh
+# 実行時にGemfile.devを使用してbundle installを実行するエントリーポイント
+RUN echo '#!/bin/bash\nset -e\ncp Gemfile.dev Gemfile\nbundle install\nexec "$@"' > /usr/local/bin/docker-entrypoint.sh && chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"]
