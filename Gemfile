@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '3.0.0'
+ruby '3.1.6'
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
@@ -17,13 +17,13 @@ gem 'mini_racer', platforms: :ruby
 gem 'mysql2'
 gem 'psych', '~> 4.0'
 gem 'puma'
-gem 'rails', '7.0.0'
+gem 'rails', '~> 7.1.0'
 gem 'ransack'
 gem 'sass-rails'
 gem 'slim-rails'
 gem 'webpacker'
 
-group :development, :test, optional: true do
+group :development, :test do
   gem 'awesome_print'
   gem 'bullet'
   gem 'byebug', platform: :mri
@@ -39,7 +39,7 @@ group :development, :test, optional: true do
   gem 'simplecov'
 end
 
-group :development, optional: true do
+group :development do
   gem 'annotate'
   gem 'better_errors'
   gem 'brakeman', require: false

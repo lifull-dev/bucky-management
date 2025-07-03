@@ -7,12 +7,9 @@ services:
       - "3000:3000"
     volumes:
       - .:/app
-      - bundle_cache:/usr/local/bundle
     environment:
       - TZ=${TZ}
       - RAILS_ENV=development
       - BUCKY_DB_NAME=bucky_development
     depends_on:
       - db
-volumes:
-  bundle_cache:
