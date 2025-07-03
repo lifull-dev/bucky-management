@@ -5,7 +5,7 @@ services:
     image: mysql:5.7.39
     container_name: bm-mysql
     volumes:
-      - ./docker/mysql/volumes:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
     environment:
       - TZ=${TZ}
       - MYSQL_ROOT_PASSWORD=password
@@ -19,3 +19,5 @@ services:
       - BUCKY_DB_HOSTNAME=${BUCKY_DB_HOSTNAME:-db}
     depends_on:
       - db
+volumes:
+  mysql_data:
