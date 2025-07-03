@@ -1,4 +1,4 @@
-FROM ruby:3.1.6
+FROM --platform=linux/arm64 ruby:3.1.6
 
 RUN apt-get update && \
     apt-get install -y build-essential libpq-dev default-mysql-client nodejs && \
@@ -9,7 +9,7 @@ WORKDIR /app
 
 # Gemfileをコピーしてbundle install
 COPY Gemfile Gemfile.lock* ./
-RUN bundle config set --local jobs 4 && \
+RUN bundle config set --local jobs 2 && \
     bundle config set --local retry 3 && \
     bundle config set --local without '' && \
     bundle install

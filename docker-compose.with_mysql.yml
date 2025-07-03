@@ -1,17 +1,17 @@
 version: '3'
 services:
   db:
-    platform: linux/x86_64
-    image: mysql:5.7.39
+    platform: linux/arm64
+    image: mysql:8.0
     container_name: bm-mysql
     volumes:
       - mysql_data:/var/lib/mysql
     environment:
       - TZ=${TZ}
       - MYSQL_ROOT_PASSWORD=password
-    command: mysqld --innodb_use_native_aio=0
+    command: mysqld --innodb_use_native_aio=0 --default-authentication-plugin=mysql_native_password
   app:
-    platform: linux/amd64
+    platform: linux/arm64
     environment:
       - TZ=${TZ}
       - BUCKY_DB_USERNAME=${BUCKY_DB_USERNAME:-root}
