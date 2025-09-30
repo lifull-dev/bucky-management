@@ -41,11 +41,14 @@ p
           th[scope="cols"]
             | Round Failed
           th[scope="cols"]
+            | Round Skipped
+          th[scope="cols"]
             | Time
       tbody
         tr
           - pc = @data_for_test_reports[:passed_count] ||= 0
           - fc = @data_for_test_reports[:failed_count] ||= 0
+          - sc = @data_for_test_reports[:skipped_count] ||= 0
           td
             = @suite_data.device
           td
@@ -53,9 +56,11 @@ p
           td
             = @suite_data.category
           td
-            = pc + fc
+            = pc + fc + sc
           td
             = fc
+          td
+            = sc
           td
             = Time.at(@data_for_test_reports[:total_elapsed_time]).strftime('%H:%M:%S')
     table.table.is-bordered.is-striped.is-narrow
@@ -66,12 +71,15 @@ p
           th[scope="cols"]
             | Total Failed
           th[scope="cols"]
+            | Total Skipped
+          th[scope="cols"]
             | Total
       tbody
         tr
           td = @data_for_test_reports[:stack_passed_counts]
           td = @data_for_test_reports[:failed_count]
-          td = @data_for_test_reports[:stack_passed_counts] + @data_for_test_reports[:failed_count]
+          td = @data_for_test_reports[:skipped_count]
+          td = @data_for_test_reports[:stack_passed_counts] + @data_for_test_reports[:failed_count] + @data_for_test_reports[:skipped_count]
   .column.is-half
     .is-size-4 Passed Rate
     canvas#test-report-detail-chart
@@ -98,3 +106,26 @@ p
             = link_to s.case_name, base_url << file_path, target: '_blank'
           td.long
             = s.case_description
+
+- if @data_for_test_reports[:skipped_test_cases].present?
+  .is-size-4 Skipped Tests List
+  table.table.is-bordered.is-striped.is-narrow.is-hoverable
+    thead
+      tr
+        th[scope="cols"]
+          | Case Name
+        th.long[scope="cols"]
+          | Case Description
+        th[scope="cols"]
+          | Skip Reason
+    tbody
+      - @data_for_test_reports[:skipped_test_cases].each do |s|
+        - base_url = s.github_url
+        - file_path = s.file_path
+        tr
+          td
+            = link_to s.case_name, base_url << file_path, target: '_blank'
+          td.long
+            = s.case_description
+          td
+            = s.skip_reason
