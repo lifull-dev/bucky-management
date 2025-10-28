@@ -1,4 +1,4 @@
-FROM ruby:3.0.0
+FROM ruby:3.0.7
 
 RUN apt-get update && \
     apt-get install -y \
@@ -6,8 +6,8 @@ RUN apt-get update && \
       libpq-dev \
       default-mysql-client \
       && rm -rf /var/lib/apt/lists/*
-RUN gem update --system && \
-    gem install bundler
+
+RUN gem install bundler -v 2.2.33
 
 RUN mkdir /app
 WORKDIR /app

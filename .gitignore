@@ -48,3 +48,5 @@ docker/mysql/volumes/*
 yarn-debug.log*
 
 /.vscode
+
+.env*
