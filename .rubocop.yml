@@ -1,5 +1,8 @@
 inherit_from: .rubocop_todo.yml
 
+require:
+  - rubocop-rails
+
 AllCops:
   NewCops: enable
   Exclude:
@@ -10,9 +13,6 @@ AllCops:
     - 'tmp/**/*'
     - 'vendor/**/*'
   TargetRubyVersion: 3.0
-
-plugins:
-  - rubocop-rails
 
 # allow method prefix start with "set_" and "get_"
 Naming/AccessorMethodName:

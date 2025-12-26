@@ -26,17 +26,22 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: rubocop-{{ checksum "Gemfile.lock" }}
+          keys:
+            - rubocop-{{ checksum "Gemfile.lock" }}
+            - rubocop-
       - run:
           name: Install dependencies
           command: |
             bundle config set --local path 'vendor/bundle'
-            bundle install
+            bundle config set --local with 'development test'
+            bundle install --jobs=4 --retry=3
       - save_cache:
           key: rubocop-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
-      - run: bundle exec rubocop -f html --out report.html
+      - run:
+          name: Run RuboCop
+          command: bundle exec rubocop -f html --out report.html
       - store_artifacts:
           path: report.html
 
