@@ -112,6 +112,7 @@ GEM
       i18n (>= 0.7)
       multi_json
       request_store (>= 1.0)
+    google-protobuf (3.25.5-aarch64-linux)
     google-protobuf (3.25.5-x86_64-linux)
     i18n (1.14.5)
       concurrent-ruby (~> 1.0)
@@ -133,6 +134,7 @@ GEM
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
     language_server-protocol (3.17.0.3)
+    libv8-node (21.7.2.0-aarch64-linux)
     libv8-node (21.7.2.0-x86_64-linux)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -163,6 +165,8 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.3)
+    nokogiri (1.16.7-aarch64-linux)
+      racc (~> 1.4)
     nokogiri (1.16.7-x86_64-linux)
       racc (~> 1.4)
     parallel (1.25.1)
@@ -351,6 +355,7 @@ GEM
     zeitwerk (2.6.17)
 
 PLATFORMS
+  aarch64-linux
   x86_64-linux
 
 DEPENDENCIES
@@ -393,7 +398,7 @@ DEPENDENCIES
   webpacker
 
 RUBY VERSION
-   ruby 3.0.0p0
+   ruby 3.0.7p220
 
 BUNDLED WITH
    2.5.17

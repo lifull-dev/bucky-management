@@ -3,68 +3,54 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/aaeb28e229926007442b/maintainability)](https://codeclimate.com/github/lifull-dev/bucky-management/maintainability)
 
 ## Overview
-Bucky-management is a web application that shows test result executed by [Bucky-core](https://github.com/lifull-dev/bucky-core).
+Bucky-management is a web application that shows test results executed by [Bucky-core](https://github.com/lifull-dev/bucky-core).
 
-## Getting Started
-We prepare three docker-compose files to start up Bucky-managemnt.
-- **docker-compose.yml**: Base compose file for production
-- **docker-compose.with_mysql.yml**: Compose file for adding a DB container
-- **docker-compose.dev.yml**: Compose file for development
+## Quick Start
 
-## Starting in production environment
-### Set environment variables
-Set DB name if you start Bucky-management first time:
+### Development Environment
+
+**Apple Silicon Mac (M1/M2/M3):**
 ```bash
-export BUCKY_DB_NAME=${BUCKY_DB_NAME}
-
-# Set connecting info for external DB.
-# Ignore these if you are going to use mysql container.
-export BUCKY_DB_USERNAME=${BUCKY_DB_USERNAME}
-export BUCKY_DB_PASSWORD=${BUCKY_DB_PASSWORD}
-export BUCKY_DB_HOSTNAME=${BUCKY_DB_HOSTNAME}
+export $(cat .env.development | xargs)
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.with_mysql.arm.yml up -d
+docker exec -it bm-app rails db:create db:migrate
 ```
+Access: http://localhost:3000
 
-### Build and start Bucky-management
+**Intel Mac:**
 ```bash
-# Start only Bucky-management. (Make sure you have prepared an external DB)
-docker-compose up --build -d
-
-# Start with mysql DB container
-docker-compose -f docker-compose.yml -f docker-compose.with_mysql.yml up --build -d
+export $(cat .env.development | xargs)
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.with_mysql.yml up -d
+docker exec -it bm-app rails db:create db:migrate
 ```
+Access: http://localhost:3000
 
-### Migration database and table
+### Production Environment
+
 ```bash
-# Create DB if you start Bucky-management first time.
-docker exec -it bm-app rails db:create
-# Do this if new migration file is added.
-docker exec -it bm-app rails db:migrate
-```
-### Publish secret key base and set to environment variables
-```bash
+# Set environment variables
+export BUCKY_DB_NAME=bucky_production
+export BUCKY_DB_USERNAME=your_username
+export BUCKY_DB_PASSWORD=your_password
+export BUCKY_DB_HOSTNAME=your_db_host
 export SECRET_KEY_BASE=$(docker exec -it bm-app rake secret)
 
-# Restart Bucky-management to reflect environment variables
+# Start with external DB
 docker-compose up --build -d
-# Restart with mysql DB container
+
+# Or start with MySQL container (Intel Mac)
 docker-compose -f docker-compose.yml -f docker-compose.with_mysql.yml up --build -d
+
+# Initialize database
+docker exec -it bm-app rails db:create db:migrate
 ```
+Access: http://localhost
 
-## Starting in development environment
+## Documentation
 
-### Build and start Bucky-management
-```bash
-# Start Bucky-management in development with mysql DB container
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.with_mysql.yml up --build -d
-```
+- [Development Guide](docs/DEVELOPMENT.md) - Detailed setup, troubleshooting, and technical details
 
-### Migration database and table
-```bash
-# Create DB if you start Bucky-management first time.
-docker exec -it bm-app rails db:create
-# Do this if new migration file is added.
-docker exec -it bm-app rails db:migrate
-```
+## Requirements
 
-## Check your Bucky-management dashboard
-http://localhost
+- Docker Desktop
+- Docker Compose v2

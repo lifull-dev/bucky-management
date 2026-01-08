@@ -2,14 +2,19 @@ version: 2
 jobs:
   rails_best_practices:
     docker:
-      - image: circleci/ruby:3.0.0-node
+      - image: cimg/ruby:3.0.7-node
     steps:
       - checkout
       - restore_cache:
-          key: rails-demo-{{ checksum "Gemfile" }}
-      - run: bundle install --path vendor/bundle --with test
+          key: rails-demo-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Install dependencies
+          command: |
+            bundle config set --local path 'vendor/bundle'
+            bundle config set --local with 'test'
+            bundle install
       - save_cache:
-          key: rails-demo-{{ checksum "Gemfile" }}
+          key: rails-demo-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
       - run: bundle exec rails_best_practices -f html -c .rails_best_practices.yml 
@@ -17,11 +22,26 @@ jobs:
           path: rails_best_practices_output.html
   rubocop:
     docker:
-      - image: circleci/ruby:3.0.0-node
+      - image: cimg/ruby:3.0.7-node
     steps:
       - checkout
-      - run: gem install rubocop rubocop-rails
-      - run: rubocop -f html --out report.html
+      - restore_cache:
+          keys:
+            - rubocop-{{ checksum "Gemfile.lock" }}
+            - rubocop-
+      - run:
+          name: Install dependencies
+          command: |
+            bundle config set --local path 'vendor/bundle'
+            bundle config set --local with 'development test'
+            bundle install --jobs=4 --retry=3
+      - save_cache:
+          key: rubocop-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+      - run:
+          name: Run RuboCop
+          command: bundle exec rubocop -f html --out report.html
       - store_artifacts:
           path: report.html
 
