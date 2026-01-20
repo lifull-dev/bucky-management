@@ -4,19 +4,22 @@ if (gon.controller_name === 'pages' && gon.action_name === 'main') {
       new Chart(gon.data_for_top[chart].title_name, {
         type: 'pie',
         data: {
-          labels: ['Passed', 'Failed'],
+          labels: ['Passed', 'Failed','Skipped'],
           datasets: [{
             data: [
               gon.data_for_top[chart].latest_passed_count,
               gon.data_for_top[chart].latest_failed_count,
+              gon.data_for_top[chart].latest_skipped_count,
             ],
             backgroundColor: [
               'rgba(75, 192, 192, 0.5)',
               'rgba(255, 99, 132, 0.5)',
+              'rgba(255, 206, 86, 0.5)',
             ],
             borderColor: [
               'rgba(75, 192, 192, 1)',
               'rgba(255,99,132,1)',
+              'rgba(255, 206, 86, 1)',
             ],
             borderWidth: 1,
           }],

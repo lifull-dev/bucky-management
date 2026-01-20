@@ -33,19 +33,22 @@ class TestCaseResult < ApplicationRecord
 
   scope :get_total_elapsed_time, ->(job_id, round) { joins(:job).where(job_id: job_id).where(round: round).sum(:elapsed_time) }
   scope :get_total_counts, ->(job_id, round) { where(job_id: job_id).where(round: round).count }
-  scope :get_passed_counts, ->(job_id, round) { where(job_id: job_id).where(round: round).where(is_error: 0).count }
-  scope :get_failed_counts, ->(job_id, round) { where(job_id: job_id).where(round: round).where(is_error: 1).count }
-  scope :get_total_passed_counts, ->(job_id) { where(job_id: job_id).where(is_error: 0).count }
-  scope :get_stack_passed_counts, ->(job_id, round) { where(job_id: job_id).where(round: 1..round.to_i).where(is_error: 0).count }
+  scope :get_passed_counts, ->(job_id, round) { where(job_id: job_id).where(round: round).where(is_error: 0).where(skip_flag: false).count }
+  scope :get_failed_counts, ->(job_id, round) { where(job_id: job_id).where(round: round).where(is_error: 1).where(skip_flag: false).count }
+  scope :get_skipped_counts, ->(job_id, round) { where(job_id: job_id).where(round: round).where(is_error: 1).where(skip_flag: true).count }
+  scope :get_total_passed_counts, ->(job_id) { where(job_id: job_id).where(is_error: 0).where(skip_flag: false).count }
+  scope :get_stack_passed_counts, ->(job_id, round) { where(job_id: job_id).where(round: 1..round.to_i).where(is_error: 0).where(skip_flag: false).count }
   scope :get_latest_round, lambda { |job_id|
                              return '' if joins(:job).where(job_id: job_id).blank?
 
                              joins(:job).where(job_id: job_id).last.round
                            }
-  scope :get_failed_cases, ->(job_id, round) { joins(test_case: :test_suite).select('test_cases.*, test_case_results.*, test_suites.*, test_case_results.id as result_id').where(job_id: job_id).where(round: round).where(is_error: true) }
+  scope :get_failed_cases, ->(job_id, round) { joins(test_case: :test_suite).select('test_cases.*, test_case_results.*, test_suites.*, test_case_results.id as result_id').where(job_id: job_id).where(round: round).where(is_error: true).where(skip_flag: false) }
+  scope :get_skipped_cases, ->(job_id, round) { joins(test_case: :test_suite).select('test_cases.*, test_case_results.*, test_suites.*, test_case_results.id as result_id').where(job_id: job_id).where(round: round).where(is_error: true).where(skip_flag: true) }
   scope :get_slow_time_cases, ->(job_id, round) { joins(test_case: :test_suite).select('test_cases.*, test_case_results.*, test_suites.*').where(job_id: job_id).where(round: round).order('elapsed_time desc').where('elapsed_time >= 60') }
-  scope :get_case_successed_counts, ->(test_case_id) { where(test_case_id: test_case_id).where(is_error: 0).order('id desc').limit(20).count }
-  scope :get_case_failed_counts, ->(test_case_id) { where(test_case_id: test_case_id).where(is_error: 1).order('id desc').limit(20).count }
+  scope :get_case_successed_counts, ->(test_case_id) { where(test_case_id: test_case_id).where(is_error: 0).where(skip_flag: false).order('id desc').limit(20).count }
+  scope :get_case_failed_counts, ->(test_case_id) { where(test_case_id: test_case_id).where(is_error: 1).where(skip_flag: false).order('id desc').limit(20).count }
+  scope :get_case_skipped_counts, ->(test_case_id) { where(test_case_id: test_case_id).where(skip_flag: true).order('id desc').limit(20).count }
   scope :check_update_in_ten_sec, -> { where('updated_at >= ?', 10.seconds.ago) }
 
   class << self
@@ -54,7 +57,7 @@ class TestCaseResult < ApplicationRecord
     end
 
     def get_latest_failed_result(test_case_id)
-      joins(:job).select('jobs.*, test_case_results.is_error').where(test_case_id: test_case_id).where(is_error: true).last
+      joins(:job).select('jobs.*, test_case_results.is_error').where(test_case_id: test_case_id).where(is_error: true).where(skip_flag: false).last
     end
 
     def get_data_for_top_page(job, test_category, device)
@@ -66,6 +69,7 @@ class TestCaseResult < ApplicationRecord
       data_for_top[:latest_round] = get_latest_round(job[:id])
       data_for_top[:latest_passed_count] = get_total_passed_counts(job[:id])
       data_for_top[:latest_failed_count] = get_failed_counts(job[:id], data_for_top[:latest_round])
+      data_for_top[:latest_skipped_count] = get_skipped_counts(job[:id], data_for_top[:latest_round])
       data_for_top
     end
 
@@ -74,7 +78,9 @@ class TestCaseResult < ApplicationRecord
       data_for_test_reports[:total_elapsed_time] = get_total_elapsed_time(job_id, round)
       data_for_test_reports[:passed_count] = get_passed_counts(job_id, round)
       data_for_test_reports[:failed_count] = get_failed_counts(job_id, round)
+      data_for_test_reports[:skipped_count] = get_skipped_counts(job_id, round)
       data_for_test_reports[:failed_test_cases] = get_failed_cases(job_id, round)
+      data_for_test_reports[:skipped_test_cases] = get_skipped_cases(job_id, round)
       data_for_test_reports[:slow_time_test_cases] = get_slow_time_cases(job_id, round)
       data_for_test_reports[:stack_passed_counts] = get_stack_passed_counts(job_id, round)
       data_for_test_reports

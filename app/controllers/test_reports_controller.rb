@@ -107,6 +107,7 @@ class TestReportsController < ApplicationController
     set_var_for_render
     gon.passed_count = @data_for_test_reports[:stack_passed_counts]
     gon.failed_count = @data_for_test_reports[:failed_count]
+    gon.skipped_count = @data_for_test_reports[:skipped_count]
     gon.controller_name = controller_name
     gon.action_name = action_name
   end
