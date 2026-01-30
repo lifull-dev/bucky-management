@@ -10,12 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_07_25_014426) do
+ActiveRecord::Schema.define(version: 2026_01_08_040924) do
 
   create_table "jobs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "start_time", null: false
     t.string "command_and_option"
     t.string "base_fqdn"
+    t.datetime "end_time"
+    t.float "duration"
   end
 
   create_table "labels", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
