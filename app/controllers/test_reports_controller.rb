@@ -9,6 +9,8 @@ class TestReportsController < ApplicationController
     if params[:search_value].present? && params[:search_type].present?
       filters[params[:search_type].to_sym] = params[:search_value]
     end
+    filters[:date_from] = params[:date_from] if params[:date_from].present?
+    filters[:date_to] = params[:date_to] if params[:date_to].present?
     has_filter = filters.any?
 
     if has_filter

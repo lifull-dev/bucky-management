@@ -55,6 +55,8 @@ class Job < ApplicationRecord
     jobs = jobs.searched_root_jobs(filters[:search_word]) if filters[:search_word].present?
     jobs = jobs.where(id: filters[:job_id]) if filters[:job_id].present?
     jobs = jobs.where('base_fqdn LIKE ?', "%#{filters[:base_fqdn]}%") if filters[:base_fqdn].present?
+    jobs = jobs.where('start_time >= ?', filters[:date_from].to_date.beginning_of_day) if filters[:date_from].present?
+    jobs = jobs.where('start_time <= ?', filters[:date_to].to_date.end_of_day) if filters[:date_to].present?
 
     if filters[:device].present?
       Job.join_with_suites(jobs.map(&:id))
@@ -82,6 +84,7 @@ class Job < ApplicationRecord
       job_tree[parent_job.id] = {
         id: parent_job.id,
         job_start_time: parent_job.start_time,
+        duration: parent_job.duration,
         command_and_option: parent_job.command_and_option,
         device: parent_job.device,
         service: parent_job.service,

@@ -10,6 +10,12 @@
           = f.select :search_type, options_for_select([["Command", "search_word"], ["Job ID", "job_id"], ["Device", "device"], ["PR NUM", "base_fqdn"]], params[:search_type] || "search_word")
       .column.is-half-mobile.is-one-third-tablet.is-one-fifth-desktop
         = f.text_field :search_value, value: params[:search_value], placeholder: "Search...", :class=>"input is-rounded"
+      .column.is-narrow
+        = f.date_field :date_from, value: params[:date_from], class: "input is-rounded"
+      .column.is-narrow
+        | ～
+      .column.is-narrow
+        = f.date_field :date_to, value: params[:date_to] || Date.today, class: "input is-rounded"
       .column.is-one-fifth
         = f.submit "search", class: "button is-info is-rounded"
 
@@ -34,6 +40,8 @@ table.table.is-bordered.is-striped.is-narrow.is-hoverable.is-fullwidth
           | Total Cases
         th[scope="cols"]
           | Failed Cases
+        th[scope="cols"]
+          | Duration
         th[scope="cols"]
           | Total Time
         th[scope="cols"]
@@ -69,6 +77,11 @@ table.table.is-bordered.is-striped.is-narrow.is-hoverable.is-fullwidth
           = tc
         td
           = fc
+        td
+          - if job[:duration]
+            = "%02d:%02d" % [job[:duration].to_i / 60, job[:duration].to_i % 60]
+          - else
+            | -
         td
           - if job[:total_time]
             = Time.at(job[:total_time]).strftime('%H:%M:%S')
