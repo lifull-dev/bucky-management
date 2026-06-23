@@ -5,12 +5,21 @@ class TestReportsController < ApplicationController
   PER_PAGE = 30
   def index
     start_num = params[:page].nil? || params[:page] == 1 ? 0 : PER_PAGE * (params[:page].to_i - 1)
-    root_jobs = if params[:search_word]
-                  Job.searched_root_jobs_per_page(start_num, PER_PAGE, params[:search_word])
-                else
-                  Job.root_jobs(start_num, PER_PAGE)
-                end
-    @page = ganerate_pagenation(params[:search_word])
+    filters = {}
+    if params[:search_value].present? && params[:search_type].present?
+      filters[params[:search_type].to_sym] = params[:search_value]
+    end
+    has_filter = filters.any?
+
+    if has_filter
+      all_job_ids = Job.filtered_root_job_ids(filters)
+      total_count = all_job_ids.size
+      root_jobs = Job.join_with_suites(all_job_ids[start_num...start_num + PER_PAGE])
+    else
+      total_count = Job.all_root_jobs.count
+      root_jobs = Job.root_jobs(start_num, PER_PAGE)
+    end
+    @page = Kaminari.paginate_array(Array.new(total_count), total_count: total_count).page(params[:page]).per(PER_PAGE)
     @jobs = []
     return if root_jobs.empty?
 

@@ -5,8 +5,11 @@
 .search_form
   = form_with url: test_reports_path, local: true, method: :get do |f|
     .columns.is-mobile
+      .column.is-narrow
+        .select.is-rounded
+          = f.select :search_type, options_for_select([["Command", "search_word"], ["Job ID", "job_id"], ["Device", "device"], ["PR NUM", "base_fqdn"]], params[:search_type] || "search_word")
       .column.is-half-mobile.is-one-third-tablet.is-one-fifth-desktop
-        = f.text_field :search_word, value: params[:search_word], placeholder: "Input label or devise", :class=>"input is-rounded"
+        = f.text_field :search_value, value: params[:search_value], placeholder: "Search...", :class=>"input is-rounded"
       .column.is-one-fifth
         = f.submit "search", class: "button is-info is-rounded"
 

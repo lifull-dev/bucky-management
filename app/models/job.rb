@@ -50,6 +50,21 @@ class Job < ApplicationRecord
         .map(&:id)[start_num...start_num + per_page])
   end
 
+  def self.filtered_root_job_ids(filters)
+    jobs = all_root_jobs
+    jobs = jobs.searched_root_jobs(filters[:search_word]) if filters[:search_word].present?
+    jobs = jobs.where(id: filters[:job_id]) if filters[:job_id].present?
+    jobs = jobs.where('base_fqdn LIKE ?', "%#{filters[:base_fqdn]}%") if filters[:base_fqdn].present?
+
+    if filters[:device].present?
+      Job.join_with_suites(jobs.map(&:id))
+         .select { |j| j.device&.downcase&.include?(filters[:device].downcase) }
+         .map(&:id)
+    else
+      jobs.map(&:id)
+    end
+  end
+
   def self.all_children_jobs(start, limit)
     Job.all.where("command_and_option like '%rerun%'").where(id: start..).order('jobs.id ASC').limit(limit)
   end
