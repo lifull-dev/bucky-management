@@ -43,8 +43,6 @@ table.table.is-bordered.is-striped.is-narrow.is-hoverable.is-fullwidth
         th[scope="cols"]
           | Duration
         th[scope="cols"]
-          | Total Time
-        th[scope="cols"]
           | Pass Rate(%)
 
   tbody
@@ -82,11 +80,6 @@ table.table.is-bordered.is-striped.is-narrow.is-hoverable.is-fullwidth
             = "%02d:%02d" % [job[:duration].to_i / 60, job[:duration].to_i % 60]
           - else
             | -
-        td
-          - if job[:total_time]
-            = Time.at(job[:total_time]).strftime('%H:%M:%S')
-          - else
-            = 0
         td
           = pc + fc > 0 ? "#{pc*100/(pc+fc)}\%" : 'no result'
 = paginate @page

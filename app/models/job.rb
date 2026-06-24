@@ -89,7 +89,6 @@ class Job < ApplicationRecord
         device: parent_job.device,
         service: parent_job.service,
         category: parent_job.category,
-        total_time: parent_job.total_time,
         children: []
       }
 
