@@ -5,8 +5,17 @@
 .search_form
   = form_with url: test_reports_path, local: true, method: :get do |f|
     .columns.is-mobile
+      .column.is-narrow
+        .select.is-rounded
+          = f.select :search_type, options_for_select(search_type_options, params[:search_type] || "search_word")
       .column.is-half-mobile.is-one-third-tablet.is-one-fifth-desktop
-        = f.text_field :search_word, value: params[:search_word], placeholder: "Input label or devise", :class=>"input is-rounded"
+        = f.text_field :search_value, value: params[:search_value], placeholder: "Search...", :class=>"input is-rounded"
+      .column.is-narrow
+        = f.date_field :date_from, value: params[:date_from], class: "input is-rounded"
+      .column.is-narrow
+        | ～
+      .column.is-narrow
+        = f.date_field :date_to, value: params[:date_to] || Date.today, class: "input is-rounded"
       .column.is-one-fifth
         = f.submit "search", class: "button is-info is-rounded"
 
@@ -32,24 +41,15 @@ table.table.is-bordered.is-striped.is-narrow.is-hoverable.is-fullwidth
         th[scope="cols"]
           | Failed Cases
         th[scope="cols"]
-          | Total Time
+          | Duration
         th[scope="cols"]
           | Pass Rate(%)
 
   tbody
     - @jobs.each do |job|
       tr
-        - indent = job[:indent_num] == 0 ? "" : "&nbsp;&nbsp;" * job[:indent_num] + "└&nbsp;"
-        - if @test_case_result.get_latest_round(job[:id]).present?
-          - latest_round = @test_case_result.get_latest_round(job[:id])
-          - fc = @test_case_result.get_failed_counts(job[:id], latest_round)
-          - pc = @test_case_result.get_total_passed_counts(job[:id])
-          - tc = @test_case_result.get_total_counts(job[:id], 1)
-        - else
-          - latest_round = 0
-          - fc = 0
-          - tc = 0
-          - pc = 0
+        - indent = job_indent(job[:indent_num])
+        - stats = job_stats(job[:id])
         td
           = link_to "#{indent}#{job[:id]}".html_safe, "/test_reports/#{job[:id]}".html_safe
         td
@@ -63,14 +63,11 @@ table.table.is-bordered.is-striped.is-narrow.is-hoverable.is-fullwidth
         td
           = job[:job_start_time].strftime("%Y/%m/%d %T(%a)")
         td
-          = tc
+          = stats[:total_count]
         td
-          = fc
+          = stats[:failed_count]
         td
-          - if job[:total_time]
-            = Time.at(job[:total_time]).strftime('%H:%M:%S')
-          - else
-            = 0
+          = job_duration(job[:duration])
         td
-          = pc + fc > 0 ? "#{pc*100/(pc+fc)}\%" : 'no result'
+          = job_pass_rate(stats[:passed_count], stats[:failed_count])
 = paginate @page

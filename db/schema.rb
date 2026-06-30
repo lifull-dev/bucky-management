@@ -13,10 +13,10 @@
 ActiveRecord::Schema.define(version: 2026_01_08_040924) do
 
   create_table "jobs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.datetime "start_time", null: false
+    t.datetime "start_time", precision: 6, null: false
     t.string "command_and_option"
     t.string "base_fqdn"
-    t.datetime "end_time"
+    t.datetime "end_time", precision: 6
     t.float "duration"
   end
 
@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(version: 2026_01_08_040924) do
     t.integer "round", null: false
     t.integer "check_status"
     t.text "check_comment"
-    t.datetime "updated_at"
+    t.datetime "updated_at", precision: 6
     t.index ["job_id", "round", "test_case_id"], name: "index_test_case_results_on_job_id_and_round_and_test_case_id"
     t.index ["job_id"], name: "index_test_case_results_on_job_id"
     t.index ["test_case_id"], name: "index_test_case_results_on_test_case_id"
