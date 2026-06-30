@@ -57,20 +57,26 @@ class Job < ApplicationRecord
   end
 
   def self.filtered_root_job_ids(filters)
-    jobs = all_root_jobs
+    jobs = apply_filters(all_root_jobs, filters)
+    filter_by_device(jobs, filters[:device])
+  end
+
+  def self.apply_filters(jobs, filters)
     jobs = jobs.searched_root_jobs(filters[:search_word]) if filters[:search_word].present?
     jobs = jobs.where(id: filters[:job_id]) if filters[:job_id].present?
     jobs = jobs.where('base_fqdn LIKE ?', "%#{filters[:base_fqdn]}%") if filters[:base_fqdn].present?
-    jobs = jobs.where('start_time >= ?', filters[:date_from].to_date.beginning_of_day) if filters[:date_from].present?
-    jobs = jobs.where('start_time <= ?', filters[:date_to].to_date.end_of_day) if filters[:date_to].present?
+    jobs = jobs.where(start_time: filters[:date_from].to_date.beginning_of_day..) if filters[:date_from].present?
+    jobs = jobs.where(start_time: ..filters[:date_to].to_date.end_of_day) if filters[:date_to].present?
+    jobs
+  end
 
-    if filters[:device].present?
-      Job.join_with_suites(jobs.map(&:id))
-         .select { |j| j.device&.downcase&.include?(filters[:device].downcase) }
-         .map(&:id)
-    else
-      jobs.map(&:id)
-    end
+  def self.filter_by_device(jobs, device)
+    job_ids = jobs.map(&:id)
+    return job_ids if device.blank?
+
+    Job.join_with_suites(job_ids)
+       .select { |j| j.device&.downcase&.include?(device.downcase) }
+       .map(&:id)
   end
 
   def self.all_children_jobs(start, limit)
@@ -85,25 +91,14 @@ class Job < ApplicationRecord
   end
 
   def self.create_job_tree(parent_jobs, children_jobs)
-    job_tree = {}
-    parent_jobs.each do |parent_job|
+    parent_jobs.each_with_object({}) do |parent_job, job_tree|
+      children = children_jobs.select { |cj| parent_job.id == TestReport.get_parent(cj.command_and_option) }.map(&:id)
       job_tree[parent_job.id] = {
-        id: parent_job.id,
-        job_start_time: parent_job.start_time,
-        duration: parent_job.duration,
-        command_and_option: parent_job.command_and_option,
-        device: parent_job.device,
-        service: parent_job.service,
-        category: parent_job.category,
-        children: []
+        id: parent_job.id, job_start_time: parent_job.start_time, duration: parent_job.duration,
+        command_and_option: parent_job.command_and_option, device: parent_job.device,
+        service: parent_job.service, category: parent_job.category, children: children
       }
-
-      children_jobs.each do |child_job|
-        job_tree[parent_job.id][:children] << child_job.id if parent_job.id == TestReport.get_parent(child_job.command_and_option)
-      end
     end
-
-    job_tree
   end
 
   def self.build_job_list(root_jobs, per_page)

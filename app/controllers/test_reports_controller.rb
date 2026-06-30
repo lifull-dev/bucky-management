@@ -6,9 +6,7 @@ class TestReportsController < ApplicationController
   def index
     start_num = params[:page].nil? || params[:page] == 1 ? 0 : PER_PAGE * (params[:page].to_i - 1)
     filters = {}
-    if params[:search_value].present? && params[:search_type].present?
-      filters[params[:search_type].to_sym] = params[:search_value]
-    end
+    filters[params[:search_type].to_sym] = params[:search_value] if params[:search_value].present? && params[:search_type].present?
     filters[:date_from] = params[:date_from] if params[:date_from].present?
     filters[:date_to] = params[:date_to] if params[:date_to].present?
 

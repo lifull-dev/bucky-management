@@ -20,15 +20,15 @@ module TestReportHelper
   end
 
   def job_indent(indent_num)
-    indent_num == 0 ? '' : ('&nbsp;&nbsp;' * indent_num + '└&nbsp;')
+    indent_num.zero? ? '' : "#{'&nbsp;&nbsp;' * indent_num}└&nbsp;"
   end
 
   def job_pass_rate(passed_count, failed_count)
-    passed_count + failed_count > 0 ? "#{passed_count * 100 / (passed_count + failed_count)}%" : 'no result'
+    (passed_count + failed_count).positive? ? "#{passed_count * 100 / (passed_count + failed_count)}%" : 'no result'
   end
 
   def job_duration(duration)
-    duration ? format('%02d:%02d', duration.to_i / 60, duration.to_i % 60) : '-'
+    duration ? format('%<min>02d:%<sec>02d', min: duration.to_i / 60, sec: duration.to_i % 60) : '-'
   end
 
   def search_type_options
