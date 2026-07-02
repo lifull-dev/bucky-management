@@ -32,6 +32,6 @@ module TestReportHelper
   end
 
   def search_type_options
-    [['Command', 'search_word'], ['Job ID', 'job_id'], ['Device', 'device'], ['PR NUM', 'base_fqdn']]
+    [['Command', 'search_word'], ['Job ID', 'job_id'], ['PR NUM', 'base_fqdn']]
   end
 end

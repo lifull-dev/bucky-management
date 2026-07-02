@@ -11,12 +11,15 @@
       .column.is-half-mobile.is-one-third-tablet.is-one-fifth-desktop
         = f.text_field :search_value, value: params[:search_value], placeholder: "Search...", :class=>"input is-rounded"
       .column.is-narrow
-        = f.date_field :date_from, value: params[:date_from], class: "input is-rounded"
+        .select.is-rounded
+          = f.select :device, options_for_select([['All Device', ''], ['SP', 'sp'], ['PC', 'pc']], params[:device])
+      .column.is-narrow
+        = f.date_field :date_from, value: params[:date_from] || 1.week.ago.to_date, class: "input is-rounded"
       .column.is-narrow
         | ～
       .column.is-narrow
         = f.date_field :date_to, value: params[:date_to] || Date.today, class: "input is-rounded"
-      .column.is-one-fifth
+      .column.is-narrow
         = f.submit "search", class: "button is-info is-rounded"
 
 .is-size-6 = page_entries_info @page

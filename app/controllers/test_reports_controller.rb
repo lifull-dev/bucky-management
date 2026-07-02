@@ -3,12 +3,22 @@
 class TestReportsController < ApplicationController
   before_action :check_round, only: %i[show update]
   PER_PAGE = 30
+  ALLOWED_SEARCH_TYPES = %w[search_word job_id base_fqdn].freeze
+
   def index
     start_num = params[:page].nil? || params[:page] == 1 ? 0 : PER_PAGE * (params[:page].to_i - 1)
     filters = {}
-    filters[params[:search_type].to_sym] = params[:search_value] if params[:search_value].present? && params[:search_type].present?
-    filters[:date_from] = params[:date_from] if params[:date_from].present?
-    filters[:date_to] = params[:date_to] if params[:date_to].present?
+    if params[:search_value].present? && params[:search_type].present? && ALLOWED_SEARCH_TYPES.include?(params[:search_type])
+      filters[params[:search_type].to_sym] = params[:search_value]
+    end
+    filters[:device] = params[:device] if params[:device].present?
+    if request.query_parameters.empty?
+      filters[:date_from] = 1.week.ago.to_date.to_s
+      filters[:date_to] = Date.today.to_s
+    else
+      filters[:date_from] = params[:date_from] if params[:date_from].present?
+      filters[:date_to] = params[:date_to] if params[:date_to].present?
+    end
 
     result = Job.paginated_root_jobs(start_num, PER_PAGE, filters: filters)
     @page = Kaminari.paginate_array(Array.new(result[:total_count]), total_count: result[:total_count]).page(params[:page]).per(PER_PAGE)
