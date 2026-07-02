@@ -10,6 +10,8 @@
 #
 
 class Job < ApplicationRecord
+  include JobFilterable
+
   has_many :test_case_results, dependent: :destroy
   has_many :test_cases, through: :test_case_results
   has_many :test_suites, through: :test_cases

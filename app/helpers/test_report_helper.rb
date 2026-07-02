@@ -34,4 +34,8 @@ module TestReportHelper
   def search_type_options
     [['Command', 'search_word'], ['Job ID', 'job_id'], ['PR NUM', 'base_fqdn']]
   end
+
+  def device_options
+    [['All Device', ''], ['SP', 'sp'], ['PC', 'pc']]
+  end
 end
