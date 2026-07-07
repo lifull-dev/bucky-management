@@ -10,6 +10,8 @@
 #
 
 class Job < ApplicationRecord
+  include JobFilterable
+
   has_many :test_case_results, dependent: :destroy
   has_many :test_cases, through: :test_case_results
   has_many :test_suites, through: :test_cases
@@ -35,19 +37,48 @@ class Job < ApplicationRecord
     Job.all.where("command_and_option not like '%rerun%'").order('jobs.id DESC')
   end
 
-  def self.searched_root_jobs(search_word)
-    all_root_jobs.where('command_and_option LIKE ?', "%#{search_word}%")
+  def self.paginated_root_jobs(start_num, per_page, filters: {})
+    if filters.any?
+      all_job_ids = filtered_root_job_ids(filters)
+      total_count = all_job_ids.size
+      jobs = join_with_suites(all_job_ids[start_num...start_num + per_page])
+    else
+      total_count = all_root_jobs.count
+      jobs = root_jobs(start_num, per_page)
+    end
+    { jobs: jobs, total_count: total_count }
   end
 
-  def self.searched_root_jobs_per_page(start_num, per_page, search_word)
-    Job.join_with_suites(Job.all_root_jobs
-            .searched_root_jobs(search_word)
-            .select(&:id)[start_num...start_num + per_page])
+  def self.searched_root_jobs(search_word)
+    all_root_jobs.where('command_and_option LIKE ?', "%#{search_word}%")
   end
 
   def self.root_jobs(start_num, per_page)
     Job.join_with_suites(Job.all_root_jobs.to_a
         .map(&:id)[start_num...start_num + per_page])
+  end
+
+  def self.filtered_root_job_ids(filters)
+    jobs = apply_filters(all_root_jobs, filters)
+    filter_by_device(jobs, filters[:device])
+  end
+
+  def self.apply_filters(jobs, filters)
+    jobs = jobs.searched_root_jobs(filters[:search_word]) if filters[:search_word].present?
+    jobs = jobs.where(id: filters[:job_id]) if filters[:job_id].present?
+    jobs = jobs.where('base_fqdn LIKE ?', "%#{filters[:base_fqdn]}%") if filters[:base_fqdn].present?
+    jobs = jobs.where(start_time: filters[:date_from].to_date.beginning_of_day..) if filters[:date_from].present?
+    jobs = jobs.where(start_time: ..filters[:date_to].to_date.end_of_day) if filters[:date_to].present?
+    jobs
+  end
+
+  def self.filter_by_device(jobs, device)
+    job_ids = jobs.map(&:id)
+    return job_ids if device.blank?
+
+    Job.join_with_suites(job_ids)
+       .select { |j| j.device&.downcase&.include?(device.downcase) }
+       .map(&:id)
   end
 
   def self.all_children_jobs(start, limit)
@@ -62,24 +93,33 @@ class Job < ApplicationRecord
   end
 
   def self.create_job_tree(parent_jobs, children_jobs)
-    job_tree = {}
-    parent_jobs.each do |parent_job|
+    parent_jobs.each_with_object({}) do |parent_job, job_tree|
+      children = children_jobs.select { |cj| parent_job.id == TestReport.get_parent(cj.command_and_option) }.map(&:id)
       job_tree[parent_job.id] = {
-        id: parent_job.id,
-        job_start_time: parent_job.start_time,
-        command_and_option: parent_job.command_and_option,
-        device: parent_job.device,
-        service: parent_job.service,
-        category: parent_job.category,
-        total_time: parent_job.total_time,
-        children: []
+        id: parent_job.id, job_start_time: parent_job.start_time, duration: parent_job.duration,
+        command_and_option: parent_job.command_and_option, device: parent_job.device,
+        service: parent_job.service, category: parent_job.category, children: children
       }
-
-      children_jobs.each do |child_job|
-        job_tree[parent_job.id][:children] << child_job.id if parent_job.id == TestReport.get_parent(child_job.command_and_option)
-      end
     end
+  end
 
-    job_tree
+  def self.build_job_list(root_jobs, per_page)
+    return [] if root_jobs.empty?
+
+    children = children_jobs(root_jobs.each(&:id).min.id, per_page * 4)
+    root_tree = create_job_tree(root_jobs, children)
+    children_tree = create_job_tree(children, children)
+    merged_tree = root_tree.merge(children_tree)
+
+    jobs = []
+    root_jobs.each { |job| traverse_job_tree(merged_tree, job[:id], 0, jobs) }
+    jobs
+  end
+
+  def self.traverse_job_tree(job_tree, job_id, indent_num, jobs)
+    jobs << job_tree[job_id]
+    jobs.last[:indent_num] = indent_num
+    indent_num += 1
+    job_tree[job_id][:children].reverse_each { |child_job_id| traverse_job_tree(job_tree, child_job_id, indent_num, jobs) }
   end
 end
