@@ -37,11 +37,7 @@ p
           th[scope="cols"]
             | Category
           th[scope="cols"]
-            | Round Total
-          th[scope="cols"]
-            | Round Failed
-          th[scope="cols"]
-            | Time
+            | Duration
       tbody
         tr
           - pc = @data_for_test_reports[:passed_count] ||= 0
@@ -53,20 +49,16 @@ p
           td
             = @suite_data.category
           td
-            = pc + fc
-          td
-            = fc
-          td
-            = Time.at(@data_for_test_reports[:total_elapsed_time]).strftime('%H:%M:%S')
+            = job_duration(@job.duration)
     table.table.is-bordered.is-striped.is-narrow
       thead
         tr
           th[scope="cols"]
-            | Total Passed
+            | Passed Case
           th[scope="cols"]
-            | Total Failed
+            | Failed Case
           th[scope="cols"]
-            | Total
+            | Total Case
       tbody
         tr
           td = @data_for_test_reports[:stack_passed_counts]
@@ -74,6 +66,7 @@ p
           td = @data_for_test_reports[:stack_passed_counts] + @data_for_test_reports[:failed_count]
   .column.is-half
     .is-size-4 Passed Rate
+    .is-size-5 = job_pass_rate(@data_for_test_reports[:stack_passed_counts], @data_for_test_reports[:failed_count])
     canvas#test-report-detail-chart
     = Gon::Base.render_data
 
