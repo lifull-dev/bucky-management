@@ -40,8 +40,6 @@ p
             | Duration
       tbody
         tr
-          - pc = @data_for_test_reports[:passed_count] ||= 0
-          - fc = @data_for_test_reports[:failed_count] ||= 0
           td
             = @suite_data.device
           td
