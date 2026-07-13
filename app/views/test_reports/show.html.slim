@@ -9,6 +9,13 @@ p
   - re_test_times = @latest_round - 1
   - re_test_times.downto(1) do |num|
     = link_to "##{@job.id}-#{num}", "/test_reports/#{@job.id}/round/#{num}", class: 'button'
+- pr_link = github_pr_url(@job.base_fqdn, @job.command_and_option)
+- if pr_link
+  .is-size-6.pr-info style="border: 1px solid #ddd; padding: 10px; margin-top: 10px; border-radius: 5px;"
+    - pr_number = extract_pr_number(@job.base_fqdn)
+    - repo_name = detect_repo_name(@job.command_and_option)
+    = link_to "PR ##{pr_number} - #{repo_name}", pr_link, target: '_blank'
+    |  (PRリンクをクリックすると該当PRに遷移します)
 .columns.is-desktop
   .column.is-half
     .is-size-3 Summary

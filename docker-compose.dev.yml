@@ -14,6 +14,8 @@ services:
       - TZ=${TZ}
       - RAILS_ENV=development
       - BUCKY_DB_NAME=bucky_development
+      - GITHUB_ORG_BASE_URL=${GITHUB_ORG_BASE_URL}
+      - ISSUE_SEARCH_BASE_URL=${ISSUE_SEARCH_BASE_URL}
 
 volumes:
   bundle_cache:
