@@ -13,9 +13,6 @@
           | Error Message
         th.long[scope="cols"]
           | Create Issue
-        - if ENV['ISSUE_SEARCH_BASE_URL'].present?
-          th[scope="cols"]
-            | Issue Search Link
     tbody
       - data_for_test_reports[:failed_test_cases].each do |ftc|
         - base_url = ftc.github_url
@@ -43,6 +40,3 @@
               = ftc.error_title
           td
             = link_to 'create_issue', github_repo_base_url(base_url) + issue_path, target: '_blank'
-          - if issue_search_url(ftc.case_name)
-            td
-              = link_to 'Search Issues', issue_search_url(ftc.case_name), target: '_blank', class: 'issue-search-link'
