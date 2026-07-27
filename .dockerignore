@@ -8,6 +8,7 @@
 Gemfile.lock
 docker
 docker-*
+!docker-entrypoint.sh
 log
 node_modules
 tmp
