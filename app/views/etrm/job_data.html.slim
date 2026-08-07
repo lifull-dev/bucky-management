@@ -38,6 +38,9 @@
           | ジョブ別パスレート（#{@start_date.strftime('%Y/%m/%d')} ～ #{@end_date.strftime('%Y/%m/%d')}）
 
         / Repo/Device別ジョブ一覧
+        - if @pages.blank?
+          .notification.is-light.has-text-centered
+            | データがありません
         - @pages.each do |device, paged_rows|
           .box
             .level

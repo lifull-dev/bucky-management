@@ -23,9 +23,14 @@ class EtrmController < ApplicationController
   end
 
   def case_data
-    set_date_range
+    # 전체 케이스 검색 (기간 제한 없음)
+    @search_value = params[:search_value]
+    @case_data = fetch_case_data_all
 
-    @case_data = fetch_case_data(@start_date, @end_date)
+    # 검색어가 있으면 필터링
+    if @search_value.present?
+      @case_data = @case_data.select { |row| row['case_name'].include?(@search_value) }
+    end
 
     # repo_device別にページネーション (Kaminari使用)
     @per_page = 10
@@ -47,15 +52,6 @@ class EtrmController < ApplicationController
     @repo_mapping ||= JSON.parse(
       ENV.fetch('REPO_MAPPING', '{}')
     )
-  end
-
-  def github_base_url
-    ENV.fetch('GITHUB_ORG_BASE_URL', '')
-  end
-
-  def resolve_repo_name(command_and_option)
-    matched = repo_mapping.find { |keyword, _| command_and_option.include?(keyword) }
-    matched&.last
   end
 
   def repo_targets
@@ -105,11 +101,12 @@ class EtrmController < ApplicationController
     results
   end
 
-  def fetch_case_data(start_date, end_date)
+  def fetch_case_data_all
+    # 기간 제한 없이 전체 케이스 데이터 조회
     results = []
     repo_targets.each do |target|
       rows = ActiveRecord::Base.connection.select_all(
-        sanitize_case_query(target[:name], target[:command], target[:device], start_date, end_date)
+        sanitize_case_query_all(target[:name], target[:command], target[:device])
       )
       results.concat(rows.to_a)
     end
@@ -125,7 +122,7 @@ class EtrmController < ApplicationController
           DATE_FORMAT(j.start_time, '%Y/%m/%d') AS date,
           DATE_FORMAT(j.start_time, '%H:%i') AS start_time,
           CASE
-            WHEN j.end_time IS NOT NULL THEN TIME_FORMAT(TIMEDIFF(j.end_time, j.start_time), '%i:%s')
+            WHEN j.end_time IS NOT NULL THEN TIME_FORMAT(TIMEDIFF(j.end_time, j.start_time), '%H:%i:%s')
             ELSE NULL
           END AS duration,
           ROUND(
@@ -166,17 +163,14 @@ class EtrmController < ApplicationController
     SQL
   end
 
-  def sanitize_case_query(repo_device, command_filter, device_filter, start_date, end_date)
-    github_url = "#{github_base_url}/ldat-homes/blob/master/"
-
-    ActiveRecord::Base.sanitize_sql_array([<<-SQL.squish, command_filter, start_date, end_date, command_filter, start_date, end_date, device_filter])
+  def sanitize_case_query_all(repo_device, command_filter, device_filter)
+    # 기간 제한 없는 케이스 쿼리
+    ActiveRecord::Base.sanitize_sql_array([<<-SQL.squish, command_filter, command_filter, device_filter])
       WITH valid_jobs AS (
           SELECT tcr.job_id
           FROM test_case_results tcr
           JOIN jobs j ON tcr.job_id = j.id
           WHERE j.command_and_option LIKE ?
-            AND j.start_time >= ?
-            AND j.start_time < DATE(?) + INTERVAL 1 DAY
           GROUP BY tcr.job_id
           HAVING ROUND(COUNT(CASE WHEN tcr.is_error = 0 THEN 1 END) / COUNT(*), 3) > 0.8
       ),
@@ -185,8 +179,6 @@ class EtrmController < ApplicationController
           FROM test_case_results tcr
           JOIN jobs j ON tcr.job_id = j.id
           WHERE j.command_and_option LIKE ?
-            AND j.start_time >= ?
-            AND j.start_time < DATE(?) + INTERVAL 1 DAY
             AND tcr.job_id IN (SELECT job_id FROM valid_jobs)
       ),
       latest_r4_fail AS (
@@ -204,7 +196,7 @@ class EtrmController < ApplicationController
       SELECT
           '#{repo_device}' AS repo_device,
           tc.case_name,
-          CONCAT('#{github_url}', ts.file_path) AS case_url,
+          CONCAT(ts.github_url, ts.file_path) AS case_url,
           ROUND(COUNT(CASE WHEN vr.is_error = 1 THEN 1 END) / COUNT(*), 3) AS all_round_failrate,
           ROUND(
               COUNT(CASE WHEN vr.round = 4 AND vr.is_error = 1 THEN 1 END) /

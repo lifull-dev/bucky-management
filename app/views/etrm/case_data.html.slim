@@ -19,25 +19,27 @@
       .column.is-10
         h1.title ETRM - Case Data
 
-        / 期間選択フォーム
+        / 検索フォーム
         .box style="margin-bottom: 1.5rem;"
           = form_with url: etrm_case_data_path, local: true, method: :get do |f|
             .columns.is-vcentered
               .column.is-narrow
-                label.label 期間
-              .column.is-narrow
-                = f.date_field :date_from, value: @start_date, class: "input"
-              .column.is-narrow
-                | ～
-              .column.is-narrow
-                = f.date_field :date_to, value: @end_date, class: "input"
+                label.label ケース名検索
+              .column.is-one-third
+                = f.text_field :search_value, value: params[:search_value], placeholder: "Search case name...", class: "input"
               .column.is-narrow
                 = f.submit "検索", class: "button is-info"
+              - if params[:search_value].present?
+                .column.is-narrow
+                  = link_to "クリア", etrm_case_data_path, class: "button is-light"
 
         p.subtitle
-          | テストケース別失敗率分析（#{@start_date.strftime('%Y/%m/%d')} ～ #{@end_date.strftime('%Y/%m/%d')}）
+          | テストケース別失敗率分析（全期間）
 
         / Repo/Device別ケース一覧
+        - if @pages.blank?
+          .notification.is-light.has-text-centered
+            | データがありません
         - @pages.each do |device, paged_rows|
           .box
             .level
