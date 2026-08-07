@@ -1,0 +1,121 @@
+- content_for :title, "ETRM - Job Data"
+
+.section
+  .container
+    .columns
+      / 左サイドバー
+      .column.is-2
+        aside.menu
+          p.menu-label ETRM
+          ul.menu-list
+            li
+              = link_to etrm_job_data_path, class: 'is-active' do
+                | Job Data
+            li
+              = link_to etrm_case_data_path do
+                | Case Data
+
+      / メインコンテンツ
+      .column.is-10
+        h1.title ETRM - Job Data
+
+        / 期間選択フォーム
+        .box style="margin-bottom: 1.5rem;"
+          = form_with url: etrm_job_data_path, local: true, method: :get do |f|
+            .columns.is-vcentered
+              .column.is-narrow
+                label.label 期間
+              .column.is-narrow
+                = f.date_field :date_from, value: @start_date, class: "input"
+              .column.is-narrow
+                | ～
+              .column.is-narrow
+                = f.date_field :date_to, value: @end_date, class: "input"
+              .column.is-narrow
+                = f.submit "検索", class: "button is-info"
+
+        p.subtitle
+          | ジョブ別パスレート（#{@start_date.strftime('%Y/%m/%d')} ～ #{@end_date.strftime('%Y/%m/%d')}）
+
+        / Repo/Device別ジョブ一覧
+        - @pages.each do |device, paged_rows|
+          .box
+            .level
+              .level-left
+                .level-item
+                  h3.subtitle.is-5 style="margin-bottom: 0;" = device
+              .level-right
+                .level-item
+                  p.is-size-7
+                    span.tag.is-danger.is-light style="margin-right: 0.5rem;"
+                      | passrate &lt; 95%
+                    span.tag.is-warning.is-light style="margin-right: 0.5rem;"
+                      | 95% ≤ passrate &lt; 100%
+                    span.tag.is-success.is-light
+                      | passrate = 100%
+
+            / このrepo_deviceの平均サマリー
+            - if @job_summary[device].present?
+              - stats = @job_summary[device]
+              table.table.is-bordered.is-fullwidth
+                thead
+                  tr
+                    th 件数
+                    th Avg R4
+                tbody
+                  tr
+                    td = stats[:valid_count]
+                    td class=rate_class(stats[:avg_passrate_round4])
+                      = format_passrate(stats[:avg_passrate_round4])
+
+            / ジョブ一覧テーブル
+            .table-container
+              table.table.is-bordered.is-striped.is-hoverable.is-fullwidth
+                thead
+                  tr
+                    th Job ID
+                    th PR
+                    th Date
+                    th Start
+                    th Duration
+                    th Passrate R1
+                    th Passrate R2
+                    th Passrate R3
+                    th Passrate R4
+                tbody
+                  - paged_rows.each do |row|
+                    tr
+                      td
+                        a href="/test_reports/#{row['job_id']}" target="_blank"
+                          = row['job_id']
+                      td = row['pr_number']
+                      td = row['date']
+                      td = row['start_time']
+                      td = row['duration']
+                      td class=rate_class(row['passrate_round1'])
+                        = format_passrate(row['passrate_round1'])
+                      td class=rate_class(row['passrate_round2'])
+                        = format_passrate(row['passrate_round2'])
+                      td class=rate_class(row['passrate_round3'])
+                        = format_passrate(row['passrate_round3'])
+                      td class=rate_class(row['passrate_round4'])
+                        = format_passrate(row['passrate_round4'])
+
+            / ページネーション
+            - if paged_rows.total_pages > 1
+              nav.pagination.is-small aria-label="pagination" style="margin-top: 0.5rem;"
+                - if paged_rows.current_page > 1
+                  = link_to "前へ", etrm_job_data_path(params.permit!.merge("page_#{device}" => paged_rows.current_page - 1)), class: "pagination-previous"
+                - else
+                  a.pagination-previous disabled="disabled" 前へ
+                - if paged_rows.current_page < paged_rows.total_pages
+                  = link_to "次へ", etrm_job_data_path(params.permit!.merge("page_#{device}" => paged_rows.current_page + 1)), class: "pagination-next"
+                - else
+                  a.pagination-next disabled="disabled" 次へ
+                ul.pagination-list
+                  - (1..paged_rows.total_pages).each do |p|
+                    li
+                      - if p == paged_rows.current_page
+                        a.pagination-link.is-current aria-current="page" = p
+                      - else
+                        = link_to p, etrm_job_data_path(params.permit!.merge("page_#{device}" => p)), class: "pagination-link"

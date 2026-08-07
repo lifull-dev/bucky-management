@@ -19,6 +19,9 @@ services:
       - BUCKY_DB_PASSWORD=${BUCKY_DB_PASSWORD}
       - BUCKY_DB_HOSTNAME=${BUCKY_DB_HOSTNAME}
       - BUCKY_DB_NAME=${BUCKY_DB_NAME}
+      - GITHUB_ORG_BASE_URL=${GITHUB_ORG_BASE_URL}
+      - ISSUE_SEARCH_BASE_URL=${ISSUE_SEARCH_BASE_URL}
+      - REPO_MAPPING=${REPO_MAPPING}
   web:
     build:
       context: docker/nginx
