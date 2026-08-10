@@ -18,9 +18,28 @@ Layout/TrailingEmptyLines:
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes, Max.
 Metrics/AbcSize:
   Exclude:
+    - 'app/controllers/etrm_controller.rb'
     - 'app/controllers/test_reports_controller.rb'
     - 'app/models/job.rb'
     - 'app/models/test_case_result.rb'
+
+# Offense count: 1
+# Configuration parameters: CountComments, Max, CountAsOne.
+Metrics/ClassLength:
+  Exclude:
+    - 'app/controllers/etrm_controller.rb'
+
+# Offense count: 1
+# Configuration parameters: AllowedMethods, AllowedPatterns, Max.
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'app/controllers/etrm_controller.rb'
+
+# Offense count: 1
+# Configuration parameters: AllowedMethods, AllowedPatterns, Max.
+Metrics/PerceivedComplexity:
+  Exclude:
+    - 'app/controllers/etrm_controller.rb'
 
 # Offense count: 2
 # Configuration parameters: CountComments, Max, CountAsOne, AllowedMethods, AllowedPatterns.

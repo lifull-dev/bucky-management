@@ -28,9 +28,7 @@ class EtrmController < ApplicationController
     @case_data = fetch_case_data_all
 
     # 검색어가 있으면 필터링
-    if @search_value.present?
-      @case_data = @case_data.select { |row| row['case_name'].include?(@search_value) }
-    end
+    @case_data = @case_data.select { |row| row['case_name'].include?(@search_value) } if @search_value.present?
 
     # repo_device別にページネーション (Kaminari使用)
     @per_page = 10
@@ -44,7 +42,7 @@ class EtrmController < ApplicationController
   private
 
   def set_date_range
-    @end_date = params[:date_to].present? ? Date.parse(params[:date_to]) : Date.today
+    @end_date = params[:date_to].present? ? Date.parse(params[:date_to]) : Time.zone.today
     @start_date = params[:date_from].present? ? Date.parse(params[:date_from]) : @end_date - (DEFAULT_DAYS - 1).days
   end
 

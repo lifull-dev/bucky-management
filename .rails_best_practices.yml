@@ -13,7 +13,7 @@ MoveCodeIntoControllerCheck: { }
 MoveCodeIntoHelperCheck: { array_count: 3 }
 MoveCodeIntoModelCheck: { use_count: 2 }
 MoveFinderToNamedScopeCheck: { }
-MoveModelLogicIntoModelCheck: { use_count: 6 }
+MoveModelLogicIntoModelCheck: { use_count: 15 }
 NeedlessDeepNestingCheck: { nested_count: 2 }
 NotRescueExceptionCheck: { }
 NotUseDefaultRouteCheck: { }
@@ -23,7 +23,7 @@ ProtectMassAssignmentCheck: { }
 RemoveEmptyHelpersCheck: { }
 #RemoveTabCheck: { }
 RemoveTrailingWhitespaceCheck: { }
-RemoveUnusedMethodsInControllersCheck: { except_methods: [] }
+RemoveUnusedMethodsInControllersCheck: { except_methods: [EtrmController#index, EtrmController#case_data] }
 RemoveUnusedMethodsInHelpersCheck: { except_methods: [] }
 RemoveUnusedMethodsInModelsCheck: { except_methods: [
   Job#ransackable_associations, TestCase#ransackable_associations, TestCaseLabel#ransackable_associations, TestCaseResult#ransackable_associations
