@@ -1,0 +1,211 @@
+// Monitoring 페이지 다크모드 대응
+// Chrome 등 브라우저에서 다크모드 사용시 가독성 확보
+
+@media (prefers-color-scheme: dark) {
+  // 전체 배경 및 텍스트
+  body {
+    background-color: #1a1a2e;
+    color: #eaeaea;
+  }
+
+  // 섹션 배경
+  .section {
+    background-color: #1a1a2e;
+  }
+
+  // 컨테이너
+  .container {
+    background-color: transparent;
+  }
+
+  // 박스 (카드 스타일)
+  .box {
+    background-color: #16213e;
+    color: #eaeaea;
+    border: 1px solid #0f3460;
+  }
+
+  // 테이블
+  .table {
+    background-color: #16213e;
+    color: #eaeaea;
+
+    th {
+      background-color: #0f3460 !important;
+      color: #eaeaea !important;
+      border-color: #1a1a2e !important;
+    }
+
+    td {
+      background-color: #16213e;
+      color: #eaeaea;
+      border-color: #0f3460 !important;
+    }
+
+    // 스트라이프 테이블
+    &.is-striped tbody tr:not(.is-selected):nth-child(even) {
+      background-color: #1a1a2e;
+
+      td {
+        background-color: #1a1a2e;
+      }
+    }
+
+    // 호버 효과
+    &.is-hoverable tbody tr:not(.is-selected):hover {
+      background-color: #0f3460;
+
+      td {
+        background-color: #0f3460;
+      }
+    }
+  }
+
+  // passrate/failrate 색상 클래스 (다크모드용) - 높은 대비
+  .has-background-success-light {
+    background-color: #d4edda !important;
+    color: #155724 !important;
+  }
+
+  .has-background-warning-light {
+    background-color: #fff3cd !important;
+    color: #856404 !important;
+  }
+
+  .has-background-danger-light {
+    background-color: #f8d7da !important;
+    color: #721c24 !important;
+  }
+
+  // 타이틀, 서브타이틀
+  .title,
+  .subtitle {
+    color: #eaeaea !important;
+  }
+
+  // 레이블
+  .label {
+    color: #eaeaea;
+  }
+
+  // 메뉴 (사이드바)
+  .menu {
+    .menu-label {
+      color: #b0b0b0;
+    }
+
+    .menu-list a {
+      color: #eaeaea;
+
+      &:hover {
+        background-color: #0f3460;
+        color: #fff;
+      }
+
+      &.is-active {
+        background-color: #3498db;
+        color: #fff;
+      }
+    }
+  }
+
+  // 입력 필드
+  .input,
+  .select select {
+    background-color: #16213e;
+    border-color: #0f3460;
+    color: #eaeaea;
+
+    &::placeholder {
+      color: #888;
+    }
+  }
+
+  // 버튼
+  .button {
+    &.is-info {
+      background-color: #3498db;
+      color: #fff;
+    }
+
+    &.is-light {
+      background-color: #2d2d44;
+      color: #eaeaea;
+      border-color: #0f3460;
+    }
+  }
+
+  // 태그 (범례)
+  .tag {
+    &.is-success.is-light {
+      background-color: #1e5631;
+      color: #a8e6cf;
+    }
+
+    &.is-warning.is-light {
+      background-color: #5c4813;
+      color: #ffd93d;
+    }
+
+    &.is-danger.is-light {
+      background-color: #5c1313;
+      color: #ff6b6b;
+    }
+  }
+
+  // 페이지네이션
+  .pagination {
+    .pagination-previous,
+    .pagination-next,
+    .pagination-link {
+      background-color: #16213e;
+      border-color: #0f3460;
+      color: #eaeaea;
+
+      &:hover {
+        background-color: #0f3460;
+        border-color: #3498db;
+      }
+
+      &.is-current {
+        background-color: #3498db;
+        border-color: #3498db;
+        color: #fff;
+      }
+
+      &[disabled] {
+        background-color: #1a1a2e;
+        border-color: #2d2d44;
+        color: #666;
+      }
+    }
+  }
+
+  // 알림 (데이터 없음 등)
+  .notification {
+    &.is-light {
+      background-color: #16213e;
+      color: #eaeaea;
+    }
+  }
+
+  // 링크 - 밝은 색상으로 가독성 향상
+  a {
+    color: #6ecfff;
+
+    &:hover {
+      color: #a8e4ff;
+    }
+  }
+
+  // 테이블 내 링크 - 더 밝은 색상
+  .table td a,
+  .table tbody td a {
+    color: #6ecfff !important;
+    font-weight: 500;
+
+    &:hover {
+      color: #a8e4ff !important;
+    }
+  }
+}

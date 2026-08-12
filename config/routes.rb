@@ -9,5 +9,8 @@ Rails.application.routes.draw do
     end
   end
   resources :test_suites, only: %i[index show]
+  get 'monitoring', to: 'monitoring#index'
+  get 'monitoring/job_data', to: 'monitoring#job_data'
+  get 'monitoring/case_data', to: 'monitoring#case_data'
   get '*path', to: 'application#render404'
 end
