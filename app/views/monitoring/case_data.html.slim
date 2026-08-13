@@ -84,7 +84,7 @@
                         td
                           - if row['case_url'].present?
                             a href=row['case_url'] target="_blank"
-                              = row['case_name'].to_s.sub(/_\d+$/, '')
+                              = row['case_name']
                           - else
                             = row['case_name']
                         td class=rate_class(row['all_round_failrate'], type: :failrate)
