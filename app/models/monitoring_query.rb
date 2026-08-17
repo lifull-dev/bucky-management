@@ -11,9 +11,9 @@ class MonitoringQuery
       end
     end
 
-    def fetch_case_data
+    def fetch_case_data(start_date, end_date)
       repo_targets.flat_map do |target|
-        execute_query(case_data_sql(target))
+        execute_query(case_data_sql(target, start_date, end_date))
       end
     end
 
@@ -62,8 +62,8 @@ class MonitoringQuery
       ActiveRecord::Base.sanitize_sql_array([job_data_template(target[:name]), target[:command], device_filter, start_date, end_date])
     end
 
-    def case_data_sql(target)
-      ActiveRecord::Base.sanitize_sql_array([case_data_template(target[:name]), target[:command], target[:command], target[:device]])
+    def case_data_sql(target, start_date, end_date)
+      ActiveRecord::Base.sanitize_sql_array([case_data_template(target[:name]), target[:command], start_date, end_date, target[:command], target[:device]])
     end
   end
 end

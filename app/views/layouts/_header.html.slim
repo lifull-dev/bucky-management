@@ -9,9 +9,10 @@ nav.navbar.is-dark role="navigation" aria-label="main navigation"
         span
     .navbar-menu#navMenu
       .navbar-start
-        = link_to test_reports_path, class: 'navbar-item' , target: "_brank" do
+        = link_to test_reports_path, class: 'navbar-item' , target: "_blank" do
           | TestReports
-        = link_to test_suites_path,  class: 'navbar-item' , target: "_brank" do
+        = link_to test_suites_path,  class: 'navbar-item' , target: "_blank" do
           | TestSuites
-        = link_to monitoring_job_data_path, class: 'navbar-item' , target: "_brank" do
-          | Monitoring
+        - if ENV['ENABLE_MONITORING'] == 'true'
+          = link_to monitoring_job_data_path, class: 'navbar-item' , target: "_blank" do
+            | Monitoring

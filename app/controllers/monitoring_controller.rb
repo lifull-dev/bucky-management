@@ -16,13 +16,27 @@ class MonitoringController < ApplicationController
   end
 
   def case_data
+    set_date_range
     @search_value = params[:search_value]
-    @case_data = MonitoringQuery.fetch_case_data
+    @case_data = MonitoringQuery.fetch_case_data(@start_date, @end_date)
     @case_data = filter_by_search(@case_data, @search_value)
     @pages = paginate_by_device(@case_data)
   end
 
+  helper_method :permitted_params
+
   private
+
+  def permitted_params
+    params.permit(:date_from, :date_to, :search_value).merge(page_params)
+  end
+
+  def page_params
+    @pages&.keys&.each_with_object({}) do |device, hash|
+      key = "page_#{device}"
+      hash[key] = params[key] if params[key].present?
+    end || {}
+  end
 
   def set_date_range
     @end_date = parse_date(params[:date_to], Time.zone.today)

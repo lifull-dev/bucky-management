@@ -9,10 +9,10 @@
           p.menu-label Monitoring
           ul.menu-list
             li
-              = link_to monitoring_job_data_path do
+              = link_to monitoring_job_data_path(date_from: @start_date, date_to: @end_date) do
                 | Job Data
             li
-              = link_to monitoring_case_data_path, class: 'is-active' do
+              = link_to monitoring_case_data_path(date_from: @start_date, date_to: @end_date), class: 'is-active' do
                 | Case Data
 
       / メインコンテンツ
@@ -24,17 +24,25 @@
           = form_with url: monitoring_case_data_path, local: true, method: :get do |f|
             .columns.is-vcentered
               .column.is-narrow
+                label.label 期間
+              .column.is-narrow
+                = f.date_field :date_from, value: @start_date, class: "input"
+              .column.is-narrow
+                | ～
+              .column.is-narrow
+                = f.date_field :date_to, value: @end_date, class: "input"
+              .column.is-narrow
                 label.label ケース名検索
-              .column.is-one-third
+              .column
                 = f.text_field :search_value, value: params[:search_value], placeholder: "Search case name...", class: "input"
               .column.is-narrow
                 = f.submit "検索", class: "button is-info"
               - if params[:search_value].present?
                 .column.is-narrow
-                  = link_to "クリア", monitoring_case_data_path, class: "button is-light"
+                  = link_to "クリア", monitoring_case_data_path(date_from: @start_date, date_to: @end_date), class: "button is-light"
 
         p.subtitle
-          | テストケース別失敗率分析（全期間）
+          | テストケース別失敗率分析（#{@start_date.strftime('%Y/%m/%d')} ～ #{@end_date.strftime('%Y/%m/%d')}）
 
         / Repo/Device別ケース一覧
         - if @pages.blank?
@@ -49,12 +57,14 @@
               .level-right
                 .level-item
                   p.is-size-7
-                    span.tag.is-success.is-light style="margin-right: 0.5rem;"
-                      | failrate = 0%
-                    span.tag.is-warning.is-light style="margin-right: 0.5rem;"
-                      | 0% &lt; failrate ≤ 5%
-                    span.tag.is-danger.is-light
-                      | failrate &gt; 5%
+                    span.tag.failrate-low style="margin-right: 0.5rem;"
+                      | failrate &lt; 30%
+                    span.tag.failrate-medium style="margin-right: 0.5rem;"
+                      | 30% ≤ failrate &lt; 60%
+                    span.tag.failrate-high style="margin-right: 0.5rem;"
+                      | 60% ≤ failrate &lt; 90%
+                    span.tag.failrate-critical
+                      | failrate ≥ 90%
 
             / このrepo_deviceのサマリー
             table.table.is-bordered.is-fullwidth style="margin-bottom: 1rem;"
@@ -87,9 +97,9 @@
                               = row['case_name']
                           - else
                             = row['case_name']
-                        td class=rate_class(row['all_round_failrate'], type: :failrate)
+                        td class=failrate_class(row['all_round_failrate'])
                           = format_failrate(row['all_round_failrate'])
-                        td class=rate_class(row['round4_failrate'], type: :failrate)
+                        td class=failrate_class(row['round4_failrate'])
                           = format_failrate(row['round4_failrate'])
                         td
                           - if row['final_round4_fail_job_id'].present? && row['final_round4_fail_job_id'] != ''
@@ -109,11 +119,11 @@
             - if paged_rows.total_pages > 1
               nav.pagination.is-small aria-label="pagination" style="margin-top: 0.5rem;"
                 - if paged_rows.current_page > 1
-                  = link_to "前へ", monitoring_case_data_path(params.permit!.merge("page_#{device}" => paged_rows.current_page - 1)), class: "pagination-previous"
+                  = link_to "前へ", monitoring_case_data_path(permitted_params.merge("page_#{device}" => paged_rows.current_page - 1)), class: "pagination-previous"
                 - else
                   a.pagination-previous disabled="disabled" 前へ
                 - if paged_rows.current_page < paged_rows.total_pages
-                  = link_to "次へ", monitoring_case_data_path(params.permit!.merge("page_#{device}" => paged_rows.current_page + 1)), class: "pagination-next"
+                  = link_to "次へ", monitoring_case_data_path(permitted_params.merge("page_#{device}" => paged_rows.current_page + 1)), class: "pagination-next"
                 - else
                   a.pagination-next disabled="disabled" 次へ
                 ul.pagination-list
@@ -122,4 +132,4 @@
                       - if p == paged_rows.current_page
                         a.pagination-link.is-current aria-current="page" = p
                       - else
-                        = link_to p, monitoring_case_data_path(params.permit!.merge("page_#{device}" => p)), class: "pagination-link"
+                        = link_to p, monitoring_case_data_path(permitted_params.merge("page_#{device}" => p)), class: "pagination-link"

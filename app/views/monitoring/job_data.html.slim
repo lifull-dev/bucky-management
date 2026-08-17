@@ -9,10 +9,10 @@
           p.menu-label Monitoring
           ul.menu-list
             li
-              = link_to monitoring_job_data_path, class: 'is-active' do
+              = link_to monitoring_job_data_path(date_from: @start_date, date_to: @end_date), class: 'is-active' do
                 | Job Data
             li
-              = link_to monitoring_case_data_path do
+              = link_to monitoring_case_data_path(date_from: @start_date, date_to: @end_date) do
                 | Case Data
 
       / メインコンテンツ
@@ -108,11 +108,11 @@
             - if paged_rows.total_pages > 1
               nav.pagination.is-small aria-label="pagination" style="margin-top: 0.5rem;"
                 - if paged_rows.current_page > 1
-                  = link_to "前へ", monitoring_job_data_path(params.permit!.merge("page_#{device}" => paged_rows.current_page - 1)), class: "pagination-previous"
+                  = link_to "前へ", monitoring_job_data_path(permitted_params.merge("page_#{device}" => paged_rows.current_page - 1)), class: "pagination-previous"
                 - else
                   a.pagination-previous disabled="disabled" 前へ
                 - if paged_rows.current_page < paged_rows.total_pages
-                  = link_to "次へ", monitoring_job_data_path(params.permit!.merge("page_#{device}" => paged_rows.current_page + 1)), class: "pagination-next"
+                  = link_to "次へ", monitoring_job_data_path(permitted_params.merge("page_#{device}" => paged_rows.current_page + 1)), class: "pagination-next"
                 - else
                   a.pagination-next disabled="disabled" 次へ
                 ul.pagination-list
@@ -121,4 +121,4 @@
                       - if p == paged_rows.current_page
                         a.pagination-link.is-current aria-current="page" = p
                       - else
-                        = link_to p, monitoring_job_data_path(params.permit!.merge("page_#{device}" => p)), class: "pagination-link"
+                        = link_to p, monitoring_job_data_path(permitted_params.merge("page_#{device}" => p)), class: "pagination-link"

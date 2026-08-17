@@ -22,6 +22,7 @@ services:
       - GITHUB_ORG_BASE_URL=${GITHUB_ORG_BASE_URL}
       - ISSUE_SEARCH_BASE_URL=${ISSUE_SEARCH_BASE_URL}
       - REPO_MAPPING=${REPO_MAPPING}
+      - ENABLE_MONITORING=${ENABLE_MONITORING}
   web:
     build:
       context: docker/nginx

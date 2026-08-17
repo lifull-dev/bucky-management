@@ -1,31 +1,43 @@
-// Monitoring 페이지 다크모드 대응
-// Chrome 등 브라우저에서 다크모드 사용시 가독성 확보
+.failrate-critical {
+  background-color: #c0392b !important;
+  color: #ffffff !important;
+}
+
+.failrate-high {
+  background-color: #e74c3c !important;
+  color: #ffffff !important;
+}
+
+.failrate-medium {
+  background-color: #fff3cd !important;
+  color: #856404 !important;
+}
+
+.failrate-low {
+  background-color: #d4edda !important;
+  color: #155724 !important;
+}
 
 @media (prefers-color-scheme: dark) {
-  // 전체 배경 및 텍스트
   body {
     background-color: #1a1a2e;
     color: #eaeaea;
   }
 
-  // 섹션 배경
   .section {
     background-color: #1a1a2e;
   }
 
-  // 컨테이너
   .container {
     background-color: transparent;
   }
 
-  // 박스 (카드 스타일)
   .box {
     background-color: #16213e;
     color: #eaeaea;
     border: 1px solid #0f3460;
   }
 
-  // 테이블
   .table {
     background-color: #16213e;
     color: #eaeaea;
@@ -42,7 +54,6 @@
       border-color: #0f3460 !important;
     }
 
-    // 스트라이프 테이블
     &.is-striped tbody tr:not(.is-selected):nth-child(even) {
       background-color: #1a1a2e;
 
@@ -51,7 +62,6 @@
       }
     }
 
-    // 호버 효과
     &.is-hoverable tbody tr:not(.is-selected):hover {
       background-color: #0f3460;
 
@@ -61,7 +71,6 @@
     }
   }
 
-  // passrate/failrate 색상 클래스 (다크모드용) - 높은 대비
   .has-background-success-light {
     background-color: #d4edda !important;
     color: #155724 !important;
@@ -83,12 +92,10 @@
     color: #eaeaea !important;
   }
 
-  // 레이블
   .label {
     color: #eaeaea;
   }
 
-  // 메뉴 (사이드바)
   .menu {
     .menu-label {
       color: #b0b0b0;
@@ -109,7 +116,6 @@
     }
   }
 
-  // 입력 필드
   .input,
   .select select {
     background-color: #16213e;
@@ -121,7 +127,6 @@
     }
   }
 
-  // 버튼
   .button {
     &.is-info {
       background-color: #3498db;
@@ -135,7 +140,6 @@
     }
   }
 
-  // 태그 (범례)
   .tag {
     &.is-success.is-light {
       background-color: #1e5631;
@@ -153,7 +157,6 @@
     }
   }
 
-  // 페이지네이션
   .pagination {
     .pagination-previous,
     .pagination-next,
@@ -181,7 +184,6 @@
     }
   }
 
-  // 알림 (데이터 없음 등)
   .notification {
     &.is-light {
       background-color: #16213e;
@@ -189,7 +191,6 @@
     }
   }
 
-  // 링크 - 밝은 색상으로 가독성 향상
   a {
     color: #6ecfff;
 
@@ -198,7 +199,6 @@
     }
   }
 
-  // 테이블 내 링크 - 더 밝은 색상
   .table td a,
   .table tbody td a {
     color: #6ecfff !important;

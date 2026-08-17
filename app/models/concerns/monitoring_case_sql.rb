@@ -7,7 +7,10 @@ module MonitoringCaseSql
     <<-SQL.squish
       WITH valid_jobs AS (
         SELECT tcr.job_id FROM test_case_results tcr
-        JOIN jobs j ON tcr.job_id = j.id WHERE j.command_and_option LIKE ?
+        JOIN jobs j ON tcr.job_id = j.id
+        WHERE j.command_and_option LIKE ?
+          AND j.start_time >= ?
+          AND j.start_time < DATE(?) + INTERVAL 1 DAY
         GROUP BY tcr.job_id
         HAVING ROUND(COUNT(CASE WHEN tcr.is_error = 0 THEN 1 END) / COUNT(*), 3) > 0.8
       ),
