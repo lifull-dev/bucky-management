@@ -58,12 +58,25 @@ class MonitoringQuery
     end
 
     def job_data_sql(target, start_date, end_date)
-      device_filter = "%-D #{target[:device]}%"
-      ActiveRecord::Base.sanitize_sql_array([job_data_template(target[:name]), target[:command], device_filter, start_date, end_date])
+      binds = {
+        repo_device: target[:name],
+        command_filter: target[:command],
+        device_filter: "%-D #{target[:device]}%",
+        start_date: start_date,
+        end_date: end_date
+      }
+      ActiveRecord::Base.sanitize_sql_array([job_data_template, binds])
     end
 
     def case_data_sql(target, start_date, end_date)
-      ActiveRecord::Base.sanitize_sql_array([case_data_template(target[:name]), target[:command], start_date, end_date, target[:command], target[:device]])
+      binds = {
+        repo_device: target[:name],
+        command_filter: target[:command],
+        device_filter: target[:device],
+        start_date: start_date,
+        end_date: end_date
+      }
+      ActiveRecord::Base.sanitize_sql_array([case_data_template, binds])
     end
   end
 end
