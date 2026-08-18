@@ -37,8 +37,9 @@ class MonitoringQuery
     end
 
     def repo_targets
+      devices = TestSuite.where(test_category: 'e2e').distinct.pluck(:device)
+
       repo_mapping.flat_map do |command_key, repo_name|
-        devices = TestSuite.where(test_category: 'e2e').distinct.pluck(:device)
         devices.map { |device| { name: "#{repo_name}_#{device}", command: "%#{command_key}%", device: device } }
       end
     end
@@ -74,7 +75,8 @@ class MonitoringQuery
         command_filter: target[:command],
         device_filter: target[:device],
         start_date: start_date,
-        end_date: end_date
+        end_date: end_date,
+        max_records: 25000
       }
       ActiveRecord::Base.sanitize_sql_array([case_data_template, binds])
     end

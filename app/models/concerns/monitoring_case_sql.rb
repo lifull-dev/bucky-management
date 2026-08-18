@@ -8,7 +8,8 @@ module MonitoringCaseSql
       WITH valid_jobs AS (
         SELECT tcr.job_id FROM test_case_results tcr
         JOIN jobs j ON tcr.job_id = j.id
-        WHERE j.command_and_option LIKE :command_filter
+        WHERE tcr.id >= (SELECT MAX(id) - :max_records FROM test_case_results)
+          AND j.command_and_option LIKE :command_filter
           AND j.duration IS NOT NULL
           AND j.start_time >= :start_date
           AND j.start_time < DATE(:end_date) + INTERVAL 1 DAY
@@ -18,7 +19,7 @@ module MonitoringCaseSql
       valid_results AS (
         SELECT tcr.id, tcr.test_case_id, tcr.is_error, tcr.round, tcr.job_id, j.start_time
         FROM test_case_results tcr JOIN jobs j ON tcr.job_id = j.id
-        WHERE j.command_and_option LIKE :command_filter
+        WHERE tcr.id >= (SELECT MAX(id) - :max_records FROM test_case_results)
           AND tcr.job_id IN (SELECT job_id FROM valid_jobs)
       ),
       latest_r4_fail AS (
