@@ -1,3 +1,4 @@
+- issue_search_enabled = ENV['ISSUE_SEARCH_BASE_URL'].present?
 - if data_for_test_reports[:failed_test_cases].present?
   .is-size-4 Error Details
   table.table.is-bordered.is-striped.is-narrow.is-hoverable
@@ -13,6 +14,9 @@
           | Error Message
         th.long[scope="cols"]
           | Create Issue
+        - if issue_search_enabled
+          th[scope="cols"]
+            | Issue Search Link
     tbody
       - data_for_test_reports[:failed_test_cases].each do |ftc|
         - base_url = ftc.github_url
@@ -40,3 +44,10 @@
               = ftc.error_title
           td
             = link_to 'create_issue', github_repo_base_url(base_url) + issue_path, target: '_blank'
+          - if issue_search_enabled
+            td
+              - issue_search_url = GithubUrlBuilder.issue_search_url(ftc.case_name)
+              - if issue_search_url
+                = link_to 'Search Issues', issue_search_url, target: '_blank', class: 'issue-search-link'
+              - else
+                | -
