@@ -26,6 +26,16 @@ RUN \
   bundle install && \
   rm -rf ~/.gem
 
-CMD bundle exec rake assets:precompile RAILS_ENV=${RAILS_ENV}
+# Asset precompilation (skip webpacker as it's not used in this app)
+RUN WEBPACKER_PRECOMPILE=false bundle exec rake assets:precompile RAILS_ENV=${RAILS_ENV}
+
+# Copy assets to assets-image for volume sync on startup
+# (Volume mounts override /app/public/assets, so we keep a copy)
+RUN cp -r /app/public/assets /app/public/assets-image
+
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 3000
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb", "config.ru"]

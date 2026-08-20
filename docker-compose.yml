@@ -11,6 +11,7 @@ services:
     volumes:
       - ./tmp/:/app/tmp
       - ./log/:/app/log
+      - assets:/app/public/assets
     environment:
       - TZ=${TZ}
       - RAILS_ENV=${RAILS_ENV:-production}
@@ -31,9 +32,13 @@ services:
     volumes:
       - ./public/:/app/public
       - ./tmp/:/app/tmp
+      - assets:/app/public/assets:ro
     environment:
       - TZ=${TZ}
     ports:
       - 80:80
     depends_on:
       - app
+
+volumes:
+  assets:
