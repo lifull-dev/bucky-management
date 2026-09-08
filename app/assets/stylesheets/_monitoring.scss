@@ -1,0 +1,210 @@
+.failrate-critical {
+  background-color: #c0392b !important;
+  color: #ffffff !important;
+}
+
+.failrate-high {
+  background-color: #e74c3c !important;
+  color: #ffffff !important;
+}
+
+.failrate-medium {
+  background-color: #fff3cd !important;
+  color: #856404 !important;
+}
+
+.failrate-low {
+  background-color: #d4edda !important;
+  color: #155724 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #1a1a2e;
+    color: #eaeaea;
+  }
+
+  .section {
+    background-color: #1a1a2e;
+  }
+
+  .container {
+    background-color: transparent;
+  }
+
+  .box {
+    background-color: #16213e;
+    color: #eaeaea;
+    border: 1px solid #0f3460;
+  }
+
+  .table {
+    background-color: #16213e;
+    color: #eaeaea;
+
+    th {
+      background-color: #0f3460 !important;
+      color: #eaeaea !important;
+      border-color: #1a1a2e !important;
+    }
+
+    td {
+      background-color: #16213e;
+      color: #eaeaea;
+      border-color: #0f3460 !important;
+    }
+
+    &.is-striped tbody tr:not(.is-selected):nth-child(even) {
+      background-color: #1a1a2e;
+
+      td {
+        background-color: #1a1a2e;
+      }
+    }
+
+    &.is-hoverable tbody tr:not(.is-selected):hover {
+      background-color: #0f3460;
+
+      td {
+        background-color: #0f3460;
+      }
+    }
+  }
+
+  .has-background-success-light {
+    background-color: #d4edda !important;
+    color: #155724 !important;
+  }
+
+  .has-background-warning-light {
+    background-color: #fff3cd !important;
+    color: #856404 !important;
+  }
+
+  .has-background-danger-light {
+    background-color: #f8d7da !important;
+    color: #721c24 !important;
+  }
+
+  .title,
+  .subtitle {
+    color: #eaeaea !important;
+  }
+
+  .label {
+    color: #eaeaea;
+  }
+
+  .menu {
+    .menu-label {
+      color: #b0b0b0;
+    }
+
+    .menu-list a {
+      color: #eaeaea;
+
+      &:hover {
+        background-color: #0f3460;
+        color: #fff;
+      }
+
+      &.is-active {
+        background-color: #3498db;
+        color: #fff;
+      }
+    }
+  }
+
+  .input,
+  .select select {
+    background-color: #16213e;
+    border-color: #0f3460;
+    color: #eaeaea;
+
+    &::placeholder {
+      color: #888;
+    }
+  }
+
+  .button {
+    &.is-info {
+      background-color: #3498db;
+      color: #fff;
+    }
+
+    &.is-light {
+      background-color: #2d2d44;
+      color: #eaeaea;
+      border-color: #0f3460;
+    }
+  }
+
+  .tag {
+    &.is-success.is-light {
+      background-color: #1e5631;
+      color: #a8e6cf;
+    }
+
+    &.is-warning.is-light {
+      background-color: #5c4813;
+      color: #ffd93d;
+    }
+
+    &.is-danger.is-light {
+      background-color: #5c1313;
+      color: #ff6b6b;
+    }
+  }
+
+  .pagination {
+    .pagination-previous,
+    .pagination-next,
+    .pagination-link {
+      background-color: #16213e;
+      border-color: #0f3460;
+      color: #eaeaea;
+
+      &:hover {
+        background-color: #0f3460;
+        border-color: #3498db;
+      }
+
+      &.is-current {
+        background-color: #3498db;
+        border-color: #3498db;
+        color: #fff;
+      }
+
+      &[disabled] {
+        background-color: #1a1a2e;
+        border-color: #2d2d44;
+        color: #666;
+      }
+    }
+  }
+
+  .notification {
+    &.is-light {
+      background-color: #16213e;
+      color: #eaeaea;
+    }
+  }
+
+  a {
+    color: #6ecfff;
+
+    &:hover {
+      color: #a8e4ff;
+    }
+  }
+
+  .table td a,
+  .table tbody td a {
+    color: #6ecfff !important;
+    font-weight: 500;
+
+    &:hover {
+      color: #a8e4ff !important;
+    }
+  }
+}

@@ -1,0 +1,135 @@
+- content_for :title, "Monitoring - Case Data"
+
+.section
+  .container
+    .columns
+      / 左サイドバー
+      .column.is-2
+        aside.menu
+          p.menu-label Monitoring
+          ul.menu-list
+            li
+              = link_to monitoring_job_data_path(date_from: @start_date, date_to: @end_date) do
+                | Job Data
+            li
+              = link_to monitoring_case_data_path(date_from: @start_date, date_to: @end_date), class: 'is-active' do
+                | Case Data
+
+      / メインコンテンツ
+      .column.is-10
+        h1.title Monitoring - Case Data
+
+        / 検索フォーム
+        .box style="margin-bottom: 1.5rem;"
+          = form_with url: monitoring_case_data_path, local: true, method: :get do |f|
+            .columns.is-vcentered
+              .column.is-narrow
+                label.label 期間
+              .column.is-narrow
+                = f.date_field :date_from, value: @start_date, class: "input"
+              .column.is-narrow
+                | ～
+              .column.is-narrow
+                = f.date_field :date_to, value: @end_date, class: "input"
+              .column.is-narrow
+                label.label ケース名検索
+              .column
+                = f.text_field :search_value, value: params[:search_value], placeholder: "Search case name...", class: "input"
+              .column.is-narrow
+                = f.submit "検索", class: "button is-info"
+              - if params[:search_value].present?
+                .column.is-narrow
+                  = link_to "クリア", monitoring_case_data_path(date_from: @start_date, date_to: @end_date), class: "button is-light"
+
+        p.subtitle
+          | テストケース別失敗率分析（#{@start_date.strftime('%Y/%m/%d')} ～ #{@end_date.strftime('%Y/%m/%d')}）
+
+        / Repo/Device別ケース一覧
+        - if @pages.blank?
+          .notification.is-light.has-text-centered
+            | データがありません
+        - @pages.each do |device, paged_rows|
+          .box
+            .level
+              .level-left
+                .level-item
+                  h3.subtitle.is-5 style="margin-bottom: 0;" = device
+              .level-right
+                .level-item
+                  p.is-size-7
+                    span.tag.failrate-low style="margin-right: 0.5rem;"
+                      | failrate &lt; 30%
+                    span.tag.failrate-medium style="margin-right: 0.5rem;"
+                      | 30% ≤ failrate &lt; 60%
+                    span.tag.failrate-high style="margin-right: 0.5rem;"
+                      | 60% ≤ failrate &lt; 90%
+                    span.tag.failrate-critical
+                      | failrate ≥ 90%
+
+            / このrepo_deviceのサマリー
+            table.table.is-bordered.is-fullwidth style="margin-bottom: 1rem;"
+              thead
+                tr
+                  th ケース数
+              tbody
+                tr
+                  td = paged_rows.total_count
+
+            / ケース一覧テーブル
+            .table-container
+              table.table.is-bordered.is-striped.is-hoverable.is-fullwidth
+                thead
+                  tr
+                    th Case Name
+                    th All Round Failrate
+                    th Round4 Failrate
+                    th Last R4 Fail Job
+                    th Last R4 Fail Date
+                    th Last R3 Fail Job
+                    th Last R3 Fail Date
+                tbody
+                  - if paged_rows.present?
+                    - paged_rows.each do |row|
+                      tr
+                        td
+                          - if row['case_url'].present?
+                            a href=row['case_url'] target="_blank"
+                              = row['case_name']
+                          - else
+                            = row['case_name']
+                        td class=failrate_class(row['all_round_failrate'])
+                          = format_failrate(row['all_round_failrate'])
+                        td class=failrate_class(row['round4_failrate'])
+                          = format_failrate(row['round4_failrate'])
+                        td
+                          - if row['final_round4_fail_job_id'].present? && row['final_round4_fail_job_id'] != ''
+                            a href="/test_reports/#{row['final_round4_fail_job_id']}/round/4" target="_blank"
+                              = row['final_round4_fail_job_id']
+                        td = row['final_round4_fail_date']
+                        td
+                          - if row['final_round3_fail_job_id'].present? && row['final_round3_fail_job_id'] != ''
+                            a href="/test_reports/#{row['final_round3_fail_job_id']}/round/3" target="_blank"
+                              = row['final_round3_fail_job_id']
+                        td = row['final_round3_fail_date']
+                  - else
+                    tr
+                      td colspan="7" style="text-align: center;" データがありません
+
+            / ページネーション
+            - if paged_rows.total_pages > 1
+              nav.pagination.is-small aria-label="pagination" style="margin-top: 0.5rem;"
+                - if paged_rows.current_page > 1
+                  = link_to "前へ", monitoring_case_data_path(permitted_params.merge("page_#{device}" => paged_rows.current_page - 1)), class: "pagination-previous"
+                - else
+                  a.pagination-previous disabled="disabled" 前へ
+                - if paged_rows.current_page < paged_rows.total_pages
+                  = link_to "次へ", monitoring_case_data_path(permitted_params.merge("page_#{device}" => paged_rows.current_page + 1)), class: "pagination-next"
+                - else
+                  a.pagination-next disabled="disabled" 次へ
+                ul.pagination-list
+                  - (1..paged_rows.total_pages).each do |p|
+                    li
+                      - if p == paged_rows.current_page
+                        a.pagination-link.is-current aria-current="page" = p
+                      - else
+                        = link_to p, monitoring_case_data_path(permitted_params.merge("page_#{device}" => p)), class: "pagination-link"
