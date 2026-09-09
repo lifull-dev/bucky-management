@@ -83,6 +83,8 @@
                     th Case Name
                     th All Round Failrate
                     th Round4 Failrate
+                    th First R4 Fail Job
+                    th First R4 Fail Date
                     th Last R4 Fail Job
                     th Last R4 Fail Date
                     th Last R3 Fail Job
@@ -102,6 +104,11 @@
                         td class=failrate_class(row['round4_failrate'])
                           = format_failrate(row['round4_failrate'])
                         td
+                          - if row['first_round4_fail_job_id'].present? && row['first_round4_fail_job_id'] != ''
+                            a href="/test_reports/#{row['first_round4_fail_job_id']}/round/4" target="_blank"
+                              = row['first_round4_fail_job_id']
+                        td = row['first_round4_fail_date']
+                        td
                           - if row['final_round4_fail_job_id'].present? && row['final_round4_fail_job_id'] != ''
                             a href="/test_reports/#{row['final_round4_fail_job_id']}/round/4" target="_blank"
                               = row['final_round4_fail_job_id']
@@ -113,7 +120,7 @@
                         td = row['final_round3_fail_date']
                   - else
                     tr
-                      td colspan="7" style="text-align: center;" データがありません
+                      td colspan="9" style="text-align: center;" データがありません
 
             / ページネーション
             - if paged_rows.total_pages > 1
