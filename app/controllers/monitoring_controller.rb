@@ -12,7 +12,12 @@ class MonitoringController < ApplicationController
     set_date_range
     @job_data = MonitoringQuery.fetch_job_data(@start_date, @end_date)
     @job_summary = MonitoringQuery.calculate_job_summary(@job_data)
-    @pages = paginate_by_device(@job_data)
+
+    respond_to do |format|
+      format.html { @pages = paginate_by_device(@job_data) }
+      format.csv { send_data to_csv(@job_data), filename: "job_data_#{@start_date}_#{@end_date}.csv" }
+      format.json { send_data to_json(@job_data, @job_summary), filename: "job_data_#{@start_date}_#{@end_date}.json" }
+    end
   end
 
   def case_data
@@ -20,12 +25,30 @@ class MonitoringController < ApplicationController
     @search_value = params[:search_value]
     @case_data = MonitoringQuery.fetch_case_data(@start_date, @end_date)
     @case_data = filter_by_search(@case_data, @search_value)
-    @pages = paginate_by_device(@case_data)
+
+    respond_to do |format|
+      format.html { @pages = paginate_by_device(@case_data) }
+      format.csv { send_data to_csv(@case_data), filename: "case_data_#{@start_date}_#{@end_date}.csv" }
+      format.json { send_data to_json(@case_data), filename: "case_data_#{@start_date}_#{@end_date}.json", type: 'application/json' }
+    end
   end
 
   helper_method :permitted_params
 
   private
+
+  def to_csv(data)
+    CSV.generate(headers: true, force_quotes: true) do |csv|
+      csv << data.first.keys
+      data.each { |row| csv << row.values }
+    end
+  end
+
+  def to_json(data, summary = nil)
+    result = { data: data, period: { from: @start_date, to: @end_date } }
+    result[:summary] = summary if summary
+    result.to_json
+  end
 
   def permitted_params
     params.permit(:date_from, :date_to, :search_value).merge(page_params)

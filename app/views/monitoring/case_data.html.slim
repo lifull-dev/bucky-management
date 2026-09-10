@@ -41,8 +41,17 @@
                 .column.is-narrow
                   = link_to "クリア", monitoring_case_data_path(date_from: @start_date, date_to: @end_date), class: "button is-light"
 
-        p.subtitle
-          | テストケース別失敗率分析（#{@start_date.strftime('%Y/%m/%d')} ～ #{@end_date.strftime('%Y/%m/%d')}）
+        .level style="margin-bottom: 1rem;"
+          .level-left
+            .level-item
+              p.subtitle style="margin-bottom: 0;"
+                | テストケース別失敗率分析（#{@start_date.strftime('%Y/%m/%d')} ～ #{@end_date.strftime('%Y/%m/%d')}）
+          .level-right
+            .level-item
+              span.is-size-7 style="margin-right: 0.5rem;" Download:
+              .buttons
+                = link_to 'CSV', monitoring_case_data_path(permitted_params.merge(format: :csv)), class: 'button is-info is-small'
+                = link_to 'JSON', monitoring_case_data_path(permitted_params.merge(format: :json)), class: 'button is-warning is-small'
 
         / Repo/Device別ケース一覧
         - if @pages.blank?
