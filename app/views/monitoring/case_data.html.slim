@@ -41,8 +41,17 @@
                 .column.is-narrow
                   = link_to "クリア", monitoring_case_data_path(date_from: @start_date, date_to: @end_date), class: "button is-light"
 
-        p.subtitle
-          | テストケース別失敗率分析（#{@start_date.strftime('%Y/%m/%d')} ～ #{@end_date.strftime('%Y/%m/%d')}）
+        .level style="margin-bottom: 1rem;"
+          .level-left
+            .level-item
+              p.subtitle style="margin-bottom: 0;"
+                | テストケース別失敗率分析（#{@start_date.strftime('%Y/%m/%d')} ～ #{@end_date.strftime('%Y/%m/%d')}）
+          .level-right
+            .level-item
+              span.is-size-7 style="margin-right: 0.5rem;" Download:
+              .buttons
+                = link_to 'CSV', monitoring_case_data_path(permitted_params.merge(format: :csv)), class: 'button is-info is-small'
+                = link_to 'JSON', monitoring_case_data_path(permitted_params.merge(format: :json)), class: 'button is-warning is-small'
 
         / Repo/Device別ケース一覧
         - if @pages.blank?
@@ -83,6 +92,8 @@
                     th Case Name
                     th All Round Failrate
                     th Round4 Failrate
+                    th First R4 Fail Job
+                    th First R4 Fail Date
                     th Last R4 Fail Job
                     th Last R4 Fail Date
                     th Last R3 Fail Job
@@ -102,6 +113,11 @@
                         td class=failrate_class(row['round4_failrate'])
                           = format_failrate(row['round4_failrate'])
                         td
+                          - if row['first_round4_fail_job_id'].present? && row['first_round4_fail_job_id'] != ''
+                            a href="/test_reports/#{row['first_round4_fail_job_id']}/round/4" target="_blank"
+                              = row['first_round4_fail_job_id']
+                        td = row['first_round4_fail_date']
+                        td
                           - if row['final_round4_fail_job_id'].present? && row['final_round4_fail_job_id'] != ''
                             a href="/test_reports/#{row['final_round4_fail_job_id']}/round/4" target="_blank"
                               = row['final_round4_fail_job_id']
@@ -113,7 +129,7 @@
                         td = row['final_round3_fail_date']
                   - else
                     tr
-                      td colspan="7" style="text-align: center;" データがありません
+                      td colspan="9" style="text-align: center;" データがありません
 
             / ページネーション
             - if paged_rows.total_pages > 1

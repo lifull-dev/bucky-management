@@ -34,8 +34,17 @@
               .column.is-narrow
                 = f.submit "検索", class: "button is-info"
 
-        p.subtitle
-          | ジョブ別パスレート（#{@start_date.strftime('%Y/%m/%d')} ～ #{@end_date.strftime('%Y/%m/%d')}）
+        .level style="margin-bottom: 1rem;"
+          .level-left
+            .level-item
+              p.subtitle style="margin-bottom: 0;"
+                | ジョブ別パスレート（#{@start_date.strftime('%Y/%m/%d')} ～ #{@end_date.strftime('%Y/%m/%d')}）
+          .level-right
+            .level-item
+              span.is-size-7 style="margin-right: 0.5rem;" Download:
+              .buttons
+                = link_to 'CSV', monitoring_job_data_path(permitted_params.merge(format: :csv)), class: 'button is-info is-small'
+                = link_to 'JSON', monitoring_job_data_path(permitted_params.merge(format: :json)), class: 'button is-warning is-small'
 
         / Repo/Device別ジョブ一覧
         - if @pages.blank?
