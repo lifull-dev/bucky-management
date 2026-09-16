@@ -76,7 +76,7 @@ class MonitoringQuery
         device_filter: target[:device],
         start_date: start_date,
         end_date: end_date,
-        max_records: 25_000
+        max_records: 250_000
       }
       ActiveRecord::Base.sanitize_sql_array([case_data_template, binds])
     end

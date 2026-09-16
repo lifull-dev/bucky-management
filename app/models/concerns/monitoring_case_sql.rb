@@ -22,6 +22,12 @@ module MonitoringCaseSql
         WHERE tcr.id >= (SELECT MAX(id) - :max_records FROM test_case_results)
           AND tcr.job_id IN (SELECT job_id FROM valid_jobs)
       ),
+
+      first_r4_fail AS (
+        SELECT test_case_id, job_id, start_time,
+          ROW_NUMBER() OVER (PARTITION BY test_case_id ORDER BY id ASC) AS rn
+        FROM valid_results WHERE round = 4 AND is_error = 1
+      ),
       latest_r4_fail AS (
         SELECT test_case_id, job_id, start_time,
           ROW_NUMBER() OVER (PARTITION BY test_case_id ORDER BY id DESC) AS rn
@@ -37,6 +43,8 @@ module MonitoringCaseSql
         ROUND(COUNT(CASE WHEN vr.is_error = 1 THEN 1 END) / COUNT(*), 3) AS all_round_failrate,
         ROUND(COUNT(CASE WHEN vr.round = 4 AND vr.is_error = 1 THEN 1 END) /
           NULLIF(COUNT(CASE WHEN vr.round = 1 THEN 1 END), 0), 3) AS round4_failrate,
+        COALESCE(CAST(f4.job_id AS CHAR), '') AS first_round4_fail_job_id,
+        COALESCE(DATE_FORMAT(f4.start_time, '%Y-%m-%d %H:%i'), '') AS first_round4_fail_date,
         COALESCE(CAST(r4.job_id AS CHAR), '') AS final_round4_fail_job_id,
         COALESCE(DATE_FORMAT(r4.start_time, '%Y-%m-%d %H:%i'), '') AS final_round4_fail_date,
         COALESCE(CAST(r3.job_id AS CHAR), '') AS final_round3_fail_job_id,
@@ -44,10 +52,11 @@ module MonitoringCaseSql
       FROM valid_results vr
       JOIN test_cases tc ON vr.test_case_id = tc.id
       JOIN test_suites ts ON tc.test_suite_id = ts.id
+      LEFT JOIN first_r4_fail f4 ON f4.test_case_id = tc.id AND f4.rn = 1
       LEFT JOIN latest_r4_fail r4 ON r4.test_case_id = tc.id AND r4.rn = 1
       LEFT JOIN latest_r3_fail r3 ON r3.test_case_id = tc.id AND r3.rn = 1
       WHERE ts.device = :device_filter
-      GROUP BY tc.id, tc.case_name, ts.file_path, r4.job_id, r4.start_time, r3.job_id, r3.start_time
+      GROUP BY tc.id, tc.case_name, ts.file_path, f4.job_id, f4.start_time, r4.job_id, r4.start_time, r3.job_id, r3.start_time
       ORDER BY round4_failrate DESC, all_round_failrate DESC, tc.case_name
     SQL
   end
