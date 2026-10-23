@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '3.0.7'
+ruby '3.4.11'
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
@@ -17,7 +17,7 @@ gem 'mini_racer', platforms: :ruby
 gem 'mysql2'
 gem 'psych', '~> 4.0'
 gem 'puma'
-gem 'rails', '7.0.0'
+gem 'rails', '7.2.3.2'
 gem 'ransack'
 gem 'sass-rails'
 gem 'slim-rails'

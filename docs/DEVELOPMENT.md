@@ -185,7 +185,7 @@ export SECRET_KEY_BASE=$(docker exec -it bm-app rake secret)
 ## CI/CD
 
 ### CircleCI Configuration
-- Ruby 3.0.7 image: `cimg/ruby:3.0.7-node`
+- Ruby 3.4.11 image: `cimg/ruby:3.4.11-node`
 - Bundler config: `bundle config set --local path 'vendor/bundle'`
 - Cache key: `Gemfile.lock` checksum
 

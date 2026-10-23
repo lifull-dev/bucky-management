@@ -2,7 +2,7 @@ version: 2
 jobs:
   rails_best_practices:
     docker:
-      - image: cimg/ruby:3.0.7-node
+      - image: cimg/ruby:3.4.11-node
     steps:
       - checkout
       - restore_cache:
@@ -22,7 +22,7 @@ jobs:
           path: rails_best_practices_output.html
   rubocop:
     docker:
-      - image: cimg/ruby:3.0.7-node
+      - image: cimg/ruby:3.4.11-node
     steps:
       - checkout
       - restore_cache:
