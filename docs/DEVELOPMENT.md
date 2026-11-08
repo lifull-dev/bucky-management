@@ -184,10 +184,13 @@ export SECRET_KEY_BASE=$(docker exec -it bm-app rake secret)
 
 ## CI/CD
 
-### CircleCI Configuration
-- Ruby 3.0.7 image: `cimg/ruby:3.0.7-node`
-- Bundler config: `bundle config set --local path 'vendor/bundle'`
-- Cache key: `Gemfile.lock` checksum
+### GitHub Actions
+- Workflow: `.github/workflows/ci.yml`
+- Runs on pushes, pull requests, and manual dispatches
+- Ruby 3.0.7 on `ubuntu-latest`
+- Jobs: Rails Best Practices and RuboCop
+- Each job caches `vendor/bundle` using the `Gemfile.lock` checksum
+- HTML reports are uploaded as workflow artifacts
 
 ### RuboCop
 - Plugin format: `plugins: - rubocop-rails`
