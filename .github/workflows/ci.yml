@@ -13,13 +13,13 @@ jobs:
     name: Rails Best Practices
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/checkout@v4.4.0
 
-      - uses: ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec # v1.334.0
+      - uses: ruby/setup-ruby@v1.334.0
         with:
           ruby-version: '3.0.7'
 
-      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      - uses: actions/cache@v4.3.0
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-rails-best-practices-${{ hashFiles('Gemfile.lock') }}
@@ -35,7 +35,7 @@ jobs:
       - name: Run Rails Best Practices
         run: bundle exec rails_best_practices -f html -c .rails_best_practices.yml
 
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@v4.6.2
         with:
           name: rails-best-practices-report
           path: rails_best_practices_output.html
@@ -45,13 +45,13 @@ jobs:
     name: RuboCop
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/checkout@v4.4.0
 
-      - uses: ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec # v1.334.0
+      - uses: ruby/setup-ruby@v1.334.0
         with:
           ruby-version: '3.0.7'
 
-      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      - uses: actions/cache@v4.3.0
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-rubocop-${{ hashFiles('Gemfile.lock') }}
@@ -67,8 +67,26 @@ jobs:
       - name: Run RuboCop
         run: bundle exec rubocop -f html --out report.html
 
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@v4.6.2
         with:
           name: rubocop-report
           path: report.html
           if-no-files-found: warn
+
+  verify-actions-lock:
+    name: Verify Actions lockfile
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Install actions-lock
+        run: gh extension install github/gh-actions-lock --pin v0.4.1
+
+      - name: Verify Actions lockfile
+        run: gh actions-lock --verify
+        env:
+          GH_TOKEN: ${{ github.token }}
